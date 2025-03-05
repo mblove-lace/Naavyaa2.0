@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+
     'userauths',
     'store',
     'customer',
@@ -318,3 +319,4 @@ JAZZMIN_UI_TWEAKS = {
         "success": "btn-success"
     }
 }
+
