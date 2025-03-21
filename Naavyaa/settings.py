@@ -14,8 +14,6 @@ from pathlib import Path
 import os
 
 from environs import Env
-env = Env()
-env.read_env()
 
 
 
@@ -45,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_ckeditor_5',
 
 
     'userauths',
@@ -147,7 +146,7 @@ AUTH_USER_MODEL = 'userauths.User'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-
+############## Heeya's Code ####################
 JAZZMIN_SETTINGS = {
     # title of the window (Will default to current_admin_site.site_title if absent or None)
     "site_title": "NAAVYAA",
