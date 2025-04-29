@@ -1,18 +1,56 @@
-#  base module for Django's Object-Relational Mapping (ORM). 
-# allows you to define database models using Python classes.
+#  base module for Django's Object-Relational Mapping (ORM).
+# What is ORM?
+# Object-Relational Mapping (ORM) is a programming technique that allows developers to interact with a database using an object-oriented paradigm instead of writing raw SQL queries.
+# ORMs map database tables to Python (or other language) classes, making it easier to work with data as objects.
 
 from django.db import models
-
+# -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Create your models here.
+# shortuuid_fields is a Django package that provides ShortUUID fields for Django models, allowing you to use shorter, URL-friendly UUIDs instead of the default long UUIDs.
+# ShortUUID is a Python library that generates concise, unambiguous, and URL-safe UUIDs.
+# What is UUID? A UUID is a 128-bit number used to uniquely identify information in computer systems. It's typically represented as a 36-character string with a specific format:
+# Copy123e4567-e89b-12d3-a456-426614174000
+
 from shortuuid.django_fields import ShortUUIDField
+
+# -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# timezone module from Django's django.utils is used for working with time zone-aware datetime objects and handling time zone-related operations.
+# It provides functions and classes to manage time zones, including converting naive datetime objects to aware ones and vice versa.
+# The timezone.now() function returns the current time in the UTC time zone, but it returns it as a timezone-aware datetime (i.e., it includes information about the time zone).
 from django.utils import timezone
+
+# -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# he slugify function converts a string into a slug — a URL-friendly version of a string. It typically: 1. Converts to lowercase. 2.Replaces spaces and special characters with hyphens. 
+# 3. Removes characters that aren't alphanumerics or hyphens
 from django.utils.text import slugify
+
+# -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# CKEditor is a rich text editor — it lets users write and format text like in Microsoft Word or Google Docs. 
+# For example, they can:
+#   Make text bold/italic/underlined
+# Add headings, images, and links
+# Create bullet points, tables, etc.
+
 from django_ckeditor_5.fields import CKEditor5Field
 
+# -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# This imports the 'models' from your userauths and vendor 'modules' and gives them aliases (user_models and vendor_models respectively).
+# It allows you to refer to the models using the aliases instead of the full path, making the code cleaner and easier to read.
+# For example, instead of writing userauths.models.User, you can just write user_models.User.
+
 from userauths import models as user_models
-from vendor import models as vendor_models
 
 import shortuuid
+
+
+
+# -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#  it's a tuple of tuples — and it's commonly used in Django model field choices.
+# Each inner tuple represents a choice for a field in a Django model. 
+# The first element of each inner tuple is the actual value to be set in the database, and the second element is the human-readable name for that value.
+# These are Django choice field tuples that define options for dropdown/selection fields in your models.
 
 STATUS = (
     ("Published", "Published"),
@@ -192,6 +230,7 @@ class OrderItem(models.Model):
     order_status = models.CharField(max_length=100, choices=SHIPPING_SERVICE, default="Pending")
     shipping_service = models.CharField(max_length=100, choices=SHIPPING_SERVICE, default="none", null=True, blank=True)
     tracking_id = models.CharField(max_length=100, default=None, null=True, blank=True)
+
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     qty = models.PositiveIntegerField(default=1)
     color = models.CharField(max_length=100, null=True, blank=True)
@@ -202,10 +241,10 @@ class OrderItem(models.Model):
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     initiate_total = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, help_text="Total amount before discount")
     saved = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, help_text="Amount saved")
-    coupon = models.ManyToManyField(Coupon, on_delete=models.SET_NULL,blank=True)
+    coupon = models.ManyToManyField(Coupon,blank=True)
     applied_coupon = models.BooleanField(default=False)
     item_id = ShortUUIDField(length=5, max_length= 25, alphabet="0123456789")
-    vendor = models.ForeignKey(user_models.Vendor, on_delete=models.SET_NULL, null=True, blank=True,related_name="vendor_order_items")
+    vendor = models.ForeignKey(user_models.User, on_delete=models.SET_NULL, null=True, blank=True,related_name="vendor_order_items")
     date = models.DateTimeField(default=timezone.now)
 
     def order_id(self):
