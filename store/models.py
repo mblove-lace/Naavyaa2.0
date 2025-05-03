@@ -48,6 +48,7 @@ import shortuuid
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #  it's a tuple of tuples — and it's commonly used in Django model field choices.
+# These tuples define fixed sets of values for a model field 
 # Each inner tuple represents a choice for a field in a Django model. 
 # The first element of each inner tuple is the actual value to be set in the database, and the second element is the human-readable name for that value.
 # These are Django choice field tuples that define options for dropdown/selection fields in your models.
@@ -91,15 +92,31 @@ RATING = (
     (4, "★★★★☆"),
     (5, "★★★★★"),
 )
+
+# -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# This line creates a model class in Django, which defines a database table.
+# Though not directly writing SQL. Instead, you're using Django's ORM (Object-Relational Mapper) to define a model.
+# Category is the name of the model (and the name of the table, unless you override it).
+# models.Model is the base class from Django’s ORM (Object-Relational Mapper).It gives Category all the functionality to interact with the database (like save(), delete(), and querying).
+# >>>>>>> Field Types:Each field defines a column in the database and what kind of data it stores
+# >>>>>>> 1. title is a CharField, which is a string field like names
+# >>>>>>> 2. image is an ImageField, which is used to store image files.  stores a reference to an uploaded image file.
+# >>>>>>> 3. slug is a SlugField, which is used to store a URL-friendly version of the title. behaves like a string, but only allows letters, numbers, hyphens, and underscores.
 class Category(models.Model):
     title = models.CharField(max_length=255)
     image = models.ImageField(upload_to="image", null=True, blank=True)
     # slug = a way to identify 
     slug = models.SlugField( unique=True, null=True, blank=True) 
 
+# This special method defines how the object is displayed as a string.
     def __str__(self):
         return self.title
     
+# This is an inner class that adds metadata to the model — settings that affect how Django behaves with it.
+# verbose_name_plural is a human-readable name for the model in plural form. 
+# It tells Django to use a proper plural name in admin (otherwise it might show “Categorys”).
+# ordering is a list of fields to use for default ordering when querying the model. In this case, it orders by the title field in ascending order.
     class Meta:
         verbose_name_plural = "Categories"
         ordering = ["title"]
@@ -267,6 +284,3 @@ class Review(models.Model):
 
     def __str__(self):
         return f"{self.user.username} review on {self.product.name}"
-    
-    class Meta:
-        ordering = ["-date"]
