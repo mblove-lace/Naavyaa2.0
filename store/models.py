@@ -143,9 +143,6 @@ class Product(models.Model):
     slug = models.SlugField( unique=True, null=True, blank=True)
 
     date = models.DateTimeField(default=timezone.now)
-    
-
-
 
 
     class Meta:
