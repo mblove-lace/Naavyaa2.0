@@ -223,7 +223,7 @@ class Order(models.Model):
    payment_status = models.CharField(max_length=50, choices=PAYMENT_STATUS, default="Processing")
    payment_method = models.CharField(max_length=50, choices=PAYMENT_METHOD, default="Razorpay", null=True, blank=True)
    order_status = models.CharField(max_length=100, choices=ORDER_STATUS, default="Pending")
-#    address = models.ForeignKey("customer.Address", on_delete=models.SET_NULL, null=True)
+   address = models.ForeignKey("customer.Address", on_delete=models.SET_NULL, null=True)
    coupons = models.ManyToManyField(Coupon, blank=True)
    order_id = ShortUUIDField(length=5, max_length= 10, prefix='O-', alphabet="0123456789")
    payment_id = models.CharField(max_length=1000, null=True, blank=True)
