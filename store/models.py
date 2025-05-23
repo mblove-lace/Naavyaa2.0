@@ -56,7 +56,7 @@ import shortuuid
 STATUS = (
     ("Published", "Published"),
     ("Draft", "Draft"),
-    ("Deleted", "Deleted"),
+    ("Disabled", "Disabled"),
 )
 
 PAYMENT_STATUS = (
@@ -123,7 +123,7 @@ class Category(models.Model):
 
 class Product(models.Model):
     name = models.CharField(max_length=255)
-    image = models.ImageField(upload_to="image", null=True, blank=True, default="product.jpg")
+    image = models.ImageField(upload_to="images", null=True, blank=True, default="product.jpg")
     description = CKEditor5Field('Text', config_name='extends')
 
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
@@ -207,7 +207,7 @@ class Cart(models.Model):
 
 class Coupon(models.Model):
     vendor = models.ForeignKey(user_models.User, on_delete=models.SET_NULL,null=True)
-    code = models.CharField(max_length=100, unique=True)
+    code = models.CharField(max_length=100)
     discount = models.IntegerField(default=1)
     
 
@@ -223,7 +223,7 @@ class Order(models.Model):
    payment_status = models.CharField(max_length=50, choices=PAYMENT_STATUS, default="Processing")
    payment_method = models.CharField(max_length=50, choices=PAYMENT_METHOD, default="Razorpay", null=True, blank=True)
    order_status = models.CharField(max_length=100, choices=ORDER_STATUS, default="Pending")
-   address = models.ForeignKey("customer.Address", on_delete=models.SET_NULL, null=True)
+#    address = models.ForeignKey("customer.Address", on_delete=models.SET_NULL, null=True)
    coupons = models.ManyToManyField(Coupon, blank=True)
    order_id = ShortUUIDField(length=5, max_length= 10, prefix='O-', alphabet="0123456789")
    payment_id = models.CharField(max_length=1000, null=True, blank=True)
@@ -231,12 +231,12 @@ class Order(models.Model):
    
    class Meta:
         verbose_name_plural = "Order"
-        ordering = ["date"]
+        ordering = ['-date']
         
    def __str__(self):
         return self.order_id
    
-   def __str__(self):
+   def order_items(self):
         return OrderItem.objects.filter(order=self)
     
 class OrderItem(models.Model):
@@ -269,7 +269,10 @@ class OrderItem(models.Model):
         return self.item_id
     
     class Meta:
-        ordering = ["-date"]
+        ordering = ['-date']
+
+
+
 class Review(models.Model):
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True, related_name="reviews")
     user = models.ForeignKey(user_models.User, on_delete=models.SET_NULL, null=True, blank=True)
@@ -281,3 +284,10 @@ class Review(models.Model):
 
     def __str__(self):
         return f"{self.user.username} review on {self.product.name}"
+    
+
+
+
+
+
+
