@@ -7,8 +7,8 @@ from store import models as store_models
 class GalleryInline(admin.TabularInline):
     model = store_models.Gallery
 
-class VariationInline(admin.TabularInline):
-    model = store_models.Variation
+class VariantInline(admin.TabularInline):
+    model = store_models.Variant
     
 class VariantItemInline(admin.TabularInline):
     model = store_models.VariantItem
@@ -24,7 +24,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ['name','category','price','regular_price','stock','status','featured','vendor','date']
     search_fields = ['name','category__name']
     list_filter = ['status','category','featured',]
-    inlines = [GalleryInline, VariationInline]
+    inlines = [GalleryInline, VariantInline]
     prepopulated_fields = {'slug': ('name',)}
 
 class VariantAdmin(admin.ModelAdmin):
@@ -41,7 +41,7 @@ class GalleryAdmin(admin.ModelAdmin):
     search_fields = ['product__name', 'gallery_id']
 
 class CartAdmin(admin.ModelAdmin):
-    list_display = ['cart_id','user', 'product', 'quantity', 'price','total','date']
+    list_display = ['cart_id','user', 'product', 'qty', 'price','total','date']
     search_fields = ['cart_id','user__username', 'product__name']
     list_filter = ['date', 'product']   
     
@@ -56,7 +56,7 @@ class OrderAdmin(admin.ModelAdmin):
     list_filter = ['payment_status', 'order_status']
 
 class OrderItemAdmin(admin.ModelAdmin):
-    list_display = ['item_id','order', 'product', 'quantity', 'price', 'total']
+    list_display = ['item_id','order', 'product', 'qty', 'price', 'total']
     search_fields = ['item_id','order__order_id','product__name']
     list_filter = ['order__date']
 
