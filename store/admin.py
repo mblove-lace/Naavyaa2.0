@@ -3,7 +3,7 @@
 from django.contrib import admin
 # Register your models here.
 from store import models as store_models
-
+ 
 class GalleryInline(admin.TabularInline):
     model = store_models.Gallery
 
