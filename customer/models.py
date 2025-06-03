@@ -6,6 +6,9 @@ from django.db import models
 
 from store.models import Product
 
+# Importing the User model from a custom user authentication app.
+# This is required to associate users with wishlists, addresses, and notifications.
+
 from userauths.models import User
 
 TYPE = (
