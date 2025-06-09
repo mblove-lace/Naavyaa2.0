@@ -11,6 +11,9 @@ from store.models import Product
 
 from userauths.models import User
 
+
+# this is a tuple of tuples, and it's a Django convention commonly used to define choices for a model field — particularly for a field like CharField.
+
 TYPE = (
     ("New Order", "New Order"),
     ("Item Shipped", "Item Shipped"),
