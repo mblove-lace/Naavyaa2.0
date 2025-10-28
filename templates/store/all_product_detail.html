@@ -1,0 +1,524 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block title %}Product Detail - Naavyaa{% endblock title %}
+
+{% block content %}
+
+
+ <body class="homepage">
+  
+   <section id="billboard" class="bg-light py-5">
+    <div class="container">
+      <div class="row justify-content-center">
+        <h1 class="section-title text-center mt-4" data-aos="fade-up"> Kurti </h1>
+        <div class="col-md-5 text-center" data-aos="fade-up" data-aos-delay="100">
+          <p>Hey, Bong Cinderellas!! At Naavyaa, we craft customizable apparels, tailored to your exact measurements. Just pick your fabric and color — and let us be your fairy godmother.</p>                   
+        </div>
+      </div>
+
+  <div class="py-5">
+    <div class="container">
+      <div class="row g-5">
+        <main class="main-content col-md-9">
+          <div class="row py-2">
+            <div class="col-md-9">
+              <span>Showing 1 – 12 results</span>
+            </div>
+            <div class="col-md-3">
+              <select class="form-select border-0" aria-label="Default select example">
+                <option selected>Default Sorting</option>
+                <option value="1">Color</option>
+                <option value="2">Size</option>
+                <option value="3">Price</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4 mb-3 product-item link-effect">
+              <div class="image-holder position-relative">
+                <a href="single-product.html">
+                  <img src="{% static 'assets/images/banner-image-6.jpg' %}" alt="categories" class="product-image img-fluid">
+                </a>
+                <a href="wishlist.html" class="btn-icon btn-wishlist">
+                  <svg width="24" height="24" viewBox="0 0 24 24">
+                    <use xlink:href="#heart"></use>
+                  </svg>
+                </a>
+                <div class="product-content">
+                  <h5 class="element-title text-uppercase fs-5 mt-3">
+                    <a href="single-product.html">Dark florish onepiece</a>
+                  </h5>
+                  <a href="#" class="text-decoration-none" data-after="Add to cart"><span>$95.00</span></a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 mb-3 product-item link-effect">
+              <div class="image-holder position-relative">
+                <a href="single-product.html">
+                  <img src="{% static 'assets/images/banner-image-6.jpg' %}" alt="categories" class="product-image img-fluid">
+                </a>
+                <a href="wishlist.html" class="btn-icon btn-wishlist">
+                  <svg width="24" height="24" viewBox="0 0 24 24">
+                    <use xlink:href="#heart"></use>
+                  </svg>
+                </a>
+                <div class="product-content">
+                  <h5 class="text-uppercase fs-5 mt-3">
+                    <a href="single-product.html">Baggy Shirt</a>
+                  </h5>
+                  <a href="#" class="text-decoration-none" data-after="Add to cart"><span>$55.00</span></a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 mb-3 product-item link-effect">
+              <div class="image-holder position-relative">
+                <a href="single-product.html">
+                  <img src="{% static 'assets/images/banner-image-6.jpg' %}" alt="categories" class="product-image img-fluid">
+                </a>
+                <a href="wishlist.html" class="btn-icon btn-wishlist">
+                  <svg width="24" height="24" viewBox="0 0 24 24">
+                    <use xlink:href="#heart"></use>
+                  </svg>
+                </a>
+                <div class="product-content">
+                  <h5 class="text-uppercase fs-5 mt-3">
+                    <a href="single-product.html">Cotton off-white shirt</a>
+                  </h5>
+                  <a href="#" class="text-decoration-none" data-after="Add to cart"><span>$65.00</span></a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 mb-3 product-item link-effect">
+              <div class="image-holder position-relative">
+                <a href="single-product.html">
+                  <img src="{% static 'assets/images/banner-image-6.jpg' %}" alt="categories" class="product-image img-fluid">
+                </a>
+                <a href="wishlist.html" class="btn-icon btn-wishlist">
+                  <svg width="24" height="24" viewBox="0 0 24 24">
+                    <use xlink:href="#heart"></use>
+                  </svg>
+                </a>
+                <div class="product-content">
+                  <h5 class="text-uppercase fs-5 mt-3">
+                    <a href="single-product.html">Crop sweater</a>
+                  </h5>
+                  <a href="#" class="text-decoration-none" data-after="Add to cart"><span>$50.00</span></a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 mb-3 product-item link-effect">
+              <div class="image-holder position-relative">
+                <a href="single-product.html">
+                  <img src="{% static 'assets/images/banner-image-6.jpg' %}" alt="categories" class="product-image img-fluid">
+                </a>
+                <a href="wishlist.html" class="btn-icon btn-wishlist">
+                  <svg width="24" height="24" viewBox="0 0 24 24">
+                    <use xlink:href="#heart"></use>
+                  </svg>
+                </a>
+                <div class="product-content">
+                  <h5 class="text-uppercase fs-5 mt-3">
+                    <a href="single-product.html">Crop sweater</a>
+                  </h5>
+                  <a href="#" class="text-decoration-none" data-after="Add to cart"><span>$70.00</span></a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 mb-3 product-item link-effect">
+              <div class="image-holder position-relative">
+                <a href="single-product.html">
+                  <img src="{% static 'assets/images/banner-image-6.jpg' %}" alt="categories" class="product-image img-fluid">
+                </a>
+                <a href="wishlist.html" class="btn-icon btn-wishlist">
+                  <svg width="24" height="24" viewBox="0 0 24 24">
+                    <use xlink:href="#heart"></use>
+                  </svg>
+                </a>
+                <div class="product-content">
+                  <h5 class="text-uppercase fs-5 mt-3">
+                    <a href="single-product.html">Dark florish onepiece</a>
+                  </h5>
+                  <a href="cart.html" class="text-decoration-none" data-after="Add to cart"><span>$95.00</span></a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 mb-3 product-item link-effect">
+              <div class="image-holder position-relative">
+                <a href="single-product.html">
+                  <img src="{% static 'assets/images/banner-image-6.jpg' %}" alt="product" class="product-image img-fluid">
+                </a>
+                <a href="wishlist.html" class="btn-icon btn-wishlist">
+                  <svg width="24" height="24" viewBox="0 0 24 24">
+                    <use xlink:href="#heart"></use>
+                  </svg>
+                </a>
+                <div class="product-content">
+                  <h5 class="text-uppercase fs-5 mt-3">
+                    <a href="single-product.html">Baggy Shirt</a>
+                  </h5>
+                  <a href="cart.html" class="text-decoration-none" data-after="Add to cart"><span>$55.00</span></a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 mb-3 product-item link-effect">
+              <div class="image-holder position-relative">
+                <a href="single-product.html">
+                  <img src="{% static 'assets/images/banner-image-6.jpg' %}" alt="categories" class="product-image img-fluid">
+                </a>
+                <a href="wishlist.html" class="btn-icon btn-wishlist">
+                  <svg width="24" height="24" viewBox="0 0 24 24">
+                    <use xlink:href="#heart"></use>
+                  </svg>
+                </a>
+                <div class="product-content">
+                  <h5 class="text-uppercase fs-5 mt-3">
+                    <a href="single-product.html">Cotton off-white shirt</a>
+                  </h5>
+                  <a href="cart.html" class="text-decoration-none" data-after="Add to cart"><span>$65.00</span></a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 mb-3 product-item link-effect">
+              <div class="image-holder position-relative">
+                <a href="single-product.html">
+                  <img src="{% static 'assets/images/banner-image-6.jpg' %}" alt="categories" class="product-image img-fluid">
+                </a>
+                <a href="wishlist.html" class="btn-icon btn-wishlist">
+                  <svg width="24" height="24" viewBox="0 0 24 24">
+                    <use xlink:href="#heart"></use>
+                  </svg>
+                </a>
+                <div class="product-content">
+                  <h5 class="text-uppercase fs-5 mt-3">
+                    <a href="single-product.html">Handmade crop sweater</a>
+                  </h5>
+                  <a href="cart.html" class="text-decoration-none" data-after="Add to cart"><span>$50.00</span></a>
+                </div>
+              </div>
+            </div>
+          <div class="row">
+            <div class="col-md-4 mb-3 product-item link-effect">
+              <div class="image-holder position-relative">
+                <a href="single-product.html">
+                  <img src="{% static 'assets/images/banner-image-6.jpg' %}" alt="categories" class="product-image img-fluid">
+                </a>
+                <a href="wishlist.html" class="btn-icon btn-wishlist">
+                  <svg width="24" height="24" viewBox="0 0 24 24">
+                    <use xlink:href="#heart"></use>
+                  </svg>
+                </a>
+                <div class="product-content">
+                  <h5 class="element-title text-uppercase fs-5 mt-3">
+                    <a href="single-product.html">Dark florish onepiece</a>
+                  </h5>
+                  <a href="#" class="text-decoration-none" data-after="Add to cart"><span>$95.00</span></a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 mb-3 product-item link-effect">
+              <div class="image-holder position-relative">
+                <a href="single-product.html">
+                  <img src="{% static 'assets/images/banner-image-6.jpg' %}" alt="categories" class="product-image img-fluid">
+                </a>
+                <a href="wishlist.html" class="btn-icon btn-wishlist">
+                  <svg width="24" height="24" viewBox="0 0 24 24">
+                    <use xlink:href="#heart"></use>
+                  </svg>
+                </a>
+                <div class="product-content">
+                  <h5 class="text-uppercase fs-5 mt-3">
+                    <a href="single-product.html">Cotton off-white shirt</a>
+                  </h5>
+                  <a href="cart.html" class="text-decoration-none" data-after="Add to cart"><span>$70.00</span></a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 mb-3 product-item link-effect">
+              <div class="image-holder position-relative">
+                <a href="single-product.html">
+                  <img src="{% static 'assets/images/banner-image-6.jpg' %}" alt="categories" class="product-image img-fluid">
+                </a>
+                <a href="wishlist.html" class="btn-icon btn-wishlist">
+                  <svg width="24" height="24" viewBox="0 0 24 24">
+                    <use xlink:href="#heart"></use>
+                  </svg>
+                </a>
+                <div class="product-content">
+                  <h5 class="text-uppercase fs-5 mt-3">
+                    <a href="single-product.html">Cotton off-white shirt</a>
+                  </h5>
+                  <a href="cart.html" class="text-decoration-none" data-after="Add to cart"><span>$70.00</span></a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 mb-3 product-item link-effect">
+              <div class="image-holder position-relative">
+                <a href="single-product.html">
+                  <img src="{% static 'assets/images/banner-image-6.jpg' %}" alt="categories" class="product-image img-fluid">
+                </a>
+                <a href="wishlist.html" class="btn-icon btn-wishlist">
+                  <svg width="24" height="24" viewBox="0 0 24 24">
+                    <use xlink:href="#heart"></use>
+                  </svg>
+                </a>
+                <div class="product-content">
+                  <h5 class="text-uppercase fs-5 mt-3">
+                    <a href="single-product.html">Cotton off-white shirt</a>
+                  </h5>
+                  <a href="cart.html" class="text-decoration-none" data-after="Add to cart"><span>$70.00</span></a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 mb-3 product-item link-effect">
+              <div class="image-holder position-relative">
+                <a href="single-product.html">
+                  <img src="{% static 'assets/images/banner-image-6.jpg' %}" alt="categories" class="product-image img-fluid">
+                </a>
+                <a href="wishlist.html" class="btn-icon btn-wishlist">
+                  <svg width="24" height="24" viewBox="0 0 24 24">
+                    <use xlink:href="#heart"></use>
+                  </svg>
+                </a>
+                <div class="product-content">
+                  <h5 class="text-uppercase fs-5 mt-3">
+                    <a href="single-product.html">Cotton off-white shirt</a>
+                  </h5>
+                  <a href="cart.html" class="text-decoration-none" data-after="Add to cart"><span>$70.00</span></a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 mb-3 product-item link-effect">
+              <div class="image-holder position-relative">
+                <a href="single-product.html">
+                  <img src="{% static 'assets/images/banner-image-6.jpg' %}" alt="categories" class="product-image img-fluid">
+                </a>
+                <a href="wishlist.html" class="btn-icon btn-wishlist">
+                  <svg width="24" height="24" viewBox="0 0 24 24">
+                    <use xlink:href="#heart"></use>
+                  </svg>
+                </a>
+                <div class="product-content">
+                  <h5 class="text-uppercase fs-5 mt-3">
+                    <a href="single-product.html">Cotton off-white shirt</a>
+                  </h5>
+                  <a href="cart.html" class="text-decoration-none" data-after="Add to cart"><span>$70.00</span></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <nav aria-label="Page navigation" class="d-flex justify-content-center mt-5">
+            <ul class="pagination">
+              <li class="page-item">
+                <a class="page-link" href="#" aria-label="Previous">
+                  <i class="icon icon-arrow-left"></i>
+                </a>
+              </li>
+              <li class="page-item active" aria-current="page"><a class="page-link" href="#">1</a></li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item"><a class="page-link" href="#">4</a></li>
+              <li class="page-item"><a class="page-link" href="#">5</a></li>
+              <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                  <i class="icon icon-arrow-right"></i>
+                </a>
+              </li>
+            </ul>
+          </nav>
+          
+        </main>
+        <aside class="col-md-3">
+          <div class="sidebar">
+            <div class="sidebar-categories border-animation-left mb-5">
+              <div class="text-dark text-uppercase">Browse By Categories:</div>
+              <ul class="list-unstyled">
+                <li>
+                  <a href="#" class="item-anchor">All</a>
+                </li>
+                <li>
+                  <a href="#" class="item-anchor">Women</a>
+                </li>
+                <li>
+                  <a href="#" class="item-anchor">Accessories</a>
+                </li>
+                <li>
+                  <a href="#" class="item-anchor">New arrivals</a>
+                </li>
+                <li>
+                  <a href="#" class="item-anchor">New sale</a>
+                </li>
+              </ul>
+            </div>
+            <div class="product-filter padding-small">
+              <div class="text-dark text-uppercase">Filter By:</div>
+              <div class="accordion" id="accordionExample">
+                <div class="accordion-item">
+                  <div class="accordion-header" id="heading-one">
+                    <button class="accordion-button py-3" type="button" data-bs-toggle="collapse"
+                      data-bs-target="#collapse-one" aria-expanded="true" aria-controls="collapse-one">
+                      <span class="accordion-title fs-3">Color</span>
+                    </button>
+                  </div>
+                  <div id="collapse-one" class="accordion-collapse collapse show" aria-labelledby="heading-one">
+                    <div class="accordion-body">
+                      <div class="form-check">
+                        <label class="form-check-label red" for="red">
+                          Reddish (23)
+                          <input class="form-check-input" type="radio" name="color-option" id="red">
+                          <span class="checkmark"></span>
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <label class="form-check-label brown" for="brown">
+                          Orange brown (9)
+                          <input class="form-check-input" type="radio" name="color-option" id="brown" checked>
+                          <span class="checkmark"></span>
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <label class="form-check-label green" for="green">
+                          Greeny (15)
+                          <input class="form-check-input" type="radio" name="color-option" id="green">
+                          <span class="checkmark"></span>
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <label class="form-check-label aqua" for="aqua">
+                          Dark aqua blue (18)
+                          <input class="form-check-input" type="radio" name="color-option" id="aqua" checked>
+                          <span class="checkmark"></span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-item">
+                  <div class="accordion-header" id="heading-two">
+                    <button class="accordion-button py-3" type="button" data-bs-toggle="collapse"
+                      data-bs-target="#collapse-two" aria-expanded="true" aria-controls="collapse-two">
+                      <span class="accordion-title fs-3">Size</span>
+                    </button>
+                  </div>
+                  <div id="collapse-two" class="accordion-collapse collapse show" aria-labelledby="heading-two">
+                    <div class="accordion-body">
+                        <a href="#">XS <span class="count">(45)</span></a>
+                        <a href="#">S <span class="count">(90)</span></a>
+                        <a href="#">M <span class="count">(56)</span></a>
+                        <a href="#">L <span class="count">(89)</span></a>
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-item">
+                  <div class="accordion-header" id="heading-three">
+                    <button class="accordion-button py-3" type="button" data-bs-toggle="collapse"
+                      data-bs-target="#collapse-three" aria-expanded="true" aria-controls="collapse-three">
+                      <span class="accordion-title fs-3">Price</span>
+                    </button>
+                  </div>
+                  <div id="collapse-three" class="accordion-collapse collapse show" aria-labelledby="heading-three">
+                    <div class="accordion-body">
+                      <a href="#">Less than $10 <span class="count">(80)</span></a>
+                      <a href="#">$20 - $40 <span class="count">(90)</span></a>
+                      <a href="#">$40 - $50 <span class="count">(150)</span></a>
+                      <a href="#">$50 - $60 <span class="count">(70)</span></a>
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-item">
+                  <div class="accordion-header" id="heading-four">
+                    <button class="accordion-button py-3" type="button" data-bs-toggle="collapse"
+                      data-bs-target="#collapse-four" aria-expanded="true" aria-controls="collapse-four">
+                      <span class="accordion-title fs-3">Brand</span>
+                    </button>
+                  </div>
+                  <div id="collapse-four" class="accordion-collapse collapse show" aria-labelledby="heading-four">
+                    <div class="accordion-body">
+                      <a href="#">ARMANI <span class="count">(100)</span></a>
+                      <a href="#">FENDI <span class="count">(80)</span></a>
+                      <a href="#">CHANEL <span class="count">(90)</span></a>
+                      <a href="#">GUCCI <span class="count">(70)</span></a>
+                      <a href="#">PRADA <span class="count">(50)</span></a>
+                    </div>
+                  </div>
+                </div>
+                <a href="#" class="btn-link text-uppercase item-anchor">Reset All Filters</a>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  {% comment %} <section class="logo-bar py-5 my-5">
+    <div class="container">
+      <div class="row">
+        <div class="logo-content d-flex flex-wrap justify-content-between">
+          <img src="images/logo1.png" alt="logo" class="logo-image img-fluid">
+          <img src="images/logo2.png" alt="logo" class="logo-image img-fluid">
+          <img src="images/logo3.png" alt="logo" class="logo-image img-fluid">
+          <img src="images/logo4.png" alt="logo" class="logo-image img-fluid">
+          <img src="images/logo5.png" alt="logo" class="logo-image img-fluid">
+        </div>
+      </div>
+    </div>
+  </section> {% endcomment %}
+
+  
+
+  <section class="instagram py-5">
+    <div class="container">
+      <div class="row g-3">
+        <h6 class="element-title text-center">Follow us on Instagram</h6>
+        <div class="col-6 col-sm-4 col-md-2">
+          <div class="insta-item">
+            <a href="https://www.instagram.com/templatesjungle/" target="_blank">
+              <img src="{% static 'assets/images/insta-item1.jpg' %}" alt="instagram" class="insta-image img-fluid">
+            </a>
+          </div>
+        </div>
+        <div class="col-6 col-sm-4 col-md-2">
+          <div class="insta-item">
+            <a href="https://www.instagram.com/templatesjungle/" target="_blank">
+              <img src="{% static 'assets/images/insta-item2.jpg' %}" class="insta-image img-fluid">
+            </a>
+          </div>
+        </div>
+        <div class="col-6 col-sm-4 col-md-2">
+          <div class="insta-item">
+            <a href="https://www.instagram.com/templatesjungle/" target="_blank">
+              <img src="{% static 'assets/images/insta-item3.jpg' %}" class="insta-image img-fluid">
+            </a>
+          </div>
+        </div>
+        <div class="col-6 col-sm-4 col-md-2">
+          <div class="insta-item">
+            <a href="https://www.instagram.com/templatesjungle/" target="_blank">
+              <img src="{% static 'assets/images/insta-item4.jpg' %}" alt="instagram" class="insta-image img-fluid">
+            </a>
+          </div>
+        </div>
+        <div class="col-6 col-sm-4 col-md-2">
+          <div class="insta-item">
+            <a href="https://www.instagram.com/templatesjungle/" target="_blank">
+              <img src="{% static 'assets/images/insta-item1.jpg' %}" class="insta-image img-fluid">
+            </a>
+          </div>
+        </div>
+        <div class="col-6 col-sm-4 col-md-2">
+          <div class="insta-item">
+            <a href="https://www.instagram.com/templatesjungle/" target="_blank">
+              <img src="{% static 'assets/images/insta-item1.jpg' %}" alt="instagram" class="insta-image img-fluid">
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+       
+
+
+
+{% endblock content %}
