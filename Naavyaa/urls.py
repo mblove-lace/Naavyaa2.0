@@ -20,11 +20,17 @@ from django.conf import settings
 from django.conf.urls.static import static 
 
 
-
+# urlpatters is a Python list that Django expects to exist in every urls.py file. So that, When a user visits a specific URL, send them to this handler.
 
 urlpatterns = [
+    # “When the user goes to https://naavyaa.com/admin/, show them the Django admin site.” Here, path() is a function that takes at least two arguments: a route (string) (here,admin/) and a view (callable).
+    # Inside Django, admin.site is actually an instance of the class AdminSite.
+    # The site instance has a urls property that returns the URL patterns for the admin site.
     path('admin/', admin.site.urls),
+    # This tells Django:  “If the URL doesn’t start with /admin/ or /ckeditor5/, check inside the file store/urls_store.py for more URL patterns.”
     path('', include('store.urls_store')),
+    # This line connects your project with a third-party app called django-ckeditor-5
+    # It provides URLs that handle uploading, browsing, and managing images/files for your text editor in the admin panel.
     path("ckeditor5/", include("django_ckeditor_5.urls")),
 
 ]

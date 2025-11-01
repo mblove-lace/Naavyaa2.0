@@ -221,33 +221,81 @@
               </div>
               
 
+{% comment %} // ============================== Stock Quantity ==============================  // {% endcomment %}
 
+{% comment %} This is a Django template conditional statement. 
+              It checks if the product has stock available.
+              product.stock_qty → refers to the stock quantity of the product, which comes from the Django backend (usually a model field like Product.stock_qty).{% endcomment %}
+              {% if product.stock > 0 %}
 
-
-
-              {% if product.stock_qty > 0 %}
-                <div class="product-action mt-4">
-                  <div class="stock" data-qty="{{ product.stock }}">
+              {% comment %} 
+                If the product is in stock (i.e., stock quantity is greater than 0), 
+                it displays the current stock quantity to the user. {% endcomment %}
+              {% comment %}
+              Making a div container with class attribute to label elements:
+               product-action - custom class  and margin-top of 4 units.
+              {% endcomment %}
+                <div class="product mt-4">
+                  {% comment %} 
+                  Inside this container, there's another div with class "stock" that displays the current stock quantity.
+                  data-qty attribute holds a custom data attribute (HTML5 standard) with the current stock number.
+                  {{ product.stock }} - Django template variable that dynamically prints the stock count of the product.
+                   {% endcomment %}
+                  <div class="stock">Current Stock: <data-qty="{{ product.stock }}">
                     {{ product.stock }}</div>
                 </div>
+                {% comment %} 
+                Else Block :
+                If the product is out of stock (i.e., stock quantity is 0 or less), Displays a message “Out of Stock”.
+                {% endcomment %}
                   {% else %}
-                    <div class="product-action mt-4">
+                    <div class="product mt-4">
                       <div class="stock out-of-stock">Out of Stock</div>
                     </div>
                   {% endif %}
-               
+               {% comment %} This ends the conditional statement that checks the stock status of the product.{% endcomment %}
+
+     {% comment %}========= A new section that lets the user choose how many items to add to the cart ========= {% endcomment %}
+     {% comment %} 
+     d-flex flex-wrap → Bootstrap flexbox layout for alignment and wrapping.
+      product-quantity → custom class for styling the quantity selector.
+      {% endcomment %}
                   <div class="product-quantity d-flex flex-wrap">
+                    {% comment %} 
+                    input-group → Bootstrap class for grouping input and buttons.
+                    me-3 → “margin-end: 1rem” (spacing on the right).
+                    style="max-width: 150px;" → prevents the quantity box from getting too wide.
+                    {% endcomment %}
                   <div class="input-group product-qty me-3" style="max-width: 150px;">
+                      {% comment %} 
+                      span with class input-group-btn → Bootstrap class for button grouping.
+                      quantity-left-minus btn btn-light btn-number → custom and Bootstrap classes for styling the minus button.
+                      data-type="minus" → custom data attribute indicating this button decreases quantity.
+                
+                      {% endcomment %}
                     <span class="input-group-btn">
                       <button type="button" class="quantity-left-minus btn btn-light btn-number" data-type="minus"
+                       {% comment %} data-field="" → placeholder for potential future use (not used here). {% endcomment %}
                         data-field="">
-                        <svg width="16" height="16">
-                          <use xlink:href="#minus"></use>
-                        </svg>
+                        {% comment %} svg> uses an icon (with <use xlink:href="#minus">) to show a minus sign — typically loaded from a sprite or icon file.                       
+                        {% endcomment %}
+                        <svg width="16" height="16"><use xlink:href="#minus"></use>     </svg>
                       </button>
                     </span>
+                    {% comment %} 
+                    id="quantity" → lets JS target it easily (e.g., $("#quantity").val() in jQuery).
+                    name="quantity" → form field name for submission.
+                    class="form-control input-number text-center" → Bootstrap classes for styling the input box.
+                    value="1" → default quantity is 1.
+                    min="1" max="100" → restricts quantity input between 1 and 10.
+    
+                    {% endcomment %}
                     <input type="text" id="quantity" name="quantity" class="form-control input-number text-center"
-                      value="1" min="1" max="100">
+                      value="1" min="1" max="{{ product.stock }}" 
+                      data-max="{{ product.stock_qty }}">
+                      {% comment %} 
+                      Similarly as the minus button, this span contains the plus button to increase quantity.
+                      {% endcomment %}
                     <span class="input-group-btn">
                       <button type="button" class="quantity-right-plus btn btn-light btn-number" data-type="plus"
                         data-field="">
@@ -257,20 +305,42 @@
                       </button>
                     </span>
                   </div>
-                  
 
+{% comment %}   // ============================== End of Stock Quantity ==============================  // {% endcomment %}
+
+
+                  
+{% comment %} // ============================== Add to Cart Button ==============================  // {% endcomment %}
+{% comment %} container <div> for grouping your button with an empty class that has been styled in the bootstrap section by CSS {% endcomment %}
                   <div class="">
+{% comment %}  This is the actual button that triggers your “Add to Cart” JavaScript function
+                        when clicked. It has several classes for styling and functionality:
+                        Overall, this button is designed to be visually appealing and functional, allowing users
+                        to easily add products to their shopping cart.
+{% endcomment %}
                     <button type="button"
+                    {% comment %} 
+                     - btn btn-dark: These are Bootstrap classes that style the button with a dark theme.
+                     - product-cart-submit add_to_cart: These classes are likely used by your JavaScript code to identify this button as an "Add to Cart" button and to attach the appropriate event listeners.
+                     - btn: This is a Bootstrap class that styles the element as a button.
+                     - btn-lg: This class makes the button larger than the default size.
+                     - text-uppercase: This class transforms the button text to uppercase.
+                     - me-3: This class adds a right margin to the button for spacing.
+                     {% endcomment %}
+
                             class="btn btn-dark product-cart-submit add_to_cart btn-lg text-uppercase me-3"
-                            data-id="{{ product.id }}">
-                      Add to cart
+                    {% comment %} The data-id attribute holds the unique identifier of the product, which is essential for your JavaScript function to know which product to add to the cart when the button is clicked.{% endcomment %}
+                            data-id="{{ product.id }}"> Add to cart
+                    {% comment %} The button's label is "Add to cart", which is what users will see and click on.  {% endcomment %}
+                      
                     </button>
                   </div>
 
-                  {% comment %} <button type="submit" name="add" data-id="{{product.id}}"
-                    class="btn btn-dark add-to-cart-submit btn-lg text-uppercase me-3">
-                    <span id="add-to-cart">Add to cart</span>
-                  </button> {% endcomment %}
+{% comment %} // ============================== End of Add to Cart Button ==============================  // {% endcomment %}
+
+
+
+{% comment %} // ============================== Wishlist button  ============================== //  {% endcomment %}
 
                   {% comment %} Wishlist button- with a heart {% endcomment %}
                   <button href="" class="btn btn-dark wish-list-button bg-dark">

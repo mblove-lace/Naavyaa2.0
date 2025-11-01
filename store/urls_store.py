@@ -20,7 +20,7 @@ urlpatterns = [
     # Name: 'index' - used for reverse URL lookups
     # Full URL reference: 'store:index'
     path("", views.index, name='index'),
-     # Route: "detail/<slug>/" - captures a slug parameter from the URL
+    # Route: "detail/<slug>/" - captures a slug parameter from the URL
     # View: calls views.product_detail function, passing the captured slug
     # Name: 'product_detail' - used for reverse URL lookups
     # Full URL reference: 'store:product_detail'

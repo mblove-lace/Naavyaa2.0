@@ -22,7 +22,11 @@ import requests
 
 # from plugin.tax_calculation import tax_calculation
 
-# Create your views here.
+
+
+# // -------------------------------------------- ---------------------------- -----------------------------------------//
+# // -------------------------------------------- Understanding how DATA moves -----------------------------------------//
+
 
 
 def index(request):
@@ -71,33 +75,52 @@ def product_detail(request, slug):
 
 @require_POST
 # making add to cart view: 
+# Defines a view function that handles adding products to a shopping cart. Takes an HTTP request object and a product_id parameter (likely from URL routing).
 def add_to_cart(request, product_id): 
-    
+     # Debug statement to confirm the function is being called (useful for troubleshooting).
+    print("DEBUG: entered add_to_cart view")
+
+
+    # Tries to get the product ID from three sources in order: URL parameter, POST data, or GET parameters. Uses the first non-empty value found.
     id = product_id or request.POST.get("id") or request.GET.get("id")
     qty_raw = request.POST.get("qty") or request.GET.get("qty")
     color = request.POST.get("color") or request.GET.get("color")
     size = request.POST.get("size") or request.GET.get("size")
     cart_id = request.POST.get("cart_id") or request.GET.get("cart_id")
-
+    print(f"DEBUG: Received - id={id}, qty_raw={qty_raw}, color={color}, size={size}, cart_id={cart_id}")
+    
     if not id or not qty_raw or not cart_id:
         return JsonResponse({"error": "Missing id, qty or cart_id"}, status=400)
+    print("DEBUG: All required fields present")
+    
 
     try:
         qty = int(qty_raw)
+        print(f"DEBUG: qty converted to int: {qty}")
+
         if qty <= 0:
+            print("DEBUG: qty is not positive")
             return JsonResponse({"error": "qty must be a positive integer"}, status=400)
+        print("DEBUG: qty validation passed")
+
     except (ValueError, TypeError):
+        print(f"DEBUG: qty conversion failed: {e}")
         return JsonResponse({"error": "Invalid qty"}, status=400)
 
     request.session['cart_id'] = cart_id
 
     try:
         product = store_models.Product.objects.get(status="Published", id=id)
+        print(f"DEBUG: Product found: {product.id} - {product.name if hasattr(product, 'name') else 'N/A'}")
+
     except store_models.Product.DoesNotExist:
+        print("DEBUG: Product does not exist")
         return JsonResponse({"error": "Product not found"}, status=404)
 
     if qty > product.stock:
+        print(f"DEBUG: Requested qty {qty} exceeds stock {product.stock}")
         return JsonResponse({"error": "Requested quantity exceeds available stock"}, status=400)
+    print(f"DEBUG: Stock check passed - stock available: {product.stock}")
 
     existing_item = store_models.Cart.objects.filter(cart_id=cart_id, product=product).first()
 
