@@ -3,6 +3,10 @@
 {% block title %}Product Detail - Naavyaa{% endblock title %}
 
 {% block content %}
+  <form id="csrf-form" style="display:none;">
+    {% csrf_token %}
+  </form> 
+  {% comment %} <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}"> {% endcomment %}
 
 
   <main class="main-content mt-5">
@@ -82,39 +86,44 @@
                 <h3 itemprop="name" class="product-title text-uppercase">{{ product.name }}</h3>
 
                  <!-- / rating demarcations-->
-
-
-               {% comment %} <div class="star-rating align-items-center d-flex justify-content-start mb-2 p-0 mt-3">
+               <div class="star-rating align-items-center d-flex justify-content-start mb-2 p-0 mt-3">
                            {% if product.average_rating %}
-                              {{ product.average_rating|floatformat:1 }} / 5
+                              {{ product.average_rating|floatformat:1 }} 
                               {# If you want graphical stars from the average: #}
-                              {% with avg=product.average_rating|floatformat:0 %}
-                                {% for i in "12345"|slice:":5" %}
+                              {% comment %} {% with avg=product.average_rating|floatformat:0 %}
+                                 {% for i in "12345"|slice:":5" %}
                                   {% if forloop.counter <= avg %}
-                                    <span>★</span>
+                                    <span> ★ </span>
                                   {% else %}
                                     <span>☆</span>
                                   {% endif %}
+                                {% endfor %} 
+                              {% endwith %} {% endcomment %}
+                              <div class="avg-stars flex gap-1 items-center" aria-label="Average rating: {{ avg_rating|floatformat:1 }} of 5">
+                                {% for _ in "12345"|slice:":5" %}
+                                  {% if forloop.counter <= avg_round %}
+                                    <span class="star filled text-yellow-500 text-xl"> ★ </span>
+                                  {% else %}
+                                  <span class="star empty text-gray-300 text-xl"> ☆ </span>
+                                  {% endif %}
                                 {% endfor %}
-                              {% endwith %}
-                            {% else %}
-                              <p>No ratings yet</p>
-                            {% endif %}
-                           
-                        <span class="small ms-2 ">({{product.reviews.all.count | default:"0"}}Reviews)</span> 
-                      </div>  {% endcomment %}
+                                <span class="small ms-2">({{ product.reviews.all.count|default:"0" }} Reviews)</span>
+                              </div>
+                                {% else %}
+                                  <p>No ratings yet</p>
+                                {% endif %}                          
+                              </div>   
 
 
 
                       {# product.html #}
 
-<!-- ================= Average Rating Block ================= -->
-                      <div class="product-average-rating bg-white p-1 shadow-sm mb-">
-                        
+ <!-- ================= Average Rating Block ================= -->
+                     
 
+                      {% comment %} <div class="product-average-rating bg-white p-1 shadow-sm mb-">
                         {% if avg_rating and avg_rating > 0 %}
-                          <class="text-gray-700 mb-2">
-                            {{ avg_rating|floatformat:1 }} / 5
+                          <p class="text-gray-700 mb-2">{{ avg_rating|floatformat:1 }} / 5</p>
 
                           <!-- Stars from avg_round (1..5) -->
                           <div class="avg-stars flex gap-1 items-center" aria-label="Average rating: {{ avg_rating|floatformat:1 }} of 5">
@@ -125,25 +134,21 @@
                                 <span class="star empty text-gray-300 text-xl">☆</span>
                               {% endif %}
                             {% endfor %}
+                            <span class="small ms-2">({{ product.reviews.all.count|default:"0" }} Reviews)</span>
                           </div>
-
                         {% else %}
                           <p class="text-gray-500">No ratings yet</p>
                         {% endif %}
-                      </div>
+                    </div>  {% endcomment %}
 
-                     
-
-
-
+  
  <!-- =================Product Price ================= -->
 
                   
               <div class="product-price">
                 <span class="fs-2"> ₹ {{product.price}}</span>
-                <del>₹ {{product.regular_price}}</del>
+                <del> ₹ {{product.regular_price}} </del>
               </div>
-              <p></p>
 
 
 
@@ -166,13 +171,16 @@
               </div>
 
 
-
-
   <!--- ================= Size Options ================= -->
 
-
-
-
+    {% for variant in product.variants.all %}
+        {% if variant.name == "Size" %}
+              
+              {% for s in variant.items.all %}
+                "<div class="form-check size-option form-option form-check-inline mb-2> <input class="form-check-input" value="{{s.title}}" type="radio" name="size" id="{{s.content}}">/ <label class="form-option-label" for="{{s.content}}">{{s.content}}"></label>"
+              {% endfor %}
+        {% endif %}
+    {% endfor %}
             <div class="swatch d-flex flex-wrap option-1 mt-4" data-option-index="1">
                 <div class="item-title">Size:</div>
 
@@ -223,131 +231,81 @@
 
 {% comment %} // ============================== Stock Quantity ==============================  // {% endcomment %}
 
-{% comment %} This is a Django template conditional statement. 
-              It checks if the product has stock available.
-              product.stock_qty → refers to the stock quantity of the product, which comes from the Django backend (usually a model field like Product.stock_qty).{% endcomment %}
+{% comment %} Stock display and quantity selector (only when in stock) {% endcomment %}
+{% comment %} if product.stock > 0 — checks if there is any stock/product available the content inside will only render if this is true {% endcomment %}
+
               {% if product.stock > 0 %}
-
-              {% comment %} 
-                If the product is in stock (i.e., stock quantity is greater than 0), 
-                it displays the current stock quantity to the user. {% endcomment %}
-              {% comment %}
-              Making a div container with class attribute to label elements:
-               product-action - custom class  and margin-top of 4 units.
-              {% endcomment %}
-                <div class="product mt-4">
+              {% comment %} {% for qty in product_stock_range %} {% endcomment %}
+                <div class="product mt-4"> {% comment %} Wrapper for the product information. mt-4 is a Bootstrap class adding top margin. {% endcomment %}
+                 {% comment %} Making another container to show the current stock in the inventory under the class stock{% endcomment %}
+                  <div class="stock"> Current Stock:
+                    {% comment %} data-qty → holds the product’s stock quantity 
+                    The data-qty attribute is used to store the product’s available stock inside the HTML element so that JavaScript can access it later. 
+                    Why put it in <span> --> <span> is an inline HTML element used mainly for grouping or styling small pieces of text or inline elements without breaking the flow of content.{% endcomment %}
+                    <span data-qty="{{ product.stock }}">{{ product.stock }}</span>
+                  </div>
+                  
+                  {% comment %} Making another container with class : with Bootstrap utility class 
+                   d- means “display”
+                   flex means you’re setting the CSS property display: flex;
+                    flex-wrap means that the flex items will wrap onto multiple lines if necessary.
+                    align-items-center means that the flex items will be vertically centered within the container.
+                    gap-3 means there will be a gap of size 3 (based on Bootstrap’s spacing scale) between the flex items.
+                    mt-3 means there will be a top margin of size 3 (based on Bootstrap’s spacing scale) above this container.  {% endcomment %}
+                  <div class="d-flex flex-wrap align-items-center gap-3 mt-3">
+                    <!-- Quantity selector -->
+                  
+                    <div>
                   {% comment %} 
-                  Inside this container, there's another div with class "stock" that displays the current stock quantity.
-                  data-qty attribute holds a custom data attribute (HTML5 standard) with the current stock number.
-                  {{ product.stock }} - Django template variable that dynamically prints the stock count of the product.
-                   {% endcomment %}
-                  <div class="stock">Current Stock: <data-qty="{{ product.stock }}">
-                    {{ product.stock }}</div>
-                </div>
-                {% comment %} 
-                Else Block :
-                If the product is out of stock (i.e., stock quantity is 0 or less), Displays a message “Out of Stock”.
-                {% endcomment %}
-                  {% else %}
-                    <div class="product mt-4">
-                      <div class="stock out-of-stock">Out of Stock</div>
-                    </div>
-                  {% endif %}
-               {% comment %} This ends the conditional statement that checks the stock status of the product.{% endcomment %}
+                    <label> — improves accessibility; hidden visually but readable by screen readers.
+                    
 
-     {% comment %}========= A new section that lets the user choose how many items to add to the cart ========= {% endcomment %}
-     {% comment %} 
-     d-flex flex-wrap → Bootstrap flexbox layout for alignment and wrapping.
-      product-quantity → custom class for styling the quantity selector.
-      {% endcomment %}
-                  <div class="product-quantity d-flex flex-wrap">
-                    {% comment %} 
-                    input-group → Bootstrap class for grouping input and buttons.
-                    me-3 → “margin-end: 1rem” (spacing on the right).
-                    style="max-width: 150px;" → prevents the quantity box from getting too wide.
                     {% endcomment %}
-                  <div class="input-group product-qty me-3" style="max-width: 150px;">
-                      {% comment %} 
-                      span with class input-group-btn → Bootstrap class for button grouping.
-                      quantity-left-minus btn btn-light btn-number → custom and Bootstrap classes for styling the minus button.
-                      data-type="minus" → custom data attribute indicating this button decreases quantity.
-                
-                      {% endcomment %}
-                    <span class="input-group-btn">
-                      <button type="button" class="quantity-left-minus btn btn-light btn-number" data-type="minus"
-                       {% comment %} data-field="" → placeholder for potential future use (not used here). {% endcomment %}
-                        data-field="">
-                        {% comment %} svg> uses an icon (with <use xlink:href="#minus">) to show a minus sign — typically loaded from a sprite or icon file.                       
-                        {% endcomment %}
-                        <svg width="16" height="16"><use xlink:href="#minus"></use>     </svg>
+                      <label for="quantity-{{ product.id }}" class="visually-hidden">Quantity</label>
+                      <select
+                        id="quantity-{{ product.id }}"
+                        name="quantity"
+                        class="form-select quantity-select"
+                        aria-label="Select quantity">
+                        {% for i in product_stock_range %}
+                          <option value="{{ i }}">{{ i }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+
+                    <!-- Add to Cart and Wishlist side by side -->
+                    <div class="d-flex align-items-center gap-2">
+                      <!-- Add to cart button -->
+                      <button
+                        type="button"
+                        class="btn btn-dark product-cart-submit add_to_cart btn-lg text-uppercase me-2"
+                        data-id="{{ product.id }}"
+                        data-max="{{ product.stock }}"> Add to cart
                       </button>
-                    </span>
-                    {% comment %} 
-                    id="quantity" → lets JS target it easily (e.g., $("#quantity").val() in jQuery).
-                    name="quantity" → form field name for submission.
-                    class="form-control input-number text-center" → Bootstrap classes for styling the input box.
-                    value="1" → default quantity is 1.
-                    min="1" max="100" → restricts quantity input between 1 and 10.
-    
-                    {% endcomment %}
-                    <input type="text" id="quantity" name="quantity" class="form-control input-number text-center"
-                      value="1" min="1" max="{{ product.stock }}" 
-                      data-max="{{ product.stock_qty }}">
-                      {% comment %} 
-                      Similarly as the minus button, this span contains the plus button to increase quantity.
-                      {% endcomment %}
-                    <span class="input-group-btn">
-                      <button type="button" class="quantity-right-plus btn btn-light btn-number" data-type="plus"
-                        data-field="">
-                        <svg width="16" height="16">
-                          <use xlink:href="#plus"></use>
+
+                         {% else %}
+                          <div class="product mt-4">
+                            <div class="stock out-of-stock">Out of Stock</div>
+                            <div class="d-flex align-items-center gap-3 mt-3">
+                              <button type="button" class="btn btn-dark btn-lg text-uppercase" disabled>
+                                Add to cart
+                              </button>                     
+                       {% endif %}
+
+                      <!-- Wishlist button -->
+                      <button type="button" class="btn btn-dark btn-outline-danger wishlist-btn btn-lg "  data-id="{{ product.id }}">
+                        <svg width="28" height="28" fill="currentColor" class="bi bi-heart">
+                          <use xlink:href="#heart"></use>
                         </svg>
                       </button>
-                    </span>
+                    </div>
                   </div>
+                </div>
 
-{% comment %}   // ============================== End of Stock Quantity ==============================  // {% endcomment %}
-
-
-                  
-{% comment %} // ============================== Add to Cart Button ==============================  // {% endcomment %}
-{% comment %} container <div> for grouping your button with an empty class that has been styled in the bootstrap section by S {% endcomment %}
-                  <div class="">
-{% comment %}  This is the actual button that triggers your “Add to Cart” JavaScript function
-                        when clicked. It has several classes for styling and functionality:
-                        Overall, this button is designed to be visually appealing and functional, allowing users
-                        to easily add products to their shopping cart.
-{% endcomment %}
-                    <button type="button"
-                    {% comment %} 
-                     - btn btn-dark: These are Bootstrap classes that style the button with a dark theme.
-                     - product-cart-submit add_to_cart: These classes are likely used by your JavaScript code to identify this button as an "Add to Cart" button and to attach the appropriate event listeners.
-                     - btn: This is a Bootstrap class that styles the element as a button.
-                     - btn-lg: This class makes the button larger than the default size.
-                     - text-uppercase: This class transforms the button text to uppercase.
-                     - me-3: This class adds a right margin to the button for spacing.
-                     {% endcomment %}
-
-                            class="btn btn-dark product-cart-submit add_to_cart btn-lg text-uppercase me-3"
-                    {% comment %} The data-id attribute holds the unique identifier of the product, which is essential for your JavaScript function to know which product to add to the cart when the button is clicked.{% endcomment %}
-                            data-id="{{ product.id }}"> Add to cart
-                    {% comment %} The button's label is "Add to cart", which is what users will see and click on.  {% endcomment %}
-                      
-                    </button>
-                  </div>
-
-{% comment %} // ============================== End of Add to Cart Button ==============================  // {% endcomment %}
+           
 
 
 
-{% comment %} // ============================== Wishlist button  ============================== //  {% endcomment %}
-
-                  {% comment %} Wishlist button- with a heart {% endcomment %}
-                  <button href="" class="btn btn-dark wish-list-button bg-dark">
-                    <svg width="24" height="24" viewBox="0 0 24 24">
-                      <use xlink:href="#heart"></use>
-                    </svg>
-                  </button>
                   <div class="cate-links d-flex flex-column mt-4">
                     <div class="cate-tag d-flex mb-3">
                       <div>Category:</div>
@@ -441,99 +399,92 @@
                   <ul>Takes 10-12 days on customised items </ul>
                   </p>
               </div>
+              {%for r in product.reviews.all %}
               
-              <div class="tab-pane fade" id="nav-review" role="tabpanel" aria-labelledby="nav-review-tab">
-                <div class="review-box review-style1 d-flex">
-                  <div class="review-item d-flex">
-                    <div class="row g-4">
-                      <div class="col-md-3">
-                        <div class="image-holder">
-                          <img src="{% static 'assets/images/cat-item2.jpg' %}" alt="review" class="rounded-circle img-fluid">
+                  <div class="tab-pane fade" id="nav-review" role="tabpanel" aria-labelledby="nav-review-tab">
+                    <div class="review-box review-style1 d-flex">
+                      <div class="review-item d-flex">
+                        <div class="row g-4">
+                          <div class="col-md-3">
+                            {% comment %} <div class="image-holder">
+                              <img src="{% static 'assets/images/cat-item2.jpg' %}" alt="review" class="rounded-circle img-fluid">
+                            </div> {% endcomment %}
+                          </div>
+                          <div class="col-md-7">
+                            <div class="review-content">
+                              <div class="rating-container d-flex align-items-center">
+                                <div class="rating" data-rating="1" onclick="rate(1)">
+                                  <svg width="32" height="32">
+                                    <use xlink:href="#star-solid"></use>
+                                  </svg>
+                                </div>
+                                <div class="rating" data-rating="2" onclick="rate(1)">
+                                  <svg width="32" height="32">
+                                    <use xlink:href="#star-solid"></use>
+                                  </svg>
+                                </div>
+                                <div class="rating" data-rating="3" onclick="rate(1)">
+                                  <svg width="32" height="32">
+                                    <use xlink:href="#star-solid"></use>
+                                  </svg>
+                                </div>
+                                <div class="rating" data-rating="4" onclick="rate(1)">
+                                  <svg width="32" height="32">
+                                    <use xlink:href="#star-outline"></use>
+                                  </svg>
+                                </div>
+                                <div class="rating" data-rating="5" onclick="rate(1)">
+                                  <svg width="32" height="32">
+                                    <use xlink:href="#star-outline"></use>
+                                  </svg>
+                                </div>
+                                <span class="rating-count">(3.5)</span>
+                              </div>
+                              <div class="review-header">
+                                <span class="author-name">{{r.user.username|title}}</span>
+                                <span class="review-date">– {{r.date|date:"d M, Y"}}</span>
+                              </div>
+                              <p>Vitae tortor condimentum lacinia quis vel eros donec ac. Nam at lectus urna duis convallis
+                                convallis</p>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                      <div class="col-md-7">
-                        <div class="review-content">
-                          <div class="rating-container d-flex align-items-center">
-                            <div class="rating" data-rating="1" onclick="rate(1)">
-                              <svg width="32" height="32">
-                                <use xlink:href="#star-solid"></use>
-                              </svg>
+                      <div class="review-item d-flex">
+                        {% comment %} <div class="row g-4">
+                          <div class="col-md-3">
+                            {% comment %} <div class="image-holder">
+                              <img src="{% static 'assets/images/cat-item2.jpg' %}" alt="review" class="rounded-circle img-fluid">
+                            </div> 
+                          </div> {% endcomment %}
+                          <div class="col-md-7">
+                            <div class="review-content">
+                              <div class="rating-container d-flex align-items-center">
+                              
+                                <div class="avg-stars flex gap-1 items-center" aria-label="Average rating: {{ avg_rating|floatformat:1 }} of 5">
+                                  {% for _ in "12345"|slice:":5" %}
+                                    {% if forloop.counter <= avg_round %}
+                                      <span class="star filled text-yellow-500 text-xl">★</span>
+                                    {% else %}
+                                      <span class="star empty text-gray-300 text-xl">☆</span>
+                                    {% endif %}
+                                  {% endfor %}
+                                <span class="small ms-2">({{ product.reviews.all.count|default:"0" }} Reviews)</span>
+                              </div>
+                              {% comment %} <div> <p class="review-header"> 
+                                <span class="author-name">{{r.user.profile.username}}</span>
+                                <span class="review-date">– {{r.date|date:"d M, Y"}}</span>
+                              </p>
+                              </div> {% endcomment %}
+                              {% comment %} <p>Vitae tortor condimentum lacinia quis vel eros donec ac. Nam at lectus urna duis convallis
+                                convallis</p> {% endcomment %}
                             </div>
-                            <div class="rating" data-rating="2" onclick="rate(1)">
-                              <svg width="32" height="32">
-                                <use xlink:href="#star-solid"></use>
-                              </svg>
-                            </div>
-                            <div class="rating" data-rating="3" onclick="rate(1)">
-                              <svg width="32" height="32">
-                                <use xlink:href="#star-solid"></use>
-                              </svg>
-                            </div>
-                            <div class="rating" data-rating="4" onclick="rate(1)">
-                              <svg width="32" height="32">
-                                <use xlink:href="#star-outline"></use>
-                              </svg>
-                            </div>
-                            <div class="rating" data-rating="5" onclick="rate(1)">
-                              <svg width="32" height="32">
-                                <use xlink:href="#star-outline"></use>
-                              </svg>
-                            </div>
-                            <span class="rating-count">(3.5)</span>
                           </div>
-                          <div class="review-header">
-                            <span class="author-name">Tom Johnson</span>
-                            <span class="review-date">– 07/05/2022</span>
-                          </div>
-                          <p>Vitae tortor condimentum lacinia quis vel eros donec ac. Nam at lectus urna duis convallis
-                            convallis</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="review-item d-flex">
-                    <div class="row g-4">
-                      <div class="col-md-3">
-                        <div class="image-holder">
-                          <img src="{% static 'assets/images/cat-item2.jpg' %}" alt="review" class="rounded-circle img-fluid">
-                        </div>
-                      </div>
-                      <div class="col-md-7">
-                        <div class="review-content">
-                          <div class="rating-container d-flex align-items-center">
-                            <div class="rating" data-rating="1" onclick="rate(1)">
-                              <i class="icon icon-star"></i>
-                            </div>
-                            <div class="rating" data-rating="2" onclick="rate(1)">
-                              <i class="icon icon-star"></i>
-                            </div>
-                            <div class="rating" data-rating="3" onclick="rate(1)">
-                              <i class="icon icon-star"></i>
-                            </div>
-                            <div class="rating" data-rating="4" onclick="rate(1)">
-                              <svg width="32" height="32">
-                                <use xlink:href="#star-outline"></use>
-                              </svg>
-                            </div>
-                            <div class="rating" data-rating="5" onclick="rate(1)">
-                              <svg width="32" height="32">
-                                <use xlink:href="#star-outline"></use>
-                              </svg>
-                            </div>
-                            <span class="rating-count">(3.5)</span>
-                          </div>
-                          <div class="review-header">
-                            <span class="author-name">Jenny Willis</span>
-                            <span class="review-date">– 07/05/2022</span>
-                          </div>
-                          <p>Vitae tortor condimentum lacinia quis vel eros donec ac. Nam at lectus urna duis convallis
-                            convallis</p>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-              </div>
+                  </div> 
+               {% endfor %}
             </div>
           </div>
         </div>
@@ -564,7 +515,7 @@
                     <h5 class="text-uppercase fs-5 mt-3">
                       <a href="single-product.html">Dark florish onepiece</a>
                     </h5>
-                    <a href="cart.html" class="text-decoration-none" data-after="Add to cart"><span>$95.00</span></a>
+                    <a href="cart" class="text-decoration-none" data-after="Add to cart"><span>$95.00</span></a>
                   </div>
                 </div>
               </div>

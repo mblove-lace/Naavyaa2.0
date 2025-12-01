@@ -125,6 +125,7 @@ class Category(models.Model):
 
 
 # Creates a Django model class named Product, stored in your database as a table named Naavyaa_product
+
 class Product(models.Model):
     name = models.CharField(max_length=255)
     image = models.ImageField(upload_to="images", null=True, blank=True)
