@@ -86,33 +86,28 @@
                 <h3 itemprop="name" class="product-title text-uppercase">{{ product.name }}</h3>
 
                  <!-- / rating demarcations-->
-               <div class="star-rating align-items-center d-flex justify-content-start mb-2 p-0 mt-3">
-                           {% if product.average_rating %}
-                              {{ product.average_rating|floatformat:1 }} 
-                              {# If you want graphical stars from the average: #}
-                              {% comment %} {% with avg=product.average_rating|floatformat:0 %}
-                                 {% for i in "12345"|slice:":5" %}
-                                  {% if forloop.counter <= avg %}
-                                    <span> ★ </span>
-                                  {% else %}
-                                    <span>☆</span>
-                                  {% endif %}
-                                {% endfor %} 
-                              {% endwith %} {% endcomment %}
-                              <div class="avg-stars flex gap-1 items-center" aria-label="Average rating: {{ avg_rating|floatformat:1 }} of 5">
-                                {% for _ in "12345"|slice:":5" %}
-                                  {% if forloop.counter <= avg_round %}
-                                    <span class="star filled text-yellow-500 text-xl"> ★ </span>
-                                  {% else %}
-                                  <span class="star empty text-gray-300 text-xl"> ☆ </span>
-                                  {% endif %}
-                                {% endfor %}
-                                <span class="small ms-2">({{ product.reviews.all.count|default:"0" }} Reviews)</span>
-                              </div>
-                                {% else %}
-                                  <p>No ratings yet</p>
-                                {% endif %}                          
-                              </div>   
+                  
+  
+                    <!-- ================= Average Rating Block ================= -->
+             
+                <div class="star-rating align-items-center d-flex justify-content-start mb-2 p-0 mt-3">
+                    {% if product.average_rating %}
+                        {{ product.average_rating|floatformat:1 }} 
+                          <div class="avg-stars flex gap-1 items-center" aria-label="Average rating: {{ avg_rating|floatformat:1 }} of 5">
+                            {% for _ in "12345"|slice:":5" %}
+                              {% if forloop.counter <= avg_round %}
+                                <span class="star filled text-yellow-500 text-xl"> ★ </span>
+                              {% else %}
+                              <span class="star empty text-gray-300 text-xl"> ☆ </span>
+                              {% endif %}
+                            {% endfor %}
+                            <span class="small ms-2">({{ product.reviews.all.count|default:"0" }} Reviews)</span>
+                          </div>
+                      {% else %}
+                        <p>No ratings yet</p>
+                      {% endif %}                          
+                  </div>   
+                
 
 
 
@@ -142,7 +137,7 @@
                     </div>  {% endcomment %}
 
   
- <!-- =================Product Price ================= -->
+ <!-- ================= Product Price ================= -->
 
                   
               <div class="product-price">
@@ -655,7 +650,7 @@
   </main>
 
 
-<script src="{% static 'assets/js/functions.js' %}" defer></script>
+
 
 
 

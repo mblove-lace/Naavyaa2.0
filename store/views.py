@@ -234,6 +234,61 @@ def add_to_cart(request):
             "items_sub_total": "{:,.2f}".format(existing_cart_items.sub_total) if existing_cart_items else "{:,.2f}".format(cart.sub_total)
          }, status=200)
 
+# >>>>>>>>>>>>>> Making cart view >>>>>>>>>>>>>>>>>>:
+#Checks whether session already contains a cart created earlier.
+#  WHY ? Guests don't have  a user account. 
+
+def cart(request):
+    if 'cart_id' in request.session:
+        cart_id = request.session['cart_id']
+    else:
+        cart_id = None  
+    items = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user)if request.user.is_authenticated else Q(cart_id=cart_id))
+    cart_sub_total = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user)if request.user.is_authenticated else Q(cart_id=cart_id)).aggregate(sub_total= Sum("sub_total"))['sub_total']
+
+    try:
+        addresses = customer_models.Address.objects.filter(user=request.user)
+    except:
+        addresses = None
+    if not items:
+        messages.info(request, "Your cart is empty")
+        return redirect ("store:index")
+    
+    context = {
+        "items": items,
+        "cart_sub_total": cart_sub_total,
+        "addresses": addresses,
+    }
+    return render (request, "store/cart.html", context)
+
+def delete_cart_item(request):
+    id = request.POST.get("id")
+    item_id = request.POST.get("item_id")
+    cart_id = request.POST.get("cart_id")
+    print(f"DEBUG: Received - id={id}, item_id={item_id}, cart_id={cart_id}")
+
+    if not id and not item_id or not cart_id:
+        return JsonResponse({"error": "Missing id, item_id or cart_id"}, status=400)
+    print("DEBUG: All required fields present for deletion")
+
+    try:
+        product = store_models.Product.objects.get(status="Published", id=id)
+    except store_models.Product.DoesNotExist:
+        print("DEBUG: Product does not exist for deletion")
+        return JsonResponse({"error": "Product not found"}, status=404)
+    item = store_models.Cart.objects.get(product=product,id=item_id)
+    item.delete()
+    print("DEBUG: Cart item deleted successfully")
+    total_cart_items = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user))
+    cart_sub_total = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user)).aggregate(sub_total= Sum("sub_total"))['sub_total']
+    return JsonResponse(
+        {
+            "message": "Item deleted successfully", 
+            "total_cart_items": total_cart_items.count(),
+            "cart_sub_total": "{:,.2f}".format(cart_sub_total) if cart_sub_total else "0.00",
+            }, status=200)
+
+
 
 # def clear_cart_items(request):
 #     try:
