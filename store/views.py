@@ -237,19 +237,18 @@ def add_to_cart(request):
 # >>>>>>>>>>>>>> Making cart view >>>>>>>>>>>>>>>>>>:
 #Checks whether session already contains a cart created earlier.
 #  WHY ? Guests don't have  a user account. 
+# For guest users (not logged in), the cart is identified by session-based cart_id.
 
 def cart(request):
+    # if 'cart_id' is in the session, retrieve it; otherwise, set cart_id to None.
     if 'cart_id' in request.session:
         cart_id = request.session['cart_id']
     else:
         cart_id = None  
+    # Fetching all cart items - QUERYSET (collection : list-like model objects) that match either the cart_id from the session or the logged-in user (if authenticated).
     items = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user)if request.user.is_authenticated else Q(cart_id=cart_id))
     cart_sub_total = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user)if request.user.is_authenticated else Q(cart_id=cart_id)).aggregate(sub_total= Sum("sub_total"))['sub_total']
-
-    try:
-        addresses = customer_models.Address.objects.filter(user=request.user)
-    except:
-        addresses = None
+    address = customer_models.Address.objects.filter(user=request.user).first()
     if not items:
         messages.info(request, "Your cart is empty")
         return redirect ("store:index")
@@ -257,7 +256,7 @@ def cart(request):
     context = {
         "items": items,
         "cart_sub_total": cart_sub_total,
-        "addresses": addresses,
+        "address": address,
     }
     return render (request, "store/cart.html", context)
 
@@ -290,22 +289,22 @@ def delete_cart_item(request):
 
 
 
-# def clear_cart_items(request):
-#     try:
-#         cart_id = request.session['cart_id']
-#         store_models.Cart.objects.filter(cart_id= cart_id).delete()
-#     except:
-#         pass
+def clear_cart_items(request):
+    try:
+        cart_id = request.session['cart_id']
+        store_models.Cart.objects.filter(cart_id= cart_id).delete()
+    except:
+        pass
 
-#     return
+    return
 
-# def checkout(request,order_id):
-#     order =store_models.Order.objects.get(order_id=order_id)
+def checkout(request,order_id):
+    order =store_models.Order.objects.get(order_id=order_id)
 
-#     context = {
-#         "order": order
-#     }
-#     return render (request, "store/checkout.html", context)
+    context = {
+        "order": order
+    }
+    return render (request, "store/checkout.html", context)
 
 
 # def coupon_apply(request, order_id):
@@ -374,7 +373,7 @@ def delete_cart_item(request):
 #     if response.status_code == 200:
 #         return response.json()['access_token']
 #     else:
-#         raise Exception(f"failed to get access token from Paypal. Status code: {response.status_code}")
+#         raise Exception(f "failed to get access token from Paypal. Status code: {response.status_code}")
     
 
 # def paypal_payment_verify(request, order_id):
