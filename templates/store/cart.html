@@ -65,13 +65,13 @@
                         </div>             
                         </div>
                         <div class="col-lg-1 col-md-2">
-                        <div class="cart-remove">
-                            <a href="#">
-                            <svg width="32px">
+                         <button type="button" class="cart-remove delete_cart_item" data-item_id="{{item.id}}" data-product_id="{{item.product.id}}">
+                            <svg width="32px" height="32px">
                                 <use xlink:href="#trash"></use>
                             </svg>
-                            </a>
-                        </div>
+                        </button>
+                            {% comment %} <button class="btn bg-danger text-white btn-sm rounded delete_cart_item" data-item_id="{{item.id}}" data-product_id="{{item.product.id}}"><i class="fas fa-trash"> </i></button> {% endcomment %}
+                             
                         </div>
                     </div>
                     </div>
@@ -126,61 +126,61 @@
             </div>
         {% endfor %}
 
+            {% if address %}
+                <section class="checkout-wrap pb-5">
+                    <div class="container">
+                    <form class="form-group" method="post" >{% csrf_token %}
 
-        {% if address %}
-            <section class="checkout-wrap pb-5">
-                <div class="container">
-                <form class="form-group" method="post" >{% csrf_token %}
+                        <div class="row g-5">
+                        <div class="col-lg-6">
+                            <h6 class="text-dark pb-4">Billing Details</h6>
+                            <div class="billing-details">
 
-                    <div class="row g-5">
-                    <div class="col-lg-6">
-                        <h6 class="text-dark pb-4">Billing Details</h6>
-                        <div class="billing-details">
-
-                        <label for="fname">Full Name*</label>
-                        <input type="text" id="name" name="name" class="form-control mt-2 mb-4 ps-3" value="{{ address.full_name|default:'' }}">
-                        
-                        <label for="cname">Country / Region*</label>
-                        <select class="form-select form-control mt-2 mb-4" aria-label="Default select example">
-                            <option selected="" hidden="">India</option>
-                            <option value="1">Australia</option>
-                            <option value="2">Canada</option>  
-                            <option value="3">UK</option>
-                            <option value="4">USA</option>
-                        </select>
-                        <label for="address">Street Address*</label>
-                        <input type="text" id="adr" name="address" placeholder="Enter full address " class="form-control mt-3 ps-3 mb-3" value="{{ address.address|default:'' }}" >
-                        
-                        <label for="city">Town / City *</label>
-                        <input type="text" id="city" name="city" class="form-control mt-3 ps-3 mb-4" value="{{ address.city|default:'' }}">
-                        <label for="state">State *</label> 
-                        <input type="text" id="city" name="city" class="form-control mt-3 ps-3 mb-4" value="{{ address.state|default:'' }}">
-                        <label for="zip">Zip Code *</label>
-                        <input type="text" id="zip" name="zip" class="form-control mt-2 mb-4 ps-3"value="{{address.zip_code|default:'' }}">
-                        <label for="email">Phone *</label>
-                        <input type="text" id="phone" name="phone" class="form-control mt-2 mb-4 ps-3" value="{{ address.mobile|default:'' }}"> 
-                        <label for="email">Email address *</label>
-                        <input type="text" id="email" name="email" class="form-control mt-2 mb-4 ps-3" value="{{ address.email|default:'' }}">
+                            <label for="fname">Full Name*</label>
+                            <input type="text" id="name" name="name" class="form-control mt-2 mb-4 ps-3" value="{{ address.full_name|default:'' }}">
+                            
+                            <label for="cname">Country / Region*</label>
+                            <select class="form-select form-control mt-2 mb-4" aria-label="Default select example">
+                                <option selected="" hidden="">India</option>
+                                <option value="1">Australia</option>
+                                <option value="2">Canada</option>  
+                                <option value="3">UK</option>
+                                <option value="4">USA</option>
+                            </select>
+                            <label for="address">Street Address*</label>
+                            <input type="text" id="adr" name="address" placeholder="Enter full address " class="form-control mt-3 ps-3 mb-3" value="{{ address.address|default:'' }}" >
+                            
+                            <label for="city">Town / City *</label>
+                            <input type="text" id="city" name="city" class="form-control mt-3 ps-3 mb-4" value="{{ address.city|default:'' }}">
+                            <label for="state">State *</label> 
+                            <input type="text" id="state" name="state" class="form-control mt-3 ps-3 mb-4" value="{{ address.state|default:'' }}">
+                            <label for="zip">Zip Code *</label>
+                            <input type="text" id="zip" name="zip" class="form-control mt-2 mb-4 ps-3"value="{{address.zip_code|default:'' }}">
+                            <label for="email">Phone *</label>
+                            <input type="text" id="phone" name="phone" class="form-control mt-2 mb-4 ps-3" value="{{ address.mobile|default:'' }}"> 
+                            <label for="email">Email address *</label>
+                            <input type="text" id="email" name="email" class="form-control mt-2 mb-4 ps-3" value="{{ address.email|default:'' }}">
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <h4 class="text-dark pb-4">Additional Information</h4>
-                        <div class="billing-details">
-                        <label for="fname">Order notes (optional)</label>
-                        <textarea class="form-control pt-3 pb-3 ps-3 mt-2" placeholder="Notes about your order. Or special notes for delivery."></textarea>
-                    </div> 
+                        <div class="col-lg-6">
+                            <h4 class="text-dark pb-4">Additional Information</h4>
+                            <div class="billing-details">
+                            <label for="fname">Order notes (optional)</label>
+                            <textarea class="form-control pt-3 pb-3 ps-3 mt-2" placeholder="Notes about your order. Or special notes for delivery."></textarea>
+                        </div> 
 
-                    <div class="list-group mt-5 mb-3">
-                        
-                            <div class="col-md-12"><button class="btn btn-primary text-uppercase btn-rounded-none w-100">Proceed to checkout</button></div>
+                        <div class="list-group mt-5 mb-3">
+                            
+                                <div class="col-md-12"><button class="btn btn-primary text-uppercase btn-rounded-none w-100">Proceed to checkout</button></div>
 
-                        
+                            
+                        </div>
+                        </div>
+                    </form>
                     </div>
-                    </div>
-                </form>
-                </div>
-            </section>     
-        {% endif %}     
+                </section>     
+            {% endif %}   
+   
             
         </div>
         </div>
