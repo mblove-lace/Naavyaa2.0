@@ -136,9 +136,8 @@
         <path fill="currentColor"
           d="M18.71 7.21a1 1 0 0 0-1.42 0l-7.45 7.46l-3.13-3.14A1 1 0 1 0 5.29 13l3.84 3.84a1 1 0 0 0 1.42 0l8.16-8.16a1 1 0 0 0 0-1.47Z" />
       </symbol>
-      <symbol xmlns="http://www.w3.org/2000/svg" id="trash" viewBox="0 0 24 24">
-        <path fill="currentColor"
-          d="M10 18a1 1 0 0 0 1-1v-6a1 1 0 0 0-2 0v6a1 1 0 0 0 1 1ZM20 6h-4V5a3 3 0 0 0-3-3h-2a3 3 0 0 0-3 3v1H4a1 1 0 0 0 0 2h1v11a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V8h1a1 1 0 0 0 0-2ZM10 5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v1h-4Zm7 14a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V8h10Zm-3-1a1 1 0 0 0 1-1v-6a1 1 0 0 0-2 0v6a1 1 0 0 0 1 1Z" />
+     <symbol xmlns="http://www.w3.org/2000/svg" id="trash" viewBox="0 0 24 24">
+        <path fill="currentColor" d="M10 18a1 1 0 0 0 1-1v-6a1 1 0 0 0-2 0v6a1 1 0 0 0 1 1ZM20 6h-4V5a3 3 0 0 0-3-3h-2a3 3 0 0 0-3 3v1H4a1 1 0 0 0 0 2h1v11a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V8h1a1 1 0 0 0 0-2ZM10 5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v1h-4Zm7 14a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V8h10Zm-3-1a1 1 0 0 0 1-1v-6a1 1 0 0 0-2 0v6a1 1 0 0 0 1 1Z"/>
       </symbol>
       <symbol xmlns="http://www.w3.org/2000/svg" id="star-outline" viewBox="0 0 15 15">
         <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -219,32 +218,25 @@
           <span class="badge bg-primary rounded-pill">{{total_cart_items}}</span>
         </h4>
         <ul class="list-group mb-3">
-          <li class="list-group-item d-flex justify-content-between lh-sm">
-            <div>
-              <h6 class="my-0">Growers cider</h6>
-              <small class="text-body-secondary">Brief description</small>
-            </div>
-            <span class="text-body-secondary">Rs.12</span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between lh-sm">
-            <div>
-              <h6 class="my-0">Fresh grapes</h6>
-              <small class="text-body-secondary">Brief description</small>
-            </div>
-            <span class="text-body-secondary">Rs.8</span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between lh-sm">
-            <div>
-              <h6 class="my-0">Heinz tomato ketchup</h6>
-              <small class="text-body-secondary">Brief description</small>
-            </div>
-            <span class="text-body-secondary">Rs. 5</span>
-          </li>
+          {% for item in items %}
+            <li class="list-group-item d-flex justify-content-between lh-sm">
+              <div>
+                <h6 class="my-0">{{item.product.name}}</h6>
+                {% comment %} <small class="text-body-secondary">Qty: {{ item.quantity }}</small> {% endcomment %}
+              </div>
+              <span class="text-body-secondary">₹{{item.sub_total}}</span>
+            </li>
+            {% empty %}
+          
+            <li class="list-group-item text-center text-muted">
+               Your cart is empty
+            </li>
+          {% endfor %}
           <li class="list-group-item d-flex justify-content-between">
-            <span>Total (INR)</span>
-            <strong>Rs. 20</strong>
-          </li>
-        </ul>
+              <span>Total (INR)</span>
+              <strong>₹{{ cart_sub_total }}</strong>
+            </li>
+          </ul>
 
         <a href="{% url 'store:cart' %}" class="w-100 btn btn-primary btn-lg">Continue to checkout</a>
       </div>

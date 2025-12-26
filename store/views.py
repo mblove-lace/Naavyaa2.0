@@ -3,10 +3,10 @@
 # 2. Passes them into a dictionary (context) under the key "products".
 # 3.Renders the template store/index.html with this context.
 
-
-from django.shortcuts import render
-from django.shortcuts import redirect
+from decimal import Decimal
+from django.shortcuts import render , redirect
 from django.http import HttpResponse
+from django.urls import reverse
 from store import models as store_models
 from django.http import JsonResponse
 from django.conf import settings
@@ -15,16 +15,15 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Q, Avg, Sum
 from customer import models as customer_models
 from django.contrib import messages
-from django.conf import settings
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 
 import requests
+import razorpay
 
 # from plugin.tax_calculation import tax_calculation
 
-
-
+razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 # // -------------------------------------------- ---------------------------- -----------------------------------------//
 # // -------------------------------------------- Understanding how DATA moves -----------------------------------------//
 
@@ -231,7 +230,7 @@ def add_to_cart(request):
             # Formatting the cart subtotal to 2 decimal places before sending it in the response.
             "cart_sub_total": "{:,.2f}".format(cart_sub_total),
             # Formatting the existing cart item's subtotal to 2 decimal places if it exists; otherwise, formatting the cart's subtotal.
-            "items_sub_total": "{:,.2f}".format(existing_cart_items.sub_total) if existing_cart_items else "{:,.2f}".format(cart.sub_total)
+            "item_sub_total": "{:,.2f}".format(existing_cart_items.sub_total) if existing_cart_items else "{:,.2f}".format(cart.sub_total)
          }, status=200)
 
 # >>>>>>>>>>>>>> Making cart view >>>>>>>>>>>>>>>>>>:
@@ -266,7 +265,7 @@ def delete_cart_item(request):
     cart_id = request.POST.get("cart_id")
     print(f"DEBUG: Received - id={id}, item_id={item_id}, cart_id={cart_id}")
 
-    if not id and not item_id or not cart_id:
+    if not id or not item_id or not cart_id:
         return JsonResponse({"error": "Missing id, item_id or cart_id"}, status=400)
     print("DEBUG: All required fields present for deletion")
 
@@ -353,14 +352,8 @@ def checkout(request,order_id):
 #         messages.success(request,"Coupon activated")
 #         return redirect("store:checkout",order.order_id)
         
-# def clear_cart_items(request):
-#     try:
-#         cart_id = request.session['cart_id']
-#         store_models.Cart.objects.filter(cart_id=cart_id).delete()
-#     except:
-#         pass
 
-#     return
+
 
 
 # def get_paypal_access_token():
@@ -411,3 +404,36 @@ def checkout(request,order_id):
 #         "order": order
 #     }
 #     return render(request, "store/payment_status.html",context)
+
+
+
+@csrf_exempt
+def razorpay_payment_verify(request, order_id):
+    order = store_models.Order.objects.get(order_id=order_id)
+    payment_method = request.GET.get("payment_method")
+
+    if request.method == "POST":
+        data = request.POST
+
+        razorpay_order_id = data.get("razorpay_order_id")
+        razorpay_payment_id = data.get("razorpay_payment_id")
+        razorpay_signature = data.get("razorpay_signature")
+
+        params_dict = {
+            "razorpay_order_id": razorpay_order_id,
+            "razorpay_payment_id": razorpay_payment_id,
+            "razorpay_signature": razorpay_signature
+        }
+
+        try:
+            razorpay_client.utility.verify_payment_signature(params_dict)
+            if order.payment_status == "Processing":
+                order.payment_status = "Paid"
+                order.payment_method = 'Razorpay'
+                order.save()
+                clear_cart_items(request)
+
+            return redirect(f"/payment_status/{order.order_id}/?payment_status=paid")
+        except razorpay.errors.SignatureVerificationError:
+            print(f"Payment verification failed: {razorpay.errors.SignatureVerificationError}")
+            return redirect(f"/payment_status/{order.order_id}/?payment_status=failed")

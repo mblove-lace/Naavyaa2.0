@@ -11,47 +11,51 @@
                 <div class="col-md-8">
                 <div class="cart-table">
                     <div class="cart-header">
-                    <div class="row d-flex">
-                        <h6 class="cart-title text-uppercase text-muted col-lg-4 pb-3">Product</h6>
-                        <h6 class="cart-title text-uppercase text-muted col-lg-3 pb-3">Quantity</h6>
-                        <h6 class="cart-title text-uppercase text-muted col-lg-4 pb-3">Subtotal</h6>
-                    </div>
+                        <div class="row d-flex">
+                            <h6 class="cart-title text-uppercase text-muted col-lg-4 pb-3">Product</h6>
+                            <h6 class="cart-title text-uppercase text-muted col-lg-3 pb-3">Quantity</h6>
+                            <h6 class="cart-title text-uppercase text-muted col-lg-4 pb-3">Subtotal</h6>
+                        </div>
                     </div>
 
-                {% for item in items %}
-                    <div class="cart-item border-top border-bottom">
+            {% for item in items %}
+                <div class="cart-item border-top border-bottom">
                     <div class="row align-items-center"> 
-                        <div class="col-lg-4 col-md-3">
-                        <div class="cart-info d-flex flex-wrap align-items-center mb-4">
-                            <div class="col-lg-5">
-                            <div class="card-image">
-                                <img src="{{item.product.image.url}}" alt="cloth" class="img-fluid">
-                            </div>
-                            </div>
-                            <div class="col-lg-7">
-                            <div class="card-detail ps-3">
-                                <h5 class="card-title">
-                                <a href="#" class="text-decoration-none">{{item.product.name}}</a>
-                                </h5>
-                                <div class="card-price">
-                                <span class="money text-dark" data-currency-usd="₹ 1000"> ₹{{item.price}}</span>
+
+                    {% comment %} Product {% endcomment %}
+                        <div class="col-lg-4 item_div_{{item.id}}">
+                            <div class="cart-info d-flex flex-wrap align-items-center mb-4">
+                                <div class="col-lg-5">
+                                <div class="card-image">
+                                    <img src="{{item.product.image.url}}" alt="cloth" class="img-fluid">
+                                </div>
+                                </div>
+                                <div class="col-lg-7">
+                                <div class="card-detail ps-3">
+                                    <h5 class="card-title">
+                                    <a href="#" class="text-decoration-none">{{item.product.name}}</a>
+                                    </h5>
+                                    <div class="card-price">
+                                    <span class="money text-dark" data-currency-usd="₹ 1000"> ₹{{item.price}}</span>
+                                    </div>
+                                </div>
                                 </div>
                             </div>
-                            </div>
                         </div>
-                        </div>
-                        <div class="col-lg-6 col-md-7">
+                    
+                    <div class="col-lg-6 col-md-7">
                         <div class="row d-flex">
                             <div class="col-md-4">
+                              
                             <div class="input-group product-qty">
                                 <span class="input-group-btn">
-                                    <button type="button" class="quantity-left-minus btn btn-light btn-number"  data-type="minus" data-field="">
+                                    <button type="button" class="quantity-left-minus btn btn-light btn-number update_cart_qty"  data-update-type="decrease" data-item-id="{{item.id}}" data-product-id="{{item.product.id}}">
                                     <svg width="16" height="16"><use xlink:href="#minus"></use></svg>
                                     </button>
                                 </span>
-                                <input type="text" id="quantity" name="quantity" class="form-control input-number text-center" value="1" min="1" max="100">
+                                <input type="text" id="quantity" name="quantity" class="form-control input-number text-center item-qty-{{item.id}}" value="{{item.qty}}" min="1" max="10">
                                 <span class="input-group-btn">
-                                    <button type="button" class="quantity-right-plus btn btn-light btn-number" data-type="plus" data-field="">
+                                    <button type="button" class="quantity-right-plus btn btn-light btn-number update_cart_qty" data-update-type="increase" data-item-id="{{item.id}}" data-product-id="{{item.product.id}}">
                                         <svg width="16" height="16"><use xlink:href="#plus"></use></svg>
                                     </button>
                                 </span>
@@ -64,21 +68,19 @@
                             </div>   
                         </div>             
                         </div>
-                        <div class="col-lg-1 col-md-2">
-                         <button type="button" class="cart-remove delete_cart_item" data-item_id="{{item.id}}" data-product_id="{{item.product.id}}">
+                        <div class="col-lg-1 col-md-2 ">
+                         <button type="button" class="cart-remove delete_cart_item" data-item-id="{{item.id}}" data-product-id="{{item.product.id}}">
                             <svg width="32px" height="32px">
                                 <use xlink:href="#trash"></use>
                             </svg>
                         </button>
-                            {% comment %} <button class="btn bg-danger text-white btn-sm rounded delete_cart_item" data-item_id="{{item.id}}" data-product_id="{{item.product.id}}"><i class="fas fa-trash"> </i></button> {% endcomment %}
-                             
                         </div>
                     </div>
                     </div>
+                {% endfor %}
             </div>
             </div>
-            
-
+      
             
             <div class="col-md-4">
             <div class="cart-totals bg-grey py-5">
@@ -111,7 +113,7 @@
                         <td data-title="Total">
                         <span class="price-amount amount text-dark ps-5">
                             <bdi>
-                            <span class="price-currency-symbol">₹</span class="cart_sub_total">{{cart_sub_total}}</bdi>
+                            <span class="price-currency-symbol">₹</span class="cart_sub_total">{{cart_sub_total | intcomma}}</bdi>
                         </span>
                         </td>
                     </tr>
@@ -124,7 +126,7 @@
                 </div>
             </div>
             </div>
-        {% endfor %}
+        
 
             {% if address %}
                 <section class="checkout-wrap pb-5">
@@ -133,7 +135,7 @@
 
                         <div class="row g-5">
                         <div class="col-lg-6">
-                            <h6 class="text-dark pb-4">Billing Details</h6>
+                            <h4 class="text-dark pb-4">Billing Details</h4>
                             <div class="billing-details">
 
                             <label for="fname">Full Name*</label>

@@ -34,4 +34,5 @@ urlpatterns = [
     # path ("checkout/<order_id>/",views.checkout,name= "checkout"),
     # path ("coupon_apply/<order_id>/",views.coupon_apply,name= "coupon_apply"),
     # path ("paypal_payment_verify/<order_id>/",views.paypal_payment_verify,name= "paypal_payment_verify"),
+    path ("razorpay_payment_verify/<order_id>/",views.razorpay_payment_verify,name= "razorpay_payment_verify"),
 ]
