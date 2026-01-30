@@ -57,6 +57,8 @@ INSTALLED_APPS = [
     'customer',
     'vendor',
     'blog',
+    
+    'anymail',
 ]
 
 MIDDLEWARE = [
@@ -101,6 +103,11 @@ DATABASES = {
     }
 }
 
+
+ANYMAIL = {
+    "MAILGUN_API_KEY": os.environ.get("MAILGUN_API_KEY"),
+    "MAILGUN_SENDER_DOMAIN": os.environ.get("MAILGUN_SENDER_DOMAIN"),
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

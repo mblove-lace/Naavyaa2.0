@@ -17,6 +17,7 @@ from customer import models as customer_models
 from django.contrib import messages
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
+from plugin.tax_calculation import tax_calculation
 
 import requests
 import razorpay
@@ -190,7 +191,7 @@ def add_to_cart(request):
 # Updating the existing cart item with new values.
         existing_cart_items.product = product
         # Increasing the quantity of the existing cart item by the new quantity.
-        existing_cart_items.qty += int(qty)
+        existing_cart_items.qty = int(qty)
         # Updating the price of the existing cart item to the product's current price.
         existing_cart_items.price = product.price
         # Updating the color of the existing cart item.
@@ -198,9 +199,9 @@ def add_to_cart(request):
         # Updating the size of the existing cart item.
         existing_cart_items.size = size
         # Recalculating and updating the subtotal for the existing cart item.
-        existing_cart_items.sub_total += Decimal(product.price) * Decimal(qty)
+        existing_cart_items.sub_total = Decimal(product.price) * Decimal(qty)
         # Recalculating and updating the shipping cost for the existing cart items.
-        existing_cart_items.shipping += Decimal(product.shipping) * Decimal(qty)
+        existing_cart_items.shipping = Decimal(product.shipping) * Decimal(qty)
             # Recalculating and updating the total cost for the existing cart item.
         existing_cart_items.total = existing_cart_items.sub_total + existing_cart_items.shipping   
         # Updating the user associated with the cart item for the existing cart item.
@@ -211,7 +212,7 @@ def add_to_cart(request):
         # Saving the updated cart item to the database. This actually updates the record in the Cart table.
         existing_cart_items.save()
 
-        print("DEBUG: Updated existing cart item")
+        print(f"DEBUG: Updated cart item - qty set to {existing_cart_items.qty}")
         # Message indicating the cart was updated successfully.
         message = "Cart updated in cart successfully"
 
@@ -239,7 +240,7 @@ def add_to_cart(request):
 # For guest users (not logged in), the cart is identified by session-based cart_id.
 
 def cart(request):
-    # if 'cart_id' is in the session, retrieve it; otherwise, set cart_id to None.
+    # if 'cart_id' is in the session, retrieve it; otherwise, set cart_id to None.m 
     if 'cart_id' in request.session:
         cart_id = request.session['cart_id']
     else:
@@ -247,9 +248,14 @@ def cart(request):
     # Fetching all cart items - QUERYSET (collection : list-like model objects) that match either the cart_id from the session or the logged-in user (if authenticated).
     items = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user)if request.user.is_authenticated else Q(cart_id=cart_id))
     cart_sub_total = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user)if request.user.is_authenticated else Q(cart_id=cart_id)).aggregate(sub_total= Sum("sub_total"))['sub_total']
-    address = customer_models.Address.objects.filter(user=request.user).first()
+    address = customer_models.Address.objects.filter(user=request.user).first() if request.user.is_authenticated else None
+
+    try:
+        addresses = customer_models.Address.objects.filter(user=request.user)
+    except:
+        addresses = None
     if not items:
-        messages.info(request, "Your cart is empty")
+        messages.warning(request, "Your cart is empty")
         return redirect ("store:index")
     
     context = {
@@ -258,6 +264,11 @@ def cart(request):
         "address": address,
     }
     return render (request, "store/cart.html", context)
+
+
+
+# Making delete cart item view >>>>>>>>>>>>>>>>>>:
+
 
 def delete_cart_item(request):
     id = request.POST.get("id")
@@ -279,23 +290,43 @@ def delete_cart_item(request):
     print("DEBUG: Cart item deleted successfully")
     total_cart_items = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user))
     cart_sub_total = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user)).aggregate(sub_total= Sum("sub_total"))['sub_total']
+
     return JsonResponse(
         {
             "message": "Item deleted successfully", 
             "total_cart_items": total_cart_items.count(),
             "cart_sub_total": "{:,.2f}".format(cart_sub_total) if cart_sub_total else "0.00",
-            }, status=200)
+            })
 
 
 
-def clear_cart_items(request):
-    try:
-        cart_id = request.session['cart_id']
-        store_models.Cart.objects.filter(cart_id= cart_id).delete()
-    except:
-        pass
 
-    return
+# Making create order view >>>>>>>>>>>>>>>>>>:
+
+
+def create_order(request):
+    if request.method == "POST":
+        address_id = request.POST.get("address")
+
+        if not address_id:
+            messages.error(request, "Please select an address")
+            return redirect("store:cart")
+        address = customer_models.Address.objects.filter(user=request.user, id=address_id).first()
+        if 'cart_id' in request.session:
+            cart_id = request.session['cart_id']
+        else:
+            cart_id = None
+        items = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user)if request.user.is_authenticated else Q(cart_id=cart_id))
+        cart_sub_total = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user)if request.user.is_authenticated else Q(cart_id=cart_id)).aggregate(sub_total= Sum("sub_total"))['sub_total']
+        # 
+
+        order = store_models.Order()
+        order.sub_total = cart_sub_total
+        order.customer = request.user
+        order.address = address
+        order.shipping - cart_shipping_total
+        
+
 
 def checkout(request,order_id):
     order =store_models.Order.objects.get(order_id=order_id)
@@ -356,54 +387,205 @@ def checkout(request,order_id):
 
 
 
-# def get_paypal_access_token():
-#     token_url = "https://api-m.sandbox.paypal.com/v1/oauth2/token"
+# ====================================
+# PAYPAL ACCESS TOKEN FUNCTION
+# ====================================
+# This function retrieves an access token from PayPal's API
+# The access token is required to make authenticated requests to PayPal's payment verification endpoints
+# Think of it like getting a temporary password to talk to PayPal's servers
 
-#     data = {'grant_type', 'client_credentials'}
-#     auth = (settings.PAYPAL_CLIENT_ID , settings.PAYPAL_SECRET_ID)
-#     response = requests.post (token_url, data=data, auth= auth)
+def get_paypal_access_token():
+    # token_url: The PayPal API endpoint URL where we request the access token
+    # This is PayPal's sandbox (testing) environment - for production, you'd use "https://api-m.paypal.com"
+    token_url = "https://api-m.sandbox.paypal.com/v1/oauth2/token"
 
-#     if response.status_code == 200:
-#         return response.json()['access_token']
-#     else:
-#         raise Exception(f "failed to get access token from Paypal. Status code: {response.status_code}")
+    # data: The payload we send to PayPal to request a token
+    # ❌ BUG HERE: This should be a dictionary {'grant_type': 'client_credentials'}, not a set
+    # A set uses curly braces but no key-value pairs, which will cause an error
+    # 'grant_type': Tells PayPal what type of authentication we're using
+    # 'client_credentials': Means we're using our app's credentials (not a user's)
+    data = {'grant_type', 'client_credentials'}  # ❌ SHOULD BE: data = {'grant_type': 'client_credentials'}
+
+    # auth: A tuple containing our PayPal app credentials (Client ID and Secret)
+    # settings.PAYPAL_CLIENT_ID: Your PayPal app's Client ID (stored in Django settings.py for security)
+    # settings.PAYPAL_SECRET_ID: Your PayPal app's Secret key (like a password, also in settings.py)
+    # These credentials prove to PayPal that our app is authorized to make API requests
+    auth = (settings.PAYPAL_CLIENT_ID, settings.PAYPAL_SECRET_ID)
     
+    # requests.post(): Makes an HTTP POST request to PayPal's server
+    # token_url: Where we're sending the request
+    # data=data: The information we're sending (grant_type)
+    # auth=auth: Our credentials for authentication (requests will automatically encode these as Basic Auth)
+    # response: The object that stores PayPal's reply to our request
+    response = requests.post(token_url, data=data, auth=auth)
 
-# def paypal_payment_verify(request, order_id):
-#     order = store_models.Order.objects.get(order_id = order_id)
+    # Checking if the request was successful
+    # response.status_code: HTTP status code returned by PayPal (200 means success)
+    # 200: "OK" - the request succeeded
+    if response.status_code == 200:
+        # response.json(): Converts PayPal's JSON response into a Python dictionary
+        # ['access_token']: Extracts just the access token string from the response
+        # This token is like a temporary key that lets us make authenticated requests to PayPal
+        # We return this token so other functions can use it
+        return response.json()['access_token']
+    else:
+        # If something went wrong (status code is not 200), we raise an error
+        # ❌ SYNTAX ERROR: f-string is missing quotes around the f
+        # Exception: A Python error that stops the program and shows an error message
+        # The error message includes the status code to help with debugging
+        raise Exception(f"failed to get access token from Paypal. Status code: {response.status_code}")
+        # ✅ FIXED VERSION: raise Exception(f"failed to get access token from Paypal. Status code: {response.status_code}")
 
-#     transaction_id = request.GET.get("transaction_id")
-#     paypal_api_url = f"https://api-m.sandbox.paypal.com/v2/checkout/orders/{transaction_id}"
-#     headers = {
-#         'Content-Type' : 'application/json',
-#         'Authorization': f"Bearer {get_paypal_access_token()}"
-#     }
-#     response = requests.get (paypal_api_url,headers=headers)
 
-#     if response.status_code == 200:
-#         paypal_order_data = response.json()
-#         paypal_payment_status = paypal_order_data['status']
-#         payment_method = "PayPal"
+# ====================================
+# PAYPAL PAYMENT VERIFICATION FUNCTION
+# ====================================
+# This function verifies that a PayPal payment was actually completed successfully
+# It's called after the user completes payment and returns to our site
+# It checks with PayPal's servers to confirm the payment is legitimate
 
-#         if paypal_payment_status == "COMPLETED":
-#             if order.payment_status == "Processing":
-#                 order.payment_status = "Paid"
-#                 order.payment_method = payment_method
-#                 order.save()
-#                 clear_cart_items(request)
+def paypal_payment_verify(request, order_id):
+    # request: The Django HTTP request object containing information about the user's request
+    # order_id: The unique identifier for the order we're verifying payment for
+    
+    # Fetching the order from our database using the order_id
+    # store_models.Order: Our Django model representing an order
+    # .objects.get(): Database query that retrieves ONE order matching the criteria
+    # order_id=order_id: Finds the order where the order_id field matches the provided order_id
+    # order: Variable storing the Order object we retrieved from the database
+    order = store_models.Order.objects.get(order_id=order_id)
 
-#                 return redirect(f"/payment_status/{order.order_id}/payment_status=paid")
+    # Getting the PayPal transaction ID from the URL parameters
+    # request.GET: A dictionary-like object containing URL query parameters (everything after ? in the URL)
+    # .get("transaction_id"): Safely retrieves the value of the "transaction_id" parameter
+    # Example URL: /verify-payment/123/?transaction_id=ABC123XYZ
+    # transaction_id: The unique ID PayPal assigned to this payment transaction
+    transaction_id = request.GET.get("transaction_id")
+    
+    # Building the PayPal API URL to check this specific transaction
+    # f-string: Allows us to insert the transaction_id variable into the URL
+    # This endpoint lets us query PayPal for details about a specific order/transaction
+    # paypal_api_url: The complete URL we'll send our verification request to
+    paypal_api_url = f"https://api-m.sandbox.paypal.com/v2/checkout/orders/{transaction_id}"
+    
+    # Setting up HTTP headers for our request to PayPal
+    # headers: A dictionary containing metadata about our request
+    headers = {
+        # 'Content-Type': Tells PayPal we're sending/expecting JSON formatted data
+        'Content-Type': 'application/json',
+        # 'Authorization': Proves to PayPal that we're authorized to access this information
+        # f"Bearer {get_paypal_access_token()}": Calls our function to get the access token
+        # "Bearer" is the authentication type, followed by the actual token
+        # This is like showing your ID card to prove who you are
+        'Authorization': f"Bearer {get_paypal_access_token()}"
+    }
+    
+    # Making a GET request to PayPal to fetch transaction details
+    # requests.get(): Makes an HTTP GET request (retrieving information)
+    # paypal_api_url: The URL we're requesting from
+    # headers=headers: Includes our authentication and content-type information
+    # response: Stores PayPal's response containing the transaction details
+    response = requests.get(paypal_api_url, headers=headers)
+
+    # Checking if PayPal successfully returned the transaction information
+    # response.status_code: The HTTP status code from PayPal's response
+    # 200: Means "OK" - PayPal found the transaction and sent us the details
+    if response.status_code == 200:
+        # Converting PayPal's JSON response into a Python dictionary
+        # response.json(): Parses the JSON data from PayPal
+        # paypal_order_data: Dictionary containing all the transaction details
+        # Example: {'id': 'ABC123', 'status': 'COMPLETED', 'amount': {...}, ...}
+        paypal_order_data = response.json()
+        
+        # Extracting the payment status from PayPal's response
+        # ['status']: Gets the value of the 'status' field from the dictionary
+        # paypal_payment_status: String indicating if payment was completed, pending, failed, etc.
+        # Possible values: "COMPLETED", "PENDING", "CANCELLED", "FAILED"
+        paypal_payment_status = paypal_order_data['status']
+        
+        # Setting the payment method name that we'll store in our database
+        # payment_method: A string we'll save to remember this order was paid via PayPal
+        payment_method = "PayPal"
+
+        # Checking if PayPal confirms the payment was completed
+        # "COMPLETED": PayPal's status indicating the payment went through successfully
+        if paypal_payment_status == "COMPLETED":
+            # Additional check: only update if our order status is still "Processing"
+            # This prevents accidentally changing an order that's already been marked as paid
+            # order.payment_status: The current payment status stored in our database
+            if order.payment_status == "Processing":
+                # Updating the order's payment status in our database
+                # "Paid": Marks the order as successfully paid
+                order.payment_status = "Paid"
+                
+                # Recording which payment method was used
+                # Saves "PayPal" to the order record
+                order.payment_method = payment_method
+                
+                # Saving the changes to the database
+                # .save(): Commits all the changes we made to the order object
+                # This actually updates the database record
+                order.save()
+                
+                # Clearing the user's shopping cart since payment is complete
+                # clear_cart_items(): A function (defined elsewhere) that removes items from the cart
+                # request: Passed so the function knows which user's cart to clear
+                clear_cart_items(request)
+
+                # Redirecting the user to a success page
+                # redirect(): Django function that sends the user to a different URL
+                # f-string: Builds the URL with the order_id
+                # payment_status=paid: URL parameter indicating successful payment
+                # This shows the user a "Payment Successful" page
+                return redirect(f"/payment_status/{order.order_id}/payment_status=paid")
+                # ❌ NOTE: Should be ?payment_status=paid (with ?) for proper URL parameters
    
-#     else:
-#         return redirect (f"/paymentstatus/{order.order_id}/payment_status=failed")
+    # If we reach here, either:
+    # 1. PayPal returned an error (status code != 200)
+    # 2. Payment status was not "COMPLETED"
+    # In either case, redirect to the failure page
+    else:
+        # Redirecting to a payment failed page
+        # Shows the user that something went wrong with their payment
+        # ❌ TYPO: URL has "/paymentstatus/" instead of "/payment_status/"
+        # This inconsistency might cause a 404 error if the URL pattern doesn't match
+        return redirect(f"/paymentstatus/{order.order_id}/payment_status=failed")
+        # ✅ SHOULD BE: return redirect(f"/payment_status/{order.order_id}/?payment_status=failed")
 
-# def payment_status(request,order_id):
-#     order =store_models.Order.objects.get(order_id=order_id)
 
-#     context = {
-#         "order": order
-#     }
-#     return render(request, "store/payment_status.html",context)
+# ====================================
+# PAYMENT STATUS PAGE FUNCTION
+# ====================================
+# This view function displays a page showing whether the payment succeeded or failed
+# It's the page users see after attempting to pay
+
+def payment_status(request, order_id):
+    # request: Django's HTTP request object with information about the user's request
+    # order_id: The unique identifier for the order we want to show status for
+    
+    # Retrieving the order from the database
+    # store_models.Order: Our Order model/database table
+    # .objects.get(): Fetches exactly one order
+    # order_id=order_id: Finds the order with this specific order_id
+    # order: Variable storing the Order object we retrieved
+    order = store_models.Order.objects.get(order_id=order_id)
+
+    # Creating a context dictionary to pass data to the template
+    # context: A dictionary containing all data we want available in the HTML template
+    # The template can access this data to display order information
+    context = {
+        # "order": The key name used in the template (e.g., {{ order.order_id }})
+        # order: The Order object we fetched from the database
+        "order": order
+    }
+    
+    # Rendering an HTML template with the context data
+    # render(): Django function that combines a template with data and returns an HTTP response
+    # request: The original request object (required by Django)
+    # "store/payment_status.html": Path to the HTML template file
+    # context: The data dictionary we created above
+    # This returns a complete HTML page to show the user
+    return render(request, "store/payment_status.html", context)
 
 
 
