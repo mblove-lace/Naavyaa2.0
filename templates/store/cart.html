@@ -2,21 +2,58 @@
 {% load humanize %}
 {% load static %}
 {% block content %}
+{% comment %} Connecting to the base html through partials , loading static for images {% endcomment %}
+
+
+
+
+
+
 {% comment %} <form id="csrf-form" style="display:none;">
     {% csrf_token %}
   </form>  {% endcomment %}
+
+{% comment %} Body section {% endcomment %}
+
+
+    {% comment %} Container - COntains the section, in this case- a table comprising row & col holds 3 parameters - Product, Quantity & Subtotal.
+    Till this section, the jinja is not being activated because this section is a common section and doesnot need product specific identification/token  {% endcomment %}
     <section class="py-5">
         <div class="container">
+            {% comment %} First introducing the row inside which the columns will be made. The structure goes like container → row → column.
+             Because Row= a horizontal strip and coloum = divisions inside that strip.
+             {% endcomment %}
             <div class="row">
+                {% comment %} this is a responsive column - with md as medium screen size and up and 8 out 12 column.
+                Bootstrap grid is divided into 12 parts {% endcomment %}
                 <div class="col-md-8">
-                <div class="cart-table">
-                    <div class="cart-header">
-                        <div class="row d-flex">
-                            <h6 class="cart-title text-uppercase text-muted col-lg-4 pb-3">Product</h6>
-                            <h6 class="cart-title text-uppercase text-muted col-lg-3 pb-3">Quantity</h6>
-                            <h6 class="cart-title text-uppercase text-muted col-lg-4 pb-3">Subtotal</h6>
+                    {% comment %} Custom styling wrapper. Now the question is : if we need a cart-table then why did we make rows and columns?
+                    Ans : Grid system in Bootstrap allows for responsive design and layout flexibility. And Cart-table is used for styling + grouping +semantic purposes {% endcomment %}
+                    <div class="cart-table">
+                        {% comment %} This is heading of the row made, named cart-header.
+                        It is  used to apply custom styling (like font size, background color, spacing) through CSS if defined  {% endcomment %}
+                        <div class="cart-header">
+                            
+                            <div class="row">
+                                {% comment %} inside the wrapper cart-header, we have a row with flex display and inside that row we have 3 columns for the 3 parameters of the product - cart-title,quantity and subtotal.
+                               h5 - size of the text 
+                               cart -title - custom of the cart - works for css
+                               text is uppercased and muted - makes text lighter in color , column takes 4 out of 12 .And bottom padding of pb- 4, which is 1.5 Rem {% endcomment %}
+                                <h5 class="cart-title text-uppercase text-muted col-lg-4 pb-4">Product</h5>
+                                <h5 class="cart-title text-uppercase text-muted col-lg-3 pb-4">Quantity</h5>
+                                <h5 class="cart-title text-uppercase text-muted col-lg-4 pb-4">Subtotal</h5>
+                            </div>
+
                         </div>
-                    </div>
+
+
+
+
+
+
+                        {% comment %} Iterating products  {% endcomment %}
+
+{% comment %} Under the cart-header section, we are now iterating over each item in the items list. Each item is a product in the cart. {% endcomment %}
 
             {% for item in items %}
                 <div class="cart-item border-top border-bottom item_div_{{item.id}}">
@@ -123,10 +160,10 @@
                     </tbody>
                 </table>
                 </div>
-                <div class="button-wrap row g-2">
+                {% comment %} <div class="button-wrap row g-2">
                 <div class="col-md-6"><button class="btn btn-dark text-uppercase btn-rounded-none w-100">Update Cart</button></div>
                 <div class="col-md-6"><button class="btn btn-dark text-uppercase btn-rounded-none w-100">Continue Shopping</button></div>
-                </div>
+                </div> {% endcomment %}
             </div>
             </div>
         

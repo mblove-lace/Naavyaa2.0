@@ -7,6 +7,7 @@ from decimal import Decimal
 from django.shortcuts import render , redirect
 from django.http import HttpResponse
 from django.urls import reverse
+from plugin.service_fee import calculate_service_fee
 from store import models as store_models
 from django.http import JsonResponse
 from django.conf import settings
@@ -31,7 +32,7 @@ razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZOR
 
 
 def index(request):
-    # store_models.Product - References a Django model class called Product from the store_models module
+    # store_models.Product - References a Django model                     called Product from the store_models module
     # .objects - This is Django's default model manager that provides database query methods
     # .filter(status="Published") - Applies a WHERE clause to only return records where the status field matches "Published"
     # .get is used for single record retrieval, while .filter is used for multiple records
@@ -318,14 +319,37 @@ def create_order(request):
             cart_id = None
         items = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user)if request.user.is_authenticated else Q(cart_id=cart_id))
         cart_sub_total = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user)if request.user.is_authenticated else Q(cart_id=cart_id)).aggregate(sub_total= Sum("sub_total"))['sub_total']
-        # 
+        cart_shipping_total = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user)if request.user.is_authenticated else Q(cart_id=cart_id)).aggregate(shipping_total= Sum("shipping"))['shipping_total']
 
         order = store_models.Order()
         order.sub_total = cart_sub_total
         order.customer = request.user
         order.address = address
-        order.shipping - cart_shipping_total
+        order.shipping = cart_shipping_total
+        order.tax = tax_calculation(address.country, cart_sub_total)
+        order.total = order.sub_total + order.shipping + Decimal(order.tax)
+        order.service_fee = calculate_service_fee(order.total)
+        order.total = order.service_fee
+        order.save()
         
+        for i in items:
+            store_models.OrderItem.objects.create(
+                order=order,
+                product=i.product,
+                qty = i.qty,
+                price = i.price,
+                sub_total = i.sub_total,
+                shipping = i.shipping,
+                tax= tax_calculation(address.country, i.sub_total),
+                total = i.total,
+                initial_total = i.total, 
+                vendor = i.product.vendor
+            )
+
+            order.vendors.add(i.product.vendor)
+    return redirect("store:checkout", order.order_id)
+         
+
 
 
 def checkout(request,order_id):
