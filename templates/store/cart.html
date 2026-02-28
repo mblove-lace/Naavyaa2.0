@@ -214,8 +214,6 @@ and then in views.py,  {% endcomment %}
 
 
 
-        {% comment %} <form action="{% url 'store:create_order' %}" method="POST" >{% csrf_token %} {% endcomment %}
-
             {% comment %} col-md-4 → Takes 4 columns out of 12 on medium+ screens. Meaning : the cart summary occupies 1/3rd of the width{% endcomment %}
             <div class="col-md-4">
                 {% comment %} cart-totals → Custom class for CSS
@@ -226,147 +224,212 @@ and then in views.py,  {% endcomment %}
                 pb-4 - padding bottom of 1.5 rem. This is to create some space between the heading and the table that displays the cart totals. 
                  {% endcomment %}
                 <h5 class="text-uppercase text-muted pb-4">Cart Total</h5>
+
+                <form action="{% url 'store:create_order' %}" method="POST" >
+                    {% csrf_token %}
                 {% comment %} Division element- div - creating a container box . Total-price - custom CSS class and bootstrap bottom padding of pb-5 {% endcomment %}
-                <div class="total-price pb-5">
-                    {% comment %} The following table  creates a table format with class- for structured styling. class is "table text-uppercase" previously, which I changed to "table"  {% endcomment %}
-                    <table  class="table ">
-                        {% comment %} tbody is the main content rows of the table and holds rows and coloumns  {% endcomment %}
-                        <tbody>
-                            {% comment %} tr- table row   which will hold table head as <th>. for determining, class is given{% endcomment %}
-                            <tr class="subtotal pt-2 pb-2 border-top border-bottom">
-                                <th>Cart Subtotal</th>
-                                {% comment %} <td> is table data with a custom data-attribute used for styling.
-                                data-title used mainly for responsive tables so that in smaller screens it will look like :
-                                Subtotal:
-                                ₹ 1,200
-                                 {% endcomment %}
-                                <td data-title="Subtotal">
-                                   {% comment %} making inline container with span and secifying class for styling conventions.
-                                   text - dark coloured and start padding of 5, which creates a gap between the data of the table and table head {% endcomment %}
-                                <span class="price-amount amount text-dark ps-5">
-                                    {% comment %} bi-directional isolation - Only controls text direction behavior when mixing. Left-to-Right (LTR) text (English, numbers) and Right-to-Left (RTL) text (Arabic, Hebrew) in the same document. It ensures that the text is displayed correctly regardless of the language direction. In this case, it will ensure that the price is displayed correctly even if the user is using a RTL language like Arabic. It will not affect the display of the price in LTR languages like English.    {% endcomment %}
-                                    <bdi>
-                                         {% comment %} span wraps the currency symbol for styling ₹ separately
-                                         But {{ cart_sub_total | intcomma }} is variable sent from the views.py - inside def add_to_cart section and intcomma is used to use comma for better readability of pricetag{% endcomment %}
-                                    <span class="price-currency-symbol">₹</span> {{cart_sub_total | intcomma }}
-                                    </bdi>
-                                </span>
-                                </td>
-                            </tr>
-                            {% comment %} next table row with class and specific top and bottom paddings and borders {% endcomment %}
-                            <tr class="subtotal pt-2 pb-2 border-top border-bottom">
-                                <th>Discount</th>
-                                {% comment %} data title is discount {% endcomment %}
-                                <td data-title="Discount">
-                                    {% comment %} price-amount → custom styling, amount → maybe used for JS targeting,text-dark → dark text
-                                    ps-5 → padding-start (left padding) {% endcomment %}
-                                <span class="price-amount amount text-dark ps-5">
-                                    <bdi>
-                                    <span class="price-currency-symbol">₹ </span> 
-                                    <span class="text-muted ">0.00</span>
-                                 
-                                    </bdi>
-                                </span>
-                                </td>
-                            </tr>
-                            {% comment %} Row made for shipping charges {% endcomment %}
-                            <tr class="subtotal pt-2 pb-2 border-top border-bottom">
-                                <th>Shipping Charges</th>
-                                <td data-title="Shipping Charges">
-                                <span class="price-amount amount text-dark ps-5">
-                                    <bdi>
-                                    <span class="price-currency-symbol">₹ </span> 
-                                    <span class="text-muted text-decoration-line-through">150.00</span>
-                                    <span class="ms-2 text-success fw-bold">FREE</span>
-                                    </bdi>
-                                </span>
-                                </td>
-                            </tr>
-                        {% comment %} Row made for subtotal / total - but shipping charges are already taken into account in views.py  {% endcomment %}
-                            <tr class="order-total pt-2 pb-2 border-bottom">
-                                <th>Total</th>
-                                <td data-title="Total">
-                                <span class="price-amount amount text-dark ps-5 fw-bold">
-                                    <bdi>
-                                        {% comment %} We are hereby returning the cart_sub_total again {% endcomment %}
-                                    <span class="price-currency-symbol">₹</span> <span class="cart_sub_total">{{cart_sub_total | intcomma}}</span></bdi>
-                                </span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                        <div class="total-price pb-5">
+                            {% comment %} The following table  creates a table format with class- for structured styling. class is "table text-uppercase" previously, which I changed to "table"  {% endcomment %}
+                            <table  class="table ">
+                                {% comment %} tbody is the main content rows of the table and holds rows and coloumns  {% endcomment %}
+                                <tbody>
+                                    {% comment %} tr- table row   which will hold table head as <th>. for determining, class is given{% endcomment %}
+                                    <tr class="subtotal pt-2 pb-2 border-top border-bottom">
+                                        <th>Cart Subtotal</th>
+                                        {% comment %} <td> is table data with a custom data-attribute used for styling.
+                                        data-title used mainly for responsive tables so that in smaller screens it will look like :
+                                        Subtotal:
+                                        ₹ 1,200
+                                        {% endcomment %}
+                                        <td data-title="Subtotal">
+                                        {% comment %} making inline container with span and secifying class for styling conventions.
+                                        text - dark coloured and start padding of 5, which creates a gap between the data of the table and table head {% endcomment %}
+                                        <span class="price-amount amount text-dark ps-5">
+                                            {% comment %} bi-directional isolation - Only controls text direction behavior when mixing. Left-to-Right (LTR) text (English, numbers) and Right-to-Left (RTL) text (Arabic, Hebrew) in the same document. It ensures that the text is displayed correctly regardless of the language direction. In this case, it will ensure that the price is displayed correctly even if the user is using a RTL language like Arabic. It will not affect the display of the price in LTR languages like English.    {% endcomment %}
+                                            <bdi>
+                                                {% comment %} span wraps the currency symbol for styling ₹ separately
+                                                But {{ cart_sub_total | intcomma }} is variable sent from the views.py - inside def add_to_cart section and intcomma is used to use comma for better readability of pricetag{% endcomment %}
+                                            <span class="price-currency-symbol">₹</span> {{cart_sub_total | intcomma }}
+                                            </bdi>
+                                        </span>
+                                        </td>
+                                    </tr>
+                                    {% comment %} next table row with class and specific top and bottom paddings and borders {% endcomment %}
+                                    <tr class="subtotal pt-2 pb-2 border-top border-bottom">
+                                        <th>Discount</th>
+                                        {% comment %} data title is discount {% endcomment %}
+                                        <td data-title="Discount">
+                                            {% comment %} price-amount → custom styling, amount → maybe used for JS targeting,text-dark → dark text
+                                            ps-5 → padding-start (left padding) {% endcomment %}
+                                        <span class="price-amount amount text-dark ps-5">
+                                            <bdi>
+                                            <span class="price-currency-symbol">₹ </span> 
+                                            <span class="text-muted ">0.00</span>
+                                        
+                                            </bdi>
+                                        </span>
+                                        </td>
+                                    </tr>
+                                    {% comment %} Row made for shipping charges {% endcomment %}
+                                    <tr class="subtotal pt-2 pb-2 border-top border-bottom">
+                                        <th>Shipping Charges</th>
+                                        <td data-title="Shipping Charges">
+                                        <span class="price-amount amount text-dark ps-5">
+                                            <bdi>
+                                            <span class="price-currency-symbol">₹ </span> 
+                                            <span class="text-muted text-decoration-line-through">150.00</span>
+                                            <span class="ms-2 text-success fw-bold">FREE</span>
+                                            </bdi>
+                                        </span>
+                                        </td>
+                                    </tr>
+                                {% comment %} Row made for subtotal / total - but shipping charges are already taken into account in views.py  {% endcomment %}
+                                    <tr class="order-total pt-2 pb-2 border-bottom">
+                                        <th>Total</th>
+                                        <td data-title="Total">
+                                        <span class="price-amount amount text-dark ps-5 fw-bold">
+                                            <bdi>
+                                                {% comment %} We are hereby returning the cart_sub_total again {% endcomment %}
+                                            <span class="price-currency-symbol">₹</span> <span class="cart_sub_total">{{cart_sub_total | intcomma}}</span></bdi>
+                                        </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    {% comment %} <div class="button-wrap row g-2">
+                    <div class="col-md-6"><button class="btn btn-dark text-uppercase btn-rounded-none w-100">Update Cart</button></div>
+                    <div class="col-md-6"><button class="btn btn-dark text-uppercase btn-rounded-none w-100">Continue Shopping</button></div>
+                    </div> {% endcomment %}
                 </div>
-                {% comment %} <div class="button-wrap row g-2">
-                <div class="col-md-6"><button class="btn btn-dark text-uppercase btn-rounded-none w-100">Update Cart</button></div>
-                <div class="col-md-6"><button class="btn btn-dark text-uppercase btn-rounded-none w-100">Continue Shopping</button></div>
-                </div> {% endcomment %}
-            </div>
-            </div>
-        
-
-
-
-
-
-
-
-
+                </div>
             
 
-            {% if address %}
+
+
+
+
+
                 <section class="checkout-wrap pb-5">
-                    <div class="container">
-                      <form class="form-group" method="post" >{% csrf_token %}
+                        <div class="container">
+                            <div class="row g-5">
+                                <div class="col-lg-6">
+                                    <h4 class="text-dark mt-4 pb-4">Billing Details</h4>
+                                    <div class="billing-details">
+                                        {% comment %} <p>Total addresses: {{ addresses|length }}</p> {% endcomment %}
 
-                        <div class="row g-5">
-                            <div class="col-lg-6">
-                                <h4 class="text-dark mt-4 pb-4">Billing Details</h4>
-                                <div class="billing-details">
-
-                                <label for="fname">Full Name*</label>
-                                <input type="text" id="name" name="name" class="form-control mt-4 mb-4 ps-3" value="{{ address.full_name|default:'' }}">
-                                
-                                <label for="cname">Country / Region*</label>
-                                <select class="form-select form-control mt-2 mb-4" aria-label="Default select example">
-                                    <option selected="" hidden="">India</option>
-                                    <option value="1">Australia</option>
-                                    <option value="2">Canada</option>  
-                                    <option value="3">UK</option>
-                                    <option value="4">USA</option>
-                                </select>
-                                <label for="address">Street Address*</label>
-                                <input type="text" id="adr" name="address" placeholder="Enter full address " class="form-control mt-3 ps-3 mb-3" value="{{ address.address|default:'' }}" >
-                                
-                                <label for="city">Town / City *</label>
-                                <input type="text" id="city" name="city" class="form-control mt-3 ps-3 mb-4" value="{{ address.city|default:'' }}">
-                                <label for="state">State *</label> 
-                                <input type="text" id="state" name="state" class="form-control mt-3 ps-3 mb-4" value="{{ address.state|default:'' }}">
-                                <label for="zip">Zip Code *</label>
-                                <input type="text" id="zip" name="zip" class="form-control mt-2 mb-4 ps-3"value="{{address.zip_code|default:'' }}">
-                                <label for="email">Phone *</label>
-                                <input type="text" id="phone" name="phone" class="form-control mt-2 mb-4 ps-3" value="{{ address.mobile|default:'' }}"> 
-                                <label for="email">Email address *</label>
-                                <input type="text" id="email" name="email" class="form-control mt-2 mb-4 ps-3" value="{{ address.email|default:'' }}">
+                                        {% for address in addresses %}
+                                           <div class= "col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                                            <div class="card-wrap-header px-3 py-2 br-bottom d-flex align-items-center justify-content-between">
+                                                {% comment %} <div class="card-header-flex">
+                                                    <h4 class="fs-md ft-semi-bold mb-0"> Shipping ADDRESS</h4>
+                                                </div> {% endcomment %}
+                                                <div class="card-wrap-body px-3 py-3">
+                                                    <p class="mb-1"><span class="text-muted">Name:</span> {{ address.full_name }}</p>
+                                                    <p class="mb-1"><span class="text-muted">Address:</span> {{ address.address }}</p>
+                                                    <p class="mb-1"><span class="text-muted">City:</span> {{ address.city }}</p>
+                                                    <p class="mb-1"><span class="text-muted">State:</span> {{ address.state }}</p>
+                                                    <p class="mb-1"><span class="text-muted">Zip Code:</span> {{ address.zip_code }}</p>
+                                                    <p class="mb-1"><span class="text-muted">Phone:</span> {{ address.mobile }}</p>
+                                                    <p class="mb-1"><span class="text-muted">Email:</span> {{ address.email }}</p>
+                                                    <div class= "mt-3">
+                                                        <input id="address{{ address.id }}" type="radio" name="address" value="{{ address.id }}" class="radio-custom"/>
+                                                        <label for="address{{ address.id }}" class="radio-custom-label">Select this address</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
                                 </div>
+                                {% comment %} <div class="col-lg-6">
+                                    <h4 class="text-dark mt-4 pb-4">Additional Information</h4>
+                                    <div class="billing-details">
+                                    <label for="fname">Order notes (optional)</label>
+                                    <textarea class="form-control pt-3 pb-3 ps-3 mt-2" placeholder="Notes about your order. Or special notes for delivery."></textarea>
+                                </div>
+                                </div> {% endcomment %}
                             </div>
-                            <div class="col-lg-6">
-                                <h4 class="text-dark mt-4 pb-4">Additional Information</h4>
-                                <div class="billing-details">
-                                <label for="fname">Order notes (optional)</label>
-                                <textarea class="form-control pt-3 pb-3 ps-3 mt-2" placeholder="Notes about your order. Or special notes for delivery."></textarea>
-                            </div> 
+                            </div>
+                            <div class="col-md-12"><button type="submit" class="btn btn-primary text-uppercase btn-rounded-none w-100">Proceed to checkout</button></div>
 
-                            <div class="list-group mt-5 mb-3">
                                 
-                                    <div class="col-md-12"><button type="submit" class="btn btn-primary text-uppercase btn-rounded-none w-100">Proceed to checkout</button></div>
+                            </div>
+                        </section>
 
-                               
+                                
+                                    
+                                     
+                            
+                                
+
+                
+
+
+
+
+
+
+
+
+
+
+                
+
+                {% comment %} {% if address %}
+                    <section class="checkout-wrap pb-5">
+                        <div class="container">
+                        
+
+                            <div class="row g-5">
+                                <div class="col-lg-6">
+                                    <h4 class="text-dark mt-4 pb-4">Billing Details</h4>
+                                    <div class="billing-details">
+
+                                    <label for="fname">Full Name*</label>
+                                    <input type="text" id="name" name="name" class="form-control mt-4 mb-4 ps-3" value="{{ address.full_name|default:'' }}">
+                                    
+                                    <label for="cname">Country / Region*</label>
+                                    <select class="form-select form-control mt-2 mb-4" aria-label="Default select example">
+                                        <option selected="" hidden="">India</option>
+                                        <option value="1">Australia</option>
+                                        <option value="2">Canada</option>  
+                                        <option value="3">UK</option>
+                                        <option value="4">USA</option>
+                                    </select>
+                                    <label for="address">Street Address*</label>
+                                    <input type="text" id="adr" name="address" placeholder="Enter full address " class="form-control mt-3 ps-3 mb-3" value="{{ address.address|default:'' }}" >
+                                    
+                                    <label for="city">Town / City *</label>
+                                    <input type="text" id="city" name="city" class="form-control mt-3 ps-3 mb-4" value="{{ address.city|default:'' }}">
+                                    <label for="state">State *</label> 
+                                    <input type="text" id="state" name="state" class="form-control mt-3 ps-3 mb-4" value="{{ address.state|default:'' }}">
+                                    <label for="zip">Zip Code *</label>
+                                    <input type="text" id="zip" name="zip" class="form-control mt-2 mb-4 ps-3"value="{{address.zip_code|default:'' }}">
+                                    <label for="email">Phone *</label>
+                                    <input type="text" id="phone" name="phone" class="form-control mt-2 mb-4 ps-3" value="{{ address.mobile|default:'' }}"> 
+                                    <label for="email">Email address *</label>
+                                    <input type="text" id="email" name="email" class="form-control mt-2 mb-4 ps-3" value="{{ address.email|default:'' }}">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <h4 class="text-dark mt-4 pb-4">Additional Information</h4>
+                                    <div class="billing-details">
+                                    <label for="fname">Order notes (optional)</label>
+                                    <textarea class="form-control pt-3 pb-3 ps-3 mt-2" placeholder="Notes about your order. Or special notes for delivery."></textarea>
+                                </div> 
+
+                                <div class="list-group mt-5 mb-3">
+                                    
+                                        <div class="col-md-12"><button type="submit" class="btn btn-primary text-uppercase btn-rounded-none w-100">Proceed to checkout</button></div>
+
+                                
+                            </div>
+                            </div>
+                        </form>
                         </div>
-                        </div>
-                    </form>
-                    </div>
-                </section>     
-            {% endif %}   
+                    </section>     
+                {% endif %}    {% endcomment %}
    
             
         </div>

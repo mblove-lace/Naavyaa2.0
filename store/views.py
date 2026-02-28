@@ -282,7 +282,7 @@ def cart(request):
     # Fetching all cart items - QUERYSET (collection : list-like model objects) that match either the cart_id from the session or the logged-in user (if authenticated). From the the table- Cart, and putting it through the filter to check if the user is authenticated . So we use an OR condition to fetch cart items that match either the cart_id (for guests) or the user (for logged-in users). If the user is not authenticated, it will only filter by cart_id.
     items = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user)if request.user.is_authenticated else Q(cart_id=cart_id))
     cart_sub_total = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user)if request.user.is_authenticated else Q(cart_id=cart_id)).aggregate(sub_total= Sum("sub_total"))['sub_total']
-    address = customer_models.Address.objects.filter(user=request.user).first() if request.user.is_authenticated else None
+    addresses = customer_models.Address.objects.filter(user=request.user).first() if request.user.is_authenticated else None
 
     try:
         addresses = customer_models.Address.objects.filter(user=request.user)
@@ -295,7 +295,7 @@ def cart(request):
     context = {
         "items": items,
         "cart_sub_total": cart_sub_total,
-        "address": address,
+        "addresses": addresses,
     }
     return render (request, "store/cart.html", context)
 
