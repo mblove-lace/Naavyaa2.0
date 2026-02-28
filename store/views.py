@@ -85,7 +85,37 @@ def product_detail(request, slug):
 
 
 
+
+
+
 #>>>>>>>>>>>>>> Making add to cart view >>>>>>>>>>>>>>>>>>:
+
+
+# How will it contact with front end?
+# >>> User clicks "Add to Cart"
+        # ↓
+# JavaScript/AJAX sends/executes a POST request
+# sending: id, qty, color, size, cart_id
+#         ↓
+# SessionMiddleware intercepts the request FIRST. Sessionmiddleware is a piece of code that runs before your view function (add_to_cart) is executed. It checks if the incoming request has a session cookie and loads the corresponding session data from the database into request.session. This allows your view to access and modify session data (like cart_id) seamlessly without having to worry about how sessions are managed behind the scenes.
+# (before your view even runs)
+# loads the session from django_session table
+# into request.session
+#         ↓
+# NOW your view add_to_cart() runs
+#         ↓
+# reads the POST data:
+# id = request.POST.get("id")
+# qty = request.POST.get("qty")
+# cart_id = request.POST.get("cart_id")  ← comes from POST
+#         ↓
+# THEN this line runs:
+# request.session['cart_id'] = cart_id   ← saved into session
+#         ↓
+# rest of the view logic runs...
+#         ↓
+# SessionMiddleware saves the updated 
+# session back to django_session table
  
 # Defines a view function that handles adding products to a shopping cart. Takes an HTTP request object and a product_id parameter (likely from URL routing).
 # Django automatically passes product_id from the URL to this view function when it is called.
@@ -116,13 +146,16 @@ def add_to_cart(request):
         # Debug statement to print received parameters (useful for troubleshooting)
         # This is an f-string — allows inserting variables inside { }.
     print(f"DEBUG: Received - id={id}, qty_raw={qty}, color={color}, size={size}, cart_id={cart_id}")
-    # request.session - This accesses the session data associated with the current user's request
+    # request.session - What is a session? >>>   When a user visits your website, Django creates a small private storage box on the server specifically for that user. This is called a session.
+    # This accesses the session data associated with the current user's request
     # Django's session object → stores data temporarily for a user.
     # 'cart_id' - A unique identifier for the user's shopping cart.This is the key you are storing in the session.
     # If 'cart_id' is not already in the session, generate a new one using store_models.generate_cart_id() and store it in the session.
     # This ensures that each user has a unique cart identifier stored in their session.
     # If there is no cart_id in the session, generate one and store it.
-    # cart_id : You store the value of cart_id inside the session.
+    # cart_id : You store the value of your cart_id inside the session.
+    # where does django stores the session data? >>> Django can store session data in various places depending on your configuration (database, cache, file system, etc.). By default, Django creates django_session table in the database to store session data. Each session is identified by a unique session key (like cart_id) that is stored in a cookie on the user's browser.
+    # Where is the Code That Instructs This? >>> The code that generates a cart_id is likely in the store_models module, specifically in a function named generate_cart_id(). This function would create a unique identifier (like a random string) to be used as the cart_id for the user's session.
     request.session['cart_id'] = cart_id
     print(f"DEBUG: Session cart_id={request.session['cart_id']}")
 # If the request did NOT send id OR qty OR cart_id → then stop and return an error. Stops the function and sends something back as the response.
@@ -240,13 +273,13 @@ def add_to_cart(request):
 #  WHY ? Guests don't have  a user account. 
 # For guest users (not logged in), the cart is identified by session-based cart_id.
 
-def cart(request):
+def cart(request): 
     # if 'cart_id' is in the session, retrieve it; otherwise, set cart_id to None.m 
     if 'cart_id' in request.session:
         cart_id = request.session['cart_id']
     else:
         cart_id = None  
-    # Fetching all cart items - QUERYSET (collection : list-like model objects) that match either the cart_id from the session or the logged-in user (if authenticated).
+    # Fetching all cart items - QUERYSET (collection : list-like model objects) that match either the cart_id from the session or the logged-in user (if authenticated). From the the table- Cart, and putting it through the filter to check if the user is authenticated . So we use an OR condition to fetch cart items that match either the cart_id (for guests) or the user (for logged-in users). If the user is not authenticated, it will only filter by cart_id.
     items = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user)if request.user.is_authenticated else Q(cart_id=cart_id))
     cart_sub_total = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user)if request.user.is_authenticated else Q(cart_id=cart_id)).aggregate(sub_total= Sum("sub_total"))['sub_total']
     address = customer_models.Address.objects.filter(user=request.user).first() if request.user.is_authenticated else None
@@ -268,7 +301,15 @@ def cart(request):
 
 
 
+
+
 # Making delete cart item view >>>>>>>>>>>>>>>>>>:
+
+# This view function is supposed to handle the deletion of a cart item from the shopping cart. 
+# It expects a POST request with the item's ID, the product ID, and the cart ID to identify which item to delete. 
+# After deleting the item, it returns a JSON response with a success message, the updated total number of items in the cart, and the new cart subtotal.
+# 1. user clicks delete button from cart.html -  "<button type="button" class="cart-remove delete_cart_item" data-item-id="{{item.id}}" data-product-id="{{item.product.id}}">".
+# 2. JavaScript captures the click event and sends an AJAX POST request to the delete_cart_item view, including the item ID, product ID, and cart ID in the request data.
 
 
 def delete_cart_item(request):
@@ -276,10 +317,16 @@ def delete_cart_item(request):
     item_id = request.POST.get("item_id")
     cart_id = request.POST.get("cart_id")
     print(f"DEBUG: Received - id={id}, item_id={item_id}, cart_id={cart_id}")
-
+# 3. If the request did NOT send id OR item_id OR cart_id  → then stop and return an error. Stops the function and sends something back as the response.
+# That means if one of the 3 required parameters (id, item_id, cart_id) is missing from the POST request, the function will return a JSON response with an error message and a 400 Bad Request status code. 
+# This prevents the function from trying to delete a cart item without having all the necessary information to identify which item to delete.
     if not id or not item_id or not cart_id:
         return JsonResponse({"error": "Missing id, item_id or cart_id"}, status=400)
     print("DEBUG: All required fields present for deletion")
+
+# 4. In short, 'Tries' to fetch the product and cart item from the database using the provided IDs. 
+# How? >> "product = Product.objects.get(status="Published", id=id)" "
+# If the product does not exist, it returns a 404 error.
 
     try:
         product = store_models.Product.objects.get(status="Published", id=id)
@@ -303,29 +350,66 @@ def delete_cart_item(request):
 
 
 # Making create order view >>>>>>>>>>>>>>>>>>:
-
+# In the urls_store.py, we have defined a URL pattern that maps to this view function. 
+# When a user clicks the "Checkout" button on the cart page, it sends a POST request to this URL, which triggers the create_order function to execute. This function will handle the process of creating an order based on the items in the user's cart and the selected address for shipping.
 
 def create_order(request):
+    # The function only runs when user submits a form (POST request).
+    #  If it's a GET request (like when the user first visits the checkout page), it will skip the order creation logic and simply redirect to the checkout page.
     if request.method == "POST":
+        # This gets the selected shipping address ID from the checkout form submitted by the user. 
+        # The form should have a field named "address" that contains the ID of the address the user chose for shipping.
         address_id = request.POST.get("address")
-
+# if the address_id is not provided in the POST data, it means the user did not select a shipping address. 
+# In this case, the function will add an error message to be displayed to the user and then redirect them back to the cart page,
+#  so they can select an address before proceeding with the order creation.
         if not address_id:
             messages.error(request, "Please select an address")
             return redirect("store:cart")
+        
+        # This line tries to fetch the Address object from the database that 
+        # 1. matches the provided address_id and 
+        # 2. belongs to a logged-in user.
+        # Using .filter().first() means: it will return the first matching address if it exists, or None if no matching address is found.
         address = customer_models.Address.objects.filter(user=request.user, id=address_id).first()
+# If the address variable is None, it means that either the address does not exist or it does not belong to the logged-in user.
+# This supports: If no address is found, it means either the address ID is invalid or the address does not belong to the user. In this case, the function will add an error message and redirect back to the cart page, prompting the user to select a valid address before proceeding with the order creation.
         if 'cart_id' in request.session:
             cart_id = request.session['cart_id']
+
         else:
             cart_id = None
+
+            # If the user if logged in then Q(cart_id=cart_id) | Q(user=request.user)- This means:
+            # 1. fetch cart items that either match the cart_id (for guests) OR
+            # 2. belong to the logged-in user. 
+            # This allows both guest users (identified by cart_id) and logged-in users (identified by user) to have their cart items included in the order creation process. 
+            # 
+            # But, If the user is not authenticated, it will only filter by cart_id, ensuring that only the relevant cart items are processed for the order.
         items = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user)if request.user.is_authenticated else Q(cart_id=cart_id))
+
+        # This line calculates the subtotal of all cart items that match either the cart_id or belong to the logged-in user. It uses Django's aggregate function to sum up the sub_total field of all matching cart items and retrieves the result as 'sub_total'.
+        # Cart.object is your model manager that allows you to query the Cart table in the database.
+        # filter(Q(cart_id=cart_id) | Q(user=request.user)if request.user.is_authenticated else Q(cart_id=cart_id)) - 
+        # This filters the cart items to include those that 
+        # either match the cart_id (for guests) OR 
+        # belong to the logged-in user (if authenticated). If the user is not authenticated, it will only filter by cart_id.
         cart_sub_total = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user)if request.user.is_authenticated else Q(cart_id=cart_id)).aggregate(sub_total= Sum("sub_total"))['sub_total']
+        # This line calculates the total shipping cost for all cart items that match either the cart_id or belong to the logged-in user. Similar to the previous line, it uses Django's aggregate function to sum up the shipping field of all matching cart items and retrieves the result as 'shipping_total'. 
+
         cart_shipping_total = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user)if request.user.is_authenticated else Q(cart_id=cart_id)).aggregate(shipping_total= Sum("shipping"))['shipping_total']
 
+
+
+# This block of code creates a new Order object and populates its fields based on the cart items and the selected address. 
+# It calculates the order totals, including shipping and tax, and saves the order to the database. Then, it iterates through each cart item and creates corresponding OrderItem records linked to the order. Finally, it redirects the user to the checkout page for the newly created order.
         order = store_models.Order()
+        # sub_total → total of all cart item prices before adding shipping and tax.
         order.sub_total = cart_sub_total
-        order.customer = request.user
+        order.customer = request.user 
         order.address = address
         order.shipping = cart_shipping_total
+        # tax_calculation(address.country, cart_sub_total) → This function calculates the tax amount based on the country of the shipping address and the cart subtotal. The tax is likely calculated as a percentage of the subtotal, and the specific tax rate may vary depending on the country. The calculated tax amount is then assigned to the order's tax field.
         order.tax = tax_calculation(address.country, cart_sub_total)
         order.total = order.sub_total + order.shipping + Decimal(order.tax)
         order.service_fee = calculate_service_fee(order.total)
@@ -337,6 +421,8 @@ def create_order(request):
                 order=order,
                 product=i.product,
                 qty = i.qty,
+                color = i.color,
+                size = i.size,
                 price = i.price,
                 sub_total = i.sub_total,
                 shipping = i.shipping,

@@ -76,7 +76,7 @@ $(document).ready(function () {
 
     $(document).on("click", ".add_to_cart", function () {
 // This is a debugging statement that logs a message to the console whenever the "Add to Cart" button is clicked.
-        console.log("CLICK on Add to Cart"); 
+        console.log("CLICKED on Add to Cart"); 
     // Storing the clicked button element in a variable for later use. 
     // Const is used to declare a variable that cannot be reassigned. And storing the jQuery object representing the clicked button in button_el.
         const button_el = $(this);                                    
@@ -93,8 +93,8 @@ $(document).ready(function () {
             url: "/add_to_cart/", // The URL endpoint on the server where the request is sent.
             method: "POST", // The HTTP method used for the request, which is POST in this case, indicating that data is being sent to the server to create or update a resource.
             data: { // the following data is being sent to the server as part of the request:
-                id: id, 
-                qty: qty,
+                id: id,
+                qty: qty,   
                 size: size,
                 color: color,
                 cart_id: cart_id,

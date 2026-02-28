@@ -208,6 +208,10 @@
     </div>
   </div>
 
+
+
+
+  
   <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasCart">
     <div class="offcanvas-header justify-content-center">
       <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -224,7 +228,7 @@
             <li class="list-group-item d-flex justify-content-between lh-sm">
               <div>
                 <h6 class="my-0">{{item.product.name}}</h6>
-                {% comment %} <small class="text-body-secondary">Qty: {{ item.quantity }}</small> {% endcomment %}
+                <small class="text-body-secondary">Qty: {{ item.quantity }}</small>
               </div>
               <span class="text-body-secondary">₹{{item.sub_total| floatformat:2|intcomma}}</span>
             </li>
@@ -240,7 +244,8 @@
             </li>
           </ul>
 
-        <a href="{% url 'store:cart' %}" class="w-100 btn btn-primary btn-lg">Continue to checkout</a>
+        <a href="{% url 'store:cart' %}" class="w-100 btn btn-primary btn-lg">Continue to your Cart</a>
+        
       </div>
     </div>
   </div>

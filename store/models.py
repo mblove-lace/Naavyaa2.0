@@ -124,9 +124,25 @@ class Category(models.Model):
 
 
 
-# Creates a Django model class named Product, stored in your database as a table named Naavyaa_product
+
+
+
+
+
+# When we define a model in Django, by defining a class from django.db import models and inheriting from models.Model, Django DOES NOT automatically creates a corresponding database table for that model.
+# Django creates a blueprint explained in "naavyaa_notes.ppt" under section,"Explanation of What the F*CK is Happening". 
+
+
+# Creates a Django model class named Product, stored in your database as a table named Naavyaa_product. So, this is a blueprint of the databse file that will be created when you run migrations. It defines the structure of the Product table, including its fields and their types.
+
+# We see, class Inheritence: The Product class inherits from models.Model, which means it gets all the functionality of a Django model, such as saving to the database, querying, etc.
+# models = the Django module that provides the base class for defining models and various field types. 
+# Model = class inside the models module that you inherit from to create your own model. 
+# models.Model means use the Model class from the models module. that Product is a Django model, and it will have all the methods and properties that Django models have, like save(), delete(), etc. It also tells Django to create a database table for this model when you run migrations. 
 
 class Product(models.Model):
+# NOT a normal Python variable. It's a database coloumn definition. Each field corresponds to a column in the database, and the type of field (CharField, DecimalField, etc.) determines the type of data that can be stored in that column.
+
     name = models.CharField(max_length=255)
     image = models.ImageField(upload_to="images", null=True, blank=True)
     description = CKEditor5Field('Text', config_name='default') 
@@ -150,7 +166,15 @@ class Product(models.Model):
 
     date = models.DateTimeField(default=timezone.now)
 
+# From everything we learnt from Class & methods in Python, we know that class MEta should be a class whose methods are def __str__ and def average_rating and so on. 
+# But in Django, the Meta class is a special inner class that provides metadata to the model. 
+# It’s not meant for defining methods like __str__ or average_rating. Instead, it’s used to specify things like ordering, verbose_name, etc.
 
+
+# class Meta is a special inner class in Django models that provides metadata about the model.
+#  It’s NOT meant for defining methods like __str__ or average_rating. Instead, it’s used to specify things like ordering, verbose_name, etc.
+
+# how does ordering work? When you query the Product model, Django will automatically order the results by the id field in descending order (because of the - sign). So, the newer products will appear first when you query the database.
     class Meta:
         ordering = ["-id"]
         verbose_name_plural = "Products"
@@ -172,7 +196,7 @@ class Product(models.Model):
     
     def vendor_orders(self):
         return OrderItem.objects.filter(product=self, vendor=self.vendor)
-
+# The save() method is a built-in method in Django models that is called when you save an instance of the model to the database.
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name) + "-" + str(shortuuid.uuid().lower()[:2])
@@ -215,6 +239,10 @@ class Gallery(models.Model):
 
 
 class Cart(models.Model):
+    # Every Django model instance automatically gets an id field (primary key) unless you explicitly define a different primary key.
+    # When you save a Cart item to the database, Django assigns it a unique integer ID. 
+     
+
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     user = models.ForeignKey(user_models.User, on_delete=models.SET_NULL, null=True, blank=True)
     qty = models.PositiveIntegerField(default=1, null=True, blank=True)

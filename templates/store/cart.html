@@ -55,21 +55,56 @@
 
 {% comment %} Under the cart-header section, we are now iterating over each item in the items list. Each item is a product in the cart. {% endcomment %}
 
+{% comment %} in views.py, under def cart, we have items variable - this item is taken from the views.py .
+Item in def cart is a QuerySet- explained in naavyaa_notes.ppt under section "Explanation of what the F*ck is happening". In short, Items are the Cart in Views call upon all the products that are added to the cart by the user. So, we are iterating over each product in the cart and displaying its details in the cart page.
+So, when server reads the cart page, it will look for the items variable in the views.py 
+and then in views.py,  {% endcomment %}
+
+
             {% for item in items %}
+            {% comment %} item.id - comes from the items QuerySet in views.py. Example : id - (assigned by Django ) -5 for product_id -2 (created by us)  so will return the id as item_div_5 will be used for JS targeting. 
+            What will JS do here? -> When we click on the delete button, it will target the div with class item_div_5 and remove it from the DOM. So, it will remove the product with id 5 from the cart page without refreshing the page. 
+            That deleteion will also go through the views.py and update the cart in the backend. So, it will remove the product with id 5 from the cart in the database as well.
+            {% endcomment %}   
+
                 <div class="cart-item border-top border-bottom item_div_{{item.id}}">
+                    {% comment %} this is how Bootstrap row creates a horizontal flex container.
+                    align-items-center vertically centers the columns inside this row. {% endcomment %}
                     <div class="row align-items-center"> 
 
-                    {% comment %} Product {% endcomment %}
+                    {% comment %} under row created above, col-lg-4 means this column takes 4 out of 12 grid units. Bootstrap grid is divided into 12 parts, so col-lg-4 means this column will take 4 out of 12 parts
+                (about 33% width) on large screens.  {% endcomment %}
+
                         <div class="col-lg-4 ">
-                            <div class="cart-info d-flex flex-wrap align-items-center mb-4">
+                            {% comment %} cart-info - for Custom CSS class . Rest are Bootstrap utilities: d-flex - flex display , means the direct children of this div will align in  flex container. 
+                            If children overflows, horizontally, they will wrap on to the next line.
+                            mb -4 - spacing utility of Bootstrap  , top & bottom margin will be 1.5 rem {% endcomment %}
+                            <div class="cart-info d-flex flex-wrap align-items-center mt-4 mb-4">
                                 <div class="col-lg-5">
+                                    {% comment %} Creating image container , first coloumn is image field  {% endcomment %}
                                 <div class="card-image">
-                                    <img src="{{item.product.image.url}}" alt="cloth" class="img-fluid">
+                                    {% comment %} Remember, in your model, you had :
+                                     image = models.ImageField(upload_to="images", null=True, blank=True).
+                                     Django  stored image file path in database .
+                                     Also remember, how you were calling the querySet items of the cart in views.py?
+                                      so when  QuerySet is used in views.py, it also returns the image URL, along with product_id, name ,etc. So, item.product.image.url will return the URL of the image field in the product model. {% endcomment %}
+                                    <img src="{{item.product.image.url}}" alt="Naavyaa_product" class="img-fluid"> 
                                 </div>
                                 </div>
                                 <div class="col-lg-7">
+                                    {% comment %} Why are we writing "card" detail or "card" title we have named the products as items , products. why again name it as card? >> Product, Cart, item, item.product.name are all python variables and database oriented names.
+                                    
+                                    Similarly, Card is a Bootstrap oriented name. Its a component that is used to display content in a structured way.
+                                        So, we are using card classes to style the product details in the cart page. 
+                                        We can use any name for the class, but using Bootstrap classes will give us pre-defined styling and structure.
+                                        the name product-detail could also have worked, nbut using card-detail gives us the flexibility to use Bootstrap's card based CSS for styling the product details in the cart page.
+                                    {% endcomment %}
+
+                                    {% comment %} ps-3 - padding start 3 . the name of the product will start after 1.5 rem(i.e., 1.5rem) {% endcomment %}
                                 <div class="card-detail ps-3">
                                     <h5 class="card-title">
+                                        {% comment %} Similarly item product name is taken from the same QuerySet under views.py - cart  and thus- Product under models.py. item.product accesses the related Product (via ForeignKey) and .name accesses the name field of that Product. So, it will return the name of the product in the cart page. and .price will similarly, fetch the price field from product.model  {% endcomment %}
+                                         
                                     <a href="#" class="text-decoration-none">{{item.product.name}}</a>
                                     </h5>
                                     <div class="card-price">
@@ -79,26 +114,81 @@
                                 </div>
                             </div>
                         </div>
+
+
+
+
+
+
+                        {% comment %} in this bootstrap, this is the way to make the bootstrap responsive- so- for lg screen gridf 6/12 and for medium screen grid 7 of 12. This together, will create an outer grid  {% endcomment %}
                     
                     <div class="col-lg-6 col-md-7">
                         <div class="row d-flex">
                          
                             <div class="col-md-4">
+                                {% comment %} input group is Bootstrap compoment class . Used for Buttons,Inputs and Icons into one unified control  and product qty - is a class that is custom built  .
+                                see, what i want on screen is: [-]   [ 2 ]   [+], where 2 is the quantity of the product in the cart. So, we are using input group to group the buttons and input field together.
+                                Now, if put in plain HTML, it will look like this : 
+                                <button>-</button>
+                                <input type="text">
+                                <button>+</button>
+                                 What input-group Does is, it wraps these three elements together and applies some default styling to make them look like a cohesive unit. 
+                                    The buttons will be on either side of the input field, and they will be styled to look like they belong together.
+
+                                WHat is product-qty? It is a custom class that we can use to apply additional styling or JavaScript functionality specific to the quantity input group. For example, we can use the product-qty class to target this specific input group in our CSS or JavaScript code to add custom styles or behavior.
+                                    {% endcomment %}
                               
                             <div class="input-group product-qty">
+                                {% comment %} <span> - Inline HTML element . Used to - wrap small pieces of contents.
+                                How small is small? Content that does NOT need any structural layout- typically that is going to live inside a line of text 
+                                Putting the input group button inside a span with class input-group-btn is a Bootstrap convention. It helps in styling the buttons within the input group separately & properly. {% endcomment %}
                                 <span class="input-group-btn">
+
+                                    {% comment %} In the below-mentioned class, btn- Bootstrap button based style with light theme 
+                                    "update_cart_qty" - Custom JS hook - in JS we have, $(document).on("click", ".update_cart_qty", function () . 
+                                    The connection between this line, JS hook , Django view, Database and back to this HTML is explained in "naavyaa_notes.ppt" under section "Explanation of what the F*ck is happening".
+                                     In short, when we click on this button, it will trigger the JS function that will make an AJAX call to the Django view that will update the cart in the database and then return the updated cart data to the JS function that will then update the cart page without refreshing the page. 
+                                     data-update-type - is a custom data attribute that we can use to specify whether this button is for increasing or decreasing the quantity. We can use this attribute in our JS code to determine which action to perform when the button is clicked. 
+                                     data-item-id and data-product-id are also custom data attributes that we can use to store the item id and product id respectively. We can use these attributes in our JS code to identify which product's quantity needs to be updated when the button is clicked.
+                                     {% endcomment %}
+
+                                     {% comment %} Why do we need to decrease or increase the quantity? Because we want to give the user the flexibility to change the quantity of the product in the cart without having to go back to the product page. So, they can directly change the quantity from the cart page itself. 
+                                     
+                                     The minus and plus icons are SVG icons that are used for better visual representation of decrease and increase actions. We can also use font awesome icons or any other icons if we want.
+                                    {% endcomment %}
                                     <button type="button" class="btn btn-light update_cart_qty"  data-update-type="decrease" data-item-id="{{item.id}}" data-product-id="{{item.product.id}}">
-                                    <svg width="16" height="16"><use xlink:href="#minus"></use></svg>
+                                        {% comment %} svg- Scalable Vector Graphic - its a symbol defining graphic used for minus with display size of 16 by 16. 
+                                        The use tag is used to reference/point at the symbol with id "minus" defined in the SVG file. 
+                                        So, it will display the minus icon on the button.
+                                        Any href in the use tag will not work because its not a link, its just a reference to the symbol defined in the SVG sprite file. 
+                                        So, basically, the SVG sprite file is a collection of all the SVG icons that we are using in our project. We define all the icons in that file with unique ids and then we can reference those icons in our HTML using the use tag.
+                                        ANd the href is telling the browser to use that svg icon .
+                                        Why xlink? In older versions of SVG, xlink was used to reference external resources.
+                                        {% endcomment %}
+                                    <svg width="16" height="16"><use href="#minus"></use></svg>
                                     </button>
                                 </span>
-                                <input type="text" id="quantity" name="quantity" class="form-control input-number text-center item-qty-{{item.id}}" value="{{item.qty}}" min="1" max="10">
-                                <span class="input-group-btn">
+                                {% comment %} 
+                                This is an input box - allowing to change the quantity of the item in the cart , its in text type.
+                                    The value of this input box is set to the quantity of the item in the cart, which is accessed through item.qty. So, it will display the current quantity of the product in the cart. 
+                                    id quantity - HTML for example, will render- quantity-5 for the product with id 5. 
+                                    JS will get: document.getElementById("quantity-5") identify this input box and then update its value when the quantity is changed.
+                                    name is set to quantity because when we submit the form, we want to send the updated quantity to the server with the name "quantity". So, in our Django view, we can access the updated quantity using request.POST.get("quantity").
+                                    class is set to form-control for Bootstrap styling, text-center to center the text inside the input box and 
+                                    item-qty-{{item.id}} is a custom class that we can use to target this specific input box in our CSS or JavaScript code. 
+                                    For example, we can use this class to disable the input box when the quantity is being updated to prevent multiple updates at the same time.
+                                {% endcomment %}
+                                    <input type="text" id="quantity-{{item.id}}" name="quantity" class="form-control text-center item-qty-{{item.id}}" value="{{item.qty}}" min="1" max="10" readonly>
+                                    
+                                    <span class="input-group-btn">
+                                        
                                     <button type="button" class=" btn btn-light update_cart_qty" data-update-type="increase" data-item-id="{{item.id}}" data-product-id="{{item.product.id}}">
-                                        <svg width="16" height="16"><use xlink:href="#plus"></use></svg>
+                                        <svg width="16" height="16"><use href="#plus"></use></svg>
                                     </button>
                                 </span>
                             </div>
-                            </div>
+                            </div>                
+                            
                             <div class="col-md-8 text-center">
                             <div class="total-price">
                                 <span class="money text-dark">₹ {{item.sub_total}}</span>
@@ -106,6 +196,7 @@
                             </div>   
                         </div>             
                         </div>
+
                         <div class="col-lg-1 col-md-2 ">
                          <button type="button" class="cart-remove delete_cart_item" data-item-id="{{item.id}}" data-product-id="{{item.product.id}}">
                             <svg width="32px" height="32px">
@@ -119,46 +210,91 @@
             </div>
             </div>
       
-            
+
+
+
+
+        {% comment %} <form action="{% url 'store:create_order' %}" method="POST" >{% csrf_token %} {% endcomment %}
+
+            {% comment %} col-md-4 → Takes 4 columns out of 12 on medium+ screens. Meaning : the cart summary occupies 1/3rd of the width{% endcomment %}
             <div class="col-md-4">
-            <div class="cart-totals bg-grey py-5">
-                <h4 class="text-dark pb-4">Cart Total</h4>
+                {% comment %} cart-totals → Custom class for CSS
+                background-grey - vertical padding of bootstrap {% endcomment %}
+            <div class="cart-totals bg-grey">
+                {% comment %} h5 - headding tag of level 5 
+                text-muted is a  Bootstrap class taht makes text light  colored to match the design of the cart summary section.
+                pb-4 - padding bottom of 1.5 rem. This is to create some space between the heading and the table that displays the cart totals. 
+                 {% endcomment %}
+                <h5 class="text-uppercase text-muted pb-4">Cart Total</h5>
+                {% comment %} Division element- div - creating a container box . Total-price - custom CSS class and bootstrap bottom padding of pb-5 {% endcomment %}
                 <div class="total-price pb-5">
-                <table cellspacing="0" class="table text-uppercase">
-                    <tbody>
-                    <tr class="subtotal pt-2 pb-2 border-top border-bottom">
-                        <th>Subtotal</th>
-                        <td data-title="Subtotal">
-                        <span class="price-amount amount text-dark ps-5">
-                            <bdi>
-                            <span class="price-currency-symbol">₹</span> {{cart_sub_total | intcomma }}
-                            </bdi>
-                        </span>
-                        </td>
-                    </tr>
-                    <tr class="subtotal pt-2 pb-2 border-top border-bottom">
-                        <th>Shipping Charges</th>
-                        <td data-title="Shipping Charges">
-                        <span class="price-amount amount text-dark ps-5">
-                            <bdi>
-                            <span class="price-currency-symbol">₹ </span> 
-                            <span class="text-muted text-decoration-line-through">150.00</span>
-                            <span class="ms-2 text-success fw-bold">FREE</span>
-                            </bdi>
-                        </span>
-                        </td>
-                    </tr>
-                    <tr class="order-total pt-2 pb-2 border-bottom">
-                        <th>Total</th>
-                        <td data-title="Total">
-                        <span class="price-amount amount text-dark ps-5">
-                            <bdi>
-                            <span class="price-currency-symbol">₹</span> <span class="cart_sub_total">{{cart_sub_total | intcomma}}</span></bdi>
-                        </span>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                    {% comment %} The following table  creates a table format with class- for structured styling. class is "table text-uppercase" previously, which I changed to "table"  {% endcomment %}
+                    <table  class="table ">
+                        {% comment %} tbody is the main content rows of the table and holds rows and coloumns  {% endcomment %}
+                        <tbody>
+                            {% comment %} tr- table row   which will hold table head as <th>. for determining, class is given{% endcomment %}
+                            <tr class="subtotal pt-2 pb-2 border-top border-bottom">
+                                <th>Cart Subtotal</th>
+                                {% comment %} <td> is table data with a custom data-attribute used for styling.
+                                data-title used mainly for responsive tables so that in smaller screens it will look like :
+                                Subtotal:
+                                ₹ 1,200
+                                 {% endcomment %}
+                                <td data-title="Subtotal">
+                                   {% comment %} making inline container with span and secifying class for styling conventions.
+                                   text - dark coloured and start padding of 5, which creates a gap between the data of the table and table head {% endcomment %}
+                                <span class="price-amount amount text-dark ps-5">
+                                    {% comment %} bi-directional isolation - Only controls text direction behavior when mixing. Left-to-Right (LTR) text (English, numbers) and Right-to-Left (RTL) text (Arabic, Hebrew) in the same document. It ensures that the text is displayed correctly regardless of the language direction. In this case, it will ensure that the price is displayed correctly even if the user is using a RTL language like Arabic. It will not affect the display of the price in LTR languages like English.    {% endcomment %}
+                                    <bdi>
+                                         {% comment %} span wraps the currency symbol for styling ₹ separately
+                                         But {{ cart_sub_total | intcomma }} is variable sent from the views.py - inside def add_to_cart section and intcomma is used to use comma for better readability of pricetag{% endcomment %}
+                                    <span class="price-currency-symbol">₹</span> {{cart_sub_total | intcomma }}
+                                    </bdi>
+                                </span>
+                                </td>
+                            </tr>
+                            {% comment %} next table row with class and specific top and bottom paddings and borders {% endcomment %}
+                            <tr class="subtotal pt-2 pb-2 border-top border-bottom">
+                                <th>Discount</th>
+                                {% comment %} data title is discount {% endcomment %}
+                                <td data-title="Discount">
+                                    {% comment %} price-amount → custom styling, amount → maybe used for JS targeting,text-dark → dark text
+                                    ps-5 → padding-start (left padding) {% endcomment %}
+                                <span class="price-amount amount text-dark ps-5">
+                                    <bdi>
+                                    <span class="price-currency-symbol">₹ </span> 
+                                    <span class="text-muted ">0.00</span>
+                                 
+                                    </bdi>
+                                </span>
+                                </td>
+                            </tr>
+                            {% comment %} Row made for shipping charges {% endcomment %}
+                            <tr class="subtotal pt-2 pb-2 border-top border-bottom">
+                                <th>Shipping Charges</th>
+                                <td data-title="Shipping Charges">
+                                <span class="price-amount amount text-dark ps-5">
+                                    <bdi>
+                                    <span class="price-currency-symbol">₹ </span> 
+                                    <span class="text-muted text-decoration-line-through">150.00</span>
+                                    <span class="ms-2 text-success fw-bold">FREE</span>
+                                    </bdi>
+                                </span>
+                                </td>
+                            </tr>
+                        {% comment %} Row made for subtotal / total - but shipping charges are already taken into account in views.py  {% endcomment %}
+                            <tr class="order-total pt-2 pb-2 border-bottom">
+                                <th>Total</th>
+                                <td data-title="Total">
+                                <span class="price-amount amount text-dark ps-5 fw-bold">
+                                    <bdi>
+                                        {% comment %} We are hereby returning the cart_sub_total again {% endcomment %}
+                                    <span class="price-currency-symbol">₹</span> <span class="cart_sub_total">{{cart_sub_total | intcomma}}</span></bdi>
+                                </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
                 {% comment %} <div class="button-wrap row g-2">
                 <div class="col-md-6"><button class="btn btn-dark text-uppercase btn-rounded-none w-100">Update Cart</button></div>
@@ -168,52 +304,61 @@
             </div>
         
 
+
+
+
+
+
+
+
+            
+
             {% if address %}
                 <section class="checkout-wrap pb-5">
                     <div class="container">
-                    <form class="form-group" method="post" >{% csrf_token %}
+                      <form class="form-group" method="post" >{% csrf_token %}
 
                         <div class="row g-5">
-                        <div class="col-lg-6">
-                            <h4 class="text-dark pb-4">Billing Details</h4>
-                            <div class="billing-details">
+                            <div class="col-lg-6">
+                                <h4 class="text-dark mt-4 pb-4">Billing Details</h4>
+                                <div class="billing-details">
 
-                            <label for="fname">Full Name*</label>
-                            <input type="text" id="name" name="name" class="form-control mt-2 mb-4 ps-3" value="{{ address.full_name|default:'' }}">
-                            
-                            <label for="cname">Country / Region*</label>
-                            <select class="form-select form-control mt-2 mb-4" aria-label="Default select example">
-                                <option selected="" hidden="">India</option>
-                                <option value="1">Australia</option>
-                                <option value="2">Canada</option>  
-                                <option value="3">UK</option>
-                                <option value="4">USA</option>
-                            </select>
-                            <label for="address">Street Address*</label>
-                            <input type="text" id="adr" name="address" placeholder="Enter full address " class="form-control mt-3 ps-3 mb-3" value="{{ address.address|default:'' }}" >
-                            
-                            <label for="city">Town / City *</label>
-                            <input type="text" id="city" name="city" class="form-control mt-3 ps-3 mb-4" value="{{ address.city|default:'' }}">
-                            <label for="state">State *</label> 
-                            <input type="text" id="state" name="state" class="form-control mt-3 ps-3 mb-4" value="{{ address.state|default:'' }}">
-                            <label for="zip">Zip Code *</label>
-                            <input type="text" id="zip" name="zip" class="form-control mt-2 mb-4 ps-3"value="{{address.zip_code|default:'' }}">
-                            <label for="email">Phone *</label>
-                            <input type="text" id="phone" name="phone" class="form-control mt-2 mb-4 ps-3" value="{{ address.mobile|default:'' }}"> 
-                            <label for="email">Email address *</label>
-                            <input type="text" id="email" name="email" class="form-control mt-2 mb-4 ps-3" value="{{ address.email|default:'' }}">
+                                <label for="fname">Full Name*</label>
+                                <input type="text" id="name" name="name" class="form-control mt-4 mb-4 ps-3" value="{{ address.full_name|default:'' }}">
+                                
+                                <label for="cname">Country / Region*</label>
+                                <select class="form-select form-control mt-2 mb-4" aria-label="Default select example">
+                                    <option selected="" hidden="">India</option>
+                                    <option value="1">Australia</option>
+                                    <option value="2">Canada</option>  
+                                    <option value="3">UK</option>
+                                    <option value="4">USA</option>
+                                </select>
+                                <label for="address">Street Address*</label>
+                                <input type="text" id="adr" name="address" placeholder="Enter full address " class="form-control mt-3 ps-3 mb-3" value="{{ address.address|default:'' }}" >
+                                
+                                <label for="city">Town / City *</label>
+                                <input type="text" id="city" name="city" class="form-control mt-3 ps-3 mb-4" value="{{ address.city|default:'' }}">
+                                <label for="state">State *</label> 
+                                <input type="text" id="state" name="state" class="form-control mt-3 ps-3 mb-4" value="{{ address.state|default:'' }}">
+                                <label for="zip">Zip Code *</label>
+                                <input type="text" id="zip" name="zip" class="form-control mt-2 mb-4 ps-3"value="{{address.zip_code|default:'' }}">
+                                <label for="email">Phone *</label>
+                                <input type="text" id="phone" name="phone" class="form-control mt-2 mb-4 ps-3" value="{{ address.mobile|default:'' }}"> 
+                                <label for="email">Email address *</label>
+                                <input type="text" id="email" name="email" class="form-control mt-2 mb-4 ps-3" value="{{ address.email|default:'' }}">
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <h4 class="text-dark pb-4">Additional Information</h4>
-                            <div class="billing-details">
-                            <label for="fname">Order notes (optional)</label>
-                            <textarea class="form-control pt-3 pb-3 ps-3 mt-2" placeholder="Notes about your order. Or special notes for delivery."></textarea>
-                        </div> 
+                            <div class="col-lg-6">
+                                <h4 class="text-dark mt-4 pb-4">Additional Information</h4>
+                                <div class="billing-details">
+                                <label for="fname">Order notes (optional)</label>
+                                <textarea class="form-control pt-3 pb-3 ps-3 mt-2" placeholder="Notes about your order. Or special notes for delivery."></textarea>
+                            </div> 
 
-                        <div class="list-group mt-5 mb-3">
-                            
-                                <div class="col-md-12"><button class="btn btn-primary text-uppercase btn-rounded-none w-100">Proceed to checkout</button></div>
+                            <div class="list-group mt-5 mb-3">
+                                
+                                    <div class="col-md-12"><button type="submit" class="btn btn-primary text-uppercase btn-rounded-none w-100">Proceed to checkout</button></div>
 
                                
                         </div>
