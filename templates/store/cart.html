@@ -165,7 +165,7 @@ and then in views.py,  {% endcomment %}
                                         ANd the href is telling the browser to use that svg icon .
                                         Why xlink? In older versions of SVG, xlink was used to reference external resources.
                                         {% endcomment %}
-                                    <svg width="16" height="16"><use href="#minus"></use></svg>
+                                    <svg width="14" height="14"><use href="#minus"></use></svg>
                                     </button>
                                 </span>
                                 {% comment %} 
@@ -183,7 +183,7 @@ and then in views.py,  {% endcomment %}
                                     <span class="input-group-btn">
                                         
                                     <button type="button" class=" btn btn-light update_cart_qty" data-update-type="increase" data-item-id="{{item.id}}" data-product-id="{{item.product.id}}">
-                                        <svg width="16" height="16"><use href="#plus"></use></svg>
+                                        <svg width="14" height="14"><use href="#plus"></use></svg>
                                     </button>
                                 </span>
                             </div>
@@ -196,12 +196,20 @@ and then in views.py,  {% endcomment %}
                             </div>   
                         </div>             
                         </div>
-
+                        {% comment %} class is made such as on Large screen it takes one coloumn , on medium screen it takes 2 coloumns {% endcomment %}
                         <div class="col-lg-1 col-md-2 ">
+                            {% comment %} type is button AJAX listens to the dlete cart- click 
+                            Inside the var item_id = $(this).data("item-id"); the button was clicked
+                            Jquery converts the data-item-id . Sends a request to Django through:
+                             $.ajax({
+    
+                             Django views the handle - in delete cart in views.py .
+                             successfully deletes the function  
+                             If success, success: function(response) {console.log("Item deleted successfully");
+                             Will run      
+                                {% endcomment %}
                          <button type="button" class="cart-remove delete_cart_item" data-item-id="{{item.id}}" data-product-id="{{item.product.id}}">
-                            <svg width="32px" height="32px">
-                                <use xlink:href="#trash"></use>
-                            </svg>
+                            <svg width="32px" height="32px"> <use xlink:href="#trash"></use> </svg>
                         </button>
                         </div>
                     </div>
@@ -306,40 +314,56 @@ and then in views.py,  {% endcomment %}
             
 
 
+{% comment %} form action will flow like : form action URL → Django urls.py → view function → processes data
+Data to be sent in request body when we submit the form :
+- address : the id of the selected address (from the radio button)
+
+ {% endcomment %}
+
+                <form method="POST" action="{% url 'store:create_order' %}">
+                    {% csrf_token %}
 
 
+{% comment %} Layout structure for checkout section :
+- Section with class checkout-wrap and padding bottom of 5 (pb-5) 
+- Container to hold the content of the checkout section
+
+ {% endcomment %}
 
 
-                <section class="checkout-wrap pb-5">
+                    <section class="checkout-wrap pb-5">
                         <div class="container">
                             <div class="row g-5">
-                                <div class="col-lg-6">
+                                <div class="col-lg-8">
                                     <h4 class="text-dark mt-4 pb-4">Billing Details</h4>
                                     <div class="billing-details">
                                         {% comment %} <p>Total addresses: {{ addresses|length }}</p> {% endcomment %}
+                                        <div class="row g-4">
 
-                                        {% for address in addresses %}
-                                           <div class= "col-xl-4 col-lg-4 col-md-6 col-sm-12">
-                                            <div class="card-wrap-header px-3 py-2 br-bottom d-flex align-items-center justify-content-between">
-                                                {% comment %} <div class="card-header-flex">
-                                                    <h4 class="fs-md ft-semi-bold mb-0"> Shipping ADDRESS</h4>
-                                                </div> {% endcomment %}
-                                                <div class="card-wrap-body px-3 py-3">
-                                                    <p class="mb-1"><span class="text-muted">Name:</span> {{ address.full_name }}</p>
-                                                    <p class="mb-1"><span class="text-muted">Address:</span> {{ address.address }}</p>
-                                                    <p class="mb-1"><span class="text-muted">City:</span> {{ address.city }}</p>
-                                                    <p class="mb-1"><span class="text-muted">State:</span> {{ address.state }}</p>
-                                                    <p class="mb-1"><span class="text-muted">Zip Code:</span> {{ address.zip_code }}</p>
-                                                    <p class="mb-1"><span class="text-muted">Phone:</span> {{ address.mobile }}</p>
-                                                    <p class="mb-1"><span class="text-muted">Email:</span> {{ address.email }}</p>
-                                                    <div class= "mt-3">
-                                                        <input id="address{{ address.id }}" type="radio" name="address" value="{{ address.id }}" class="radio-custom"/>
-                                                        <label for="address{{ address.id }}" class="radio-custom-label">Select this address</label>
+                                            {% for address in addresses %}
+                                                <div class= "col-xl-4 col-lg-4 col-md-6 col-sm-12">
+
+                                                <div class="card-wrap-header px-3 py-2 br-bottom d-flex align-items-center justify-content-between">
+                                                    {% comment %} <div class="card-header-flex">
+                                                        <h4 class="fs-md ft-semi-bold mb-0"> Shipping ADDRESS</h4>
+                                                    </div> {% endcomment %}
+                                                    <div class="card-wrap-body px-3 py-3">
+                                                        <p class="mb-1"><span class="text-muted">Name:</span> {{ address.full_name }}</p>
+                                                        <p class="mb-1"><span class="text-muted">Address:</span> {{ address.address }}</p>
+                                                        <p class="mb-1"><span class="text-muted">City:</span> {{ address.city }}</p>
+                                                        <p class="mb-1"><span class="text-muted">State:</span> {{ address.state }}</p>
+                                                        <p class="mb-1"><span class="text-muted">Zip Code:</span> {{ address.zip_code }}</p>
+                                                        <p class="mb-1"><span class="text-muted">Phone:</span> {{ address.mobile }}</p>
+                                                        <p class="mb-1"><span class="text-muted">Email:</span> {{ address.email }}</p>
+                                                        <div class= "mt-3">
+                                                            <input id="address{{ address.id }}" type="radio" name="address" value="{{ address.id }}" class="radio-custom"/>
+                                                            <label for="address{{ address.id }}" class="radio-custom-label">Select this address</label>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            </div>
-                                        {% endfor %}
+                                                </div>
+                                            {% endfor %}
+                                        {% comment %} {% endcomment %}
                                     </div>
                                 </div>
                                 {% comment %} <div class="col-lg-6">
@@ -350,12 +374,14 @@ and then in views.py,  {% endcomment %}
                                 </div>
                                 </div> {% endcomment %}
                             </div>
-                            </div>
-                            <div class="col-md-12"><button type="submit" class="btn btn-primary text-uppercase btn-rounded-none w-100">Proceed to checkout</button></div>
+                            
+                            <div class="d-flex justify-content-center w-100 mt-3"><button type="submit" class="btn btn-primary text-uppercase btn-rounded-none w-100">Proceed to checkout</button></div>
+                            
 
-                                
-                            </div>
-                        </section>
+                                    
+                        </div>
+                    </section>
+                    </form>
 
                                 
                                     

@@ -413,7 +413,8 @@ def create_order(request):
         order.tax = tax_calculation(address.country, cart_sub_total)
         order.total = order.sub_total + order.shipping + Decimal(order.tax)
         order.service_fee = calculate_service_fee(order.total)
-        order.total = order.service_fee
+        order.total += order.service_fee
+        order.initial_total = order.total
         order.save()
         
         for i in items:
@@ -504,228 +505,228 @@ def checkout(request,order_id):
 # The access token is required to make authenticated requests to PayPal's payment verification endpoints
 # Think of it like getting a temporary password to talk to PayPal's servers
 
-def get_paypal_access_token():
-    # token_url: The PayPal API endpoint URL where we request the access token
-    # This is PayPal's sandbox (testing) environment - for production, you'd use "https://api-m.paypal.com"
-    token_url = "https://api-m.sandbox.paypal.com/v1/oauth2/token"
+# def get_paypal_access_token():
+#     # token_url: The PayPal API endpoint URL where we request the access token
+#     # This is PayPal's sandbox (testing) environment - for production, you'd use "https://api-m.paypal.com"
+#     token_url = "https://api-m.sandbox.paypal.com/v1/oauth2/token"
 
-    # data: The payload we send to PayPal to request a token
-    # ❌ BUG HERE: This should be a dictionary {'grant_type': 'client_credentials'}, not a set
-    # A set uses curly braces but no key-value pairs, which will cause an error
-    # 'grant_type': Tells PayPal what type of authentication we're using
-    # 'client_credentials': Means we're using our app's credentials (not a user's)
-    data = {'grant_type', 'client_credentials'}  # ❌ SHOULD BE: data = {'grant_type': 'client_credentials'}
+#     # data: The payload we send to PayPal to request a token
+#     # ❌ BUG HERE: This should be a dictionary {'grant_type': 'client_credentials'}, not a set
+#     # A set uses curly braces but no key-value pairs, which will cause an error
+#     # 'grant_type': Tells PayPal what type of authentication we're using
+#     # 'client_credentials': Means we're using our app's credentials (not a user's)
+#     data = {'grant_type', 'client_credentials'}  # ❌ SHOULD BE: data = {'grant_type': 'client_credentials'}
 
-    # auth: A tuple containing our PayPal app credentials (Client ID and Secret)
-    # settings.PAYPAL_CLIENT_ID: Your PayPal app's Client ID (stored in Django settings.py for security)
-    # settings.PAYPAL_SECRET_ID: Your PayPal app's Secret key (like a password, also in settings.py)
-    # These credentials prove to PayPal that our app is authorized to make API requests
-    auth = (settings.PAYPAL_CLIENT_ID, settings.PAYPAL_SECRET_ID)
+#     # auth: A tuple containing our PayPal app credentials (Client ID and Secret)
+#     # settings.PAYPAL_CLIENT_ID: Your PayPal app's Client ID (stored in Django settings.py for security)
+#     # settings.PAYPAL_SECRET_ID: Your PayPal app's Secret key (like a password, also in settings.py)
+#     # These credentials prove to PayPal that our app is authorized to make API requests
+#     auth = (settings.PAYPAL_CLIENT_ID, settings.PAYPAL_SECRET_ID)
     
-    # requests.post(): Makes an HTTP POST request to PayPal's server
-    # token_url: Where we're sending the request
-    # data=data: The information we're sending (grant_type)
-    # auth=auth: Our credentials for authentication (requests will automatically encode these as Basic Auth)
-    # response: The object that stores PayPal's reply to our request
-    response = requests.post(token_url, data=data, auth=auth)
+#     # requests.post(): Makes an HTTP POST request to PayPal's server
+#     # token_url: Where we're sending the request
+#     # data=data: The information we're sending (grant_type)
+#     # auth=auth: Our credentials for authentication (requests will automatically encode these as Basic Auth)
+#     # response: The object that stores PayPal's reply to our request
+#     response = requests.post(token_url, data=data, auth=auth)
 
-    # Checking if the request was successful
-    # response.status_code: HTTP status code returned by PayPal (200 means success)
-    # 200: "OK" - the request succeeded
-    if response.status_code == 200:
-        # response.json(): Converts PayPal's JSON response into a Python dictionary
-        # ['access_token']: Extracts just the access token string from the response
-        # This token is like a temporary key that lets us make authenticated requests to PayPal
-        # We return this token so other functions can use it
-        return response.json()['access_token']
-    else:
-        # If something went wrong (status code is not 200), we raise an error
-        # ❌ SYNTAX ERROR: f-string is missing quotes around the f
-        # Exception: A Python error that stops the program and shows an error message
-        # The error message includes the status code to help with debugging
-        raise Exception(f"failed to get access token from Paypal. Status code: {response.status_code}")
-        # ✅ FIXED VERSION: raise Exception(f"failed to get access token from Paypal. Status code: {response.status_code}")
+#     # Checking if the request was successful
+#     # response.status_code: HTTP status code returned by PayPal (200 means success)
+#     # 200: "OK" - the request succeeded
+#     if response.status_code == 200:
+#         # response.json(): Converts PayPal's JSON response into a Python dictionary
+#         # ['access_token']: Extracts just the access token string from the response
+#         # This token is like a temporary key that lets us make authenticated requests to PayPal
+#         # We return this token so other functions can use it
+#         return response.json()['access_token']
+#     else:
+#         # If something went wrong (status code is not 200), we raise an error
+#         # ❌ SYNTAX ERROR: f-string is missing quotes around the f
+#         # Exception: A Python error that stops the program and shows an error message
+#         # The error message includes the status code to help with debugging
+#         raise Exception(f"failed to get access token from Paypal. Status code: {response.status_code}")
+#         # ✅ FIXED VERSION: raise Exception(f"failed to get access token from Paypal. Status code: {response.status_code}")
 
 
-# ====================================
-# PAYPAL PAYMENT VERIFICATION FUNCTION
-# ====================================
-# This function verifies that a PayPal payment was actually completed successfully
-# It's called after the user completes payment and returns to our site
-# It checks with PayPal's servers to confirm the payment is legitimate
+# # ====================================
+# # PAYPAL PAYMENT VERIFICATION FUNCTION
+# # ====================================
+# # This function verifies that a PayPal payment was actually completed successfully
+# # It's called after the user completes payment and returns to our site
+# # It checks with PayPal's servers to confirm the payment is legitimate
 
-def paypal_payment_verify(request, order_id):
-    # request: The Django HTTP request object containing information about the user's request
-    # order_id: The unique identifier for the order we're verifying payment for
+# def paypal_payment_verify(request, order_id):
+#     # request: The Django HTTP request object containing information about the user's request
+#     # order_id: The unique identifier for the order we're verifying payment for
     
-    # Fetching the order from our database using the order_id
-    # store_models.Order: Our Django model representing an order
-    # .objects.get(): Database query that retrieves ONE order matching the criteria
-    # order_id=order_id: Finds the order where the order_id field matches the provided order_id
-    # order: Variable storing the Order object we retrieved from the database
-    order = store_models.Order.objects.get(order_id=order_id)
+#     # Fetching the order from our database using the order_id
+#     # store_models.Order: Our Django model representing an order
+#     # .objects.get(): Database query that retrieves ONE order matching the criteria
+#     # order_id=order_id: Finds the order where the order_id field matches the provided order_id
+#     # order: Variable storing the Order object we retrieved from the database
+#     order = store_models.Order.objects.get(order_id=order_id)
 
-    # Getting the PayPal transaction ID from the URL parameters
-    # request.GET: A dictionary-like object containing URL query parameters (everything after ? in the URL)
-    # .get("transaction_id"): Safely retrieves the value of the "transaction_id" parameter
-    # Example URL: /verify-payment/123/?transaction_id=ABC123XYZ
-    # transaction_id: The unique ID PayPal assigned to this payment transaction
-    transaction_id = request.GET.get("transaction_id")
+#     # Getting the PayPal transaction ID from the URL parameters
+#     # request.GET: A dictionary-like object containing URL query parameters (everything after ? in the URL)
+#     # .get("transaction_id"): Safely retrieves the value of the "transaction_id" parameter
+#     # Example URL: /verify-payment/123/?transaction_id=ABC123XYZ
+#     # transaction_id: The unique ID PayPal assigned to this payment transaction
+#     transaction_id = request.GET.get("transaction_id")
     
-    # Building the PayPal API URL to check this specific transaction
-    # f-string: Allows us to insert the transaction_id variable into the URL
-    # This endpoint lets us query PayPal for details about a specific order/transaction
-    # paypal_api_url: The complete URL we'll send our verification request to
-    paypal_api_url = f"https://api-m.sandbox.paypal.com/v2/checkout/orders/{transaction_id}"
+#     # Building the PayPal API URL to check this specific transaction
+#     # f-string: Allows us to insert the transaction_id variable into the URL
+#     # This endpoint lets us query PayPal for details about a specific order/transaction
+#     # paypal_api_url: The complete URL we'll send our verification request to
+#     paypal_api_url = f"https://api-m.sandbox.paypal.com/v2/checkout/orders/{transaction_id}"
     
-    # Setting up HTTP headers for our request to PayPal
-    # headers: A dictionary containing metadata about our request
-    headers = {
-        # 'Content-Type': Tells PayPal we're sending/expecting JSON formatted data
-        'Content-Type': 'application/json',
-        # 'Authorization': Proves to PayPal that we're authorized to access this information
-        # f"Bearer {get_paypal_access_token()}": Calls our function to get the access token
-        # "Bearer" is the authentication type, followed by the actual token
-        # This is like showing your ID card to prove who you are
-        'Authorization': f"Bearer {get_paypal_access_token()}"
-    }
+#     # Setting up HTTP headers for our request to PayPal
+#     # headers: A dictionary containing metadata about our request
+#     headers = {
+#         # 'Content-Type': Tells PayPal we're sending/expecting JSON formatted data
+#         'Content-Type': 'application/json',
+#         # 'Authorization': Proves to PayPal that we're authorized to access this information
+#         # f"Bearer {get_paypal_access_token()}": Calls our function to get the access token
+#         # "Bearer" is the authentication type, followed by the actual token
+#         # This is like showing your ID card to prove who you are
+#         'Authorization': f"Bearer {get_paypal_access_token()}"
+#     }
     
-    # Making a GET request to PayPal to fetch transaction details
-    # requests.get(): Makes an HTTP GET request (retrieving information)
-    # paypal_api_url: The URL we're requesting from
-    # headers=headers: Includes our authentication and content-type information
-    # response: Stores PayPal's response containing the transaction details
-    response = requests.get(paypal_api_url, headers=headers)
+#     # Making a GET request to PayPal to fetch transaction details
+#     # requests.get(): Makes an HTTP GET request (retrieving information)
+#     # paypal_api_url: The URL we're requesting from
+#     # headers=headers: Includes our authentication and content-type information
+#     # response: Stores PayPal's response containing the transaction details
+#     response = requests.get(paypal_api_url, headers=headers)
 
-    # Checking if PayPal successfully returned the transaction information
-    # response.status_code: The HTTP status code from PayPal's response
-    # 200: Means "OK" - PayPal found the transaction and sent us the details
-    if response.status_code == 200:
-        # Converting PayPal's JSON response into a Python dictionary
-        # response.json(): Parses the JSON data from PayPal
-        # paypal_order_data: Dictionary containing all the transaction details
-        # Example: {'id': 'ABC123', 'status': 'COMPLETED', 'amount': {...}, ...}
-        paypal_order_data = response.json()
+#     # Checking if PayPal successfully returned the transaction information
+#     # response.status_code: The HTTP status code from PayPal's response
+#     # 200: Means "OK" - PayPal found the transaction and sent us the details
+#     if response.status_code == 200:
+#         # Converting PayPal's JSON response into a Python dictionary
+#         # response.json(): Parses the JSON data from PayPal
+#         # paypal_order_data: Dictionary containing all the transaction details
+#         # Example: {'id': 'ABC123', 'status': 'COMPLETED', 'amount': {...}, ...}
+#         paypal_order_data = response.json()
         
-        # Extracting the payment status from PayPal's response
-        # ['status']: Gets the value of the 'status' field from the dictionary
-        # paypal_payment_status: String indicating if payment was completed, pending, failed, etc.
-        # Possible values: "COMPLETED", "PENDING", "CANCELLED", "FAILED"
-        paypal_payment_status = paypal_order_data['status']
+#         # Extracting the payment status from PayPal's response
+#         # ['status']: Gets the value of the 'status' field from the dictionary
+#         # paypal_payment_status: String indicating if payment was completed, pending, failed, etc.
+#         # Possible values: "COMPLETED", "PENDING", "CANCELLED", "FAILED"
+#         paypal_payment_status = paypal_order_data['status']
         
-        # Setting the payment method name that we'll store in our database
-        # payment_method: A string we'll save to remember this order was paid via PayPal
-        payment_method = "PayPal"
+#         # Setting the payment method name that we'll store in our database
+#         # payment_method: A string we'll save to remember this order was paid via PayPal
+#         payment_method = "PayPal"
 
-        # Checking if PayPal confirms the payment was completed
-        # "COMPLETED": PayPal's status indicating the payment went through successfully
-        if paypal_payment_status == "COMPLETED":
-            # Additional check: only update if our order status is still "Processing"
-            # This prevents accidentally changing an order that's already been marked as paid
-            # order.payment_status: The current payment status stored in our database
-            if order.payment_status == "Processing":
-                # Updating the order's payment status in our database
-                # "Paid": Marks the order as successfully paid
-                order.payment_status = "Paid"
+#         # Checking if PayPal confirms the payment was completed
+#         # "COMPLETED": PayPal's status indicating the payment went through successfully
+#         if paypal_payment_status == "COMPLETED":
+#             # Additional check: only update if our order status is still "Processing"
+#             # This prevents accidentally changing an order that's already been marked as paid
+#             # order.payment_status: The current payment status stored in our database
+#             if order.payment_status == "Processing":
+#                 # Updating the order's payment status in our database
+#                 # "Paid": Marks the order as successfully paid
+#                 order.payment_status = "Paid"
                 
-                # Recording which payment method was used
-                # Saves "PayPal" to the order record
-                order.payment_method = payment_method
+#                 # Recording which payment method was used
+#                 # Saves "PayPal" to the order record
+#                 order.payment_method = payment_method
                 
-                # Saving the changes to the database
-                # .save(): Commits all the changes we made to the order object
-                # This actually updates the database record
-                order.save()
+#                 # Saving the changes to the database
+#                 # .save(): Commits all the changes we made to the order object
+#                 # This actually updates the database record
+#                 order.save()
                 
-                # Clearing the user's shopping cart since payment is complete
-                # clear_cart_items(): A function (defined elsewhere) that removes items from the cart
-                # request: Passed so the function knows which user's cart to clear
-                clear_cart_items(request)
+#                 # Clearing the user's shopping cart since payment is complete
+#                 # clear_cart_items(): A function (defined elsewhere) that removes items from the cart
+#                 # request: Passed so the function knows which user's cart to clear
+#                 clear_cart_items(request)
 
-                # Redirecting the user to a success page
-                # redirect(): Django function that sends the user to a different URL
-                # f-string: Builds the URL with the order_id
-                # payment_status=paid: URL parameter indicating successful payment
-                # This shows the user a "Payment Successful" page
-                return redirect(f"/payment_status/{order.order_id}/payment_status=paid")
-                # ❌ NOTE: Should be ?payment_status=paid (with ?) for proper URL parameters
+#                 # Redirecting the user to a success page
+#                 # redirect(): Django function that sends the user to a different URL
+#                 # f-string: Builds the URL with the order_id
+#                 # payment_status=paid: URL parameter indicating successful payment
+#                 # This shows the user a "Payment Successful" page
+#                 return redirect(f"/payment_status/{order.order_id}/payment_status=paid")
+#                 # ❌ NOTE: Should be ?payment_status=paid (with ?) for proper URL parameters
    
-    # If we reach here, either:
-    # 1. PayPal returned an error (status code != 200)
-    # 2. Payment status was not "COMPLETED"
-    # In either case, redirect to the failure page
-    else:
-        # Redirecting to a payment failed page
-        # Shows the user that something went wrong with their payment
-        # ❌ TYPO: URL has "/paymentstatus/" instead of "/payment_status/"
-        # This inconsistency might cause a 404 error if the URL pattern doesn't match
-        return redirect(f"/paymentstatus/{order.order_id}/payment_status=failed")
-        # ✅ SHOULD BE: return redirect(f"/payment_status/{order.order_id}/?payment_status=failed")
+#     # If we reach here, either:
+#     # 1. PayPal returned an error (status code != 200)
+#     # 2. Payment status was not "COMPLETED"
+#     # In either case, redirect to the failure page
+#     else:
+#         # Redirecting to a payment failed page
+#         # Shows the user that something went wrong with their payment
+#         # ❌ TYPO: URL has "/paymentstatus/" instead of "/payment_status/"
+#         # This inconsistency might cause a 404 error if the URL pattern doesn't match
+#         return redirect(f"/paymentstatus/{order.order_id}/payment_status=failed")
+#         # ✅ SHOULD BE: return redirect(f"/payment_status/{order.order_id}/?payment_status=failed")
 
 
-# ====================================
-# PAYMENT STATUS PAGE FUNCTION
-# ====================================
-# This view function displays a page showing whether the payment succeeded or failed
-# It's the page users see after attempting to pay
+# # ====================================
+# # PAYMENT STATUS PAGE FUNCTION
+# # ====================================
+# # This view function displays a page showing whether the payment succeeded or failed
+# # It's the page users see after attempting to pay
 
-def payment_status(request, order_id):
-    # request: Django's HTTP request object with information about the user's request
-    # order_id: The unique identifier for the order we want to show status for
+# def payment_status(request, order_id):
+#     # request: Django's HTTP request object with information about the user's request
+#     # order_id: The unique identifier for the order we want to show status for
     
-    # Retrieving the order from the database
-    # store_models.Order: Our Order model/database table
-    # .objects.get(): Fetches exactly one order
-    # order_id=order_id: Finds the order with this specific order_id
-    # order: Variable storing the Order object we retrieved
-    order = store_models.Order.objects.get(order_id=order_id)
+#     # Retrieving the order from the database
+#     # store_models.Order: Our Order model/database table
+#     # .objects.get(): Fetches exactly one order
+#     # order_id=order_id: Finds the order with this specific order_id
+#     # order: Variable storing the Order object we retrieved
+#     order = store_models.Order.objects.get(order_id=order_id)
 
-    # Creating a context dictionary to pass data to the template
-    # context: A dictionary containing all data we want available in the HTML template
-    # The template can access this data to display order information
-    context = {
-        # "order": The key name used in the template (e.g., {{ order.order_id }})
-        # order: The Order object we fetched from the database
-        "order": order
-    }
+#     # Creating a context dictionary to pass data to the template
+#     # context: A dictionary containing all data we want available in the HTML template
+#     # The template can access this data to display order information
+#     context = {
+#         # "order": The key name used in the template (e.g., {{ order.order_id }})
+#         # order: The Order object we fetched from the database
+#         "order": order
+#     }
     
-    # Rendering an HTML template with the context data
-    # render(): Django function that combines a template with data and returns an HTTP response
-    # request: The original request object (required by Django)
-    # "store/payment_status.html": Path to the HTML template file
-    # context: The data dictionary we created above
-    # This returns a complete HTML page to show the user
-    return render(request, "store/payment_status.html", context)
+#     # Rendering an HTML template with the context data
+#     # render(): Django function that combines a template with data and returns an HTTP response
+#     # request: The original request object (required by Django)
+#     # "store/payment_status.html": Path to the HTML template file
+#     # context: The data dictionary we created above
+#     # This returns a complete HTML page to show the user
+#     return render(request, "store/payment_status.html", context)
 
 
 
-@csrf_exempt
-def razorpay_payment_verify(request, order_id):
-    order = store_models.Order.objects.get(order_id=order_id)
-    payment_method = request.GET.get("payment_method")
+# @csrf_exempt
+# def razorpay_payment_verify(request, order_id):
+#     order = store_models.Order.objects.get(order_id=order_id)
+#     payment_method = request.GET.get("payment_method")
 
-    if request.method == "POST":
-        data = request.POST
+#     if request.method == "POST":
+#         data = request.POST
 
-        razorpay_order_id = data.get("razorpay_order_id")
-        razorpay_payment_id = data.get("razorpay_payment_id")
-        razorpay_signature = data.get("razorpay_signature")
+#         razorpay_order_id = data.get("razorpay_order_id")
+#         razorpay_payment_id = data.get("razorpay_payment_id")
+#         razorpay_signature = data.get("razorpay_signature")
 
-        params_dict = {
-            "razorpay_order_id": razorpay_order_id,
-            "razorpay_payment_id": razorpay_payment_id,
-            "razorpay_signature": razorpay_signature
-        }
+#         params_dict = {
+#             "razorpay_order_id": razorpay_order_id,
+#             "razorpay_payment_id": razorpay_payment_id,
+#             "razorpay_signature": razorpay_signature
+#         }
 
-        try:
-            razorpay_client.utility.verify_payment_signature(params_dict)
-            if order.payment_status == "Processing":
-                order.payment_status = "Paid"
-                order.payment_method = 'Razorpay'
-                order.save()
-                clear_cart_items(request)
+#         try:
+#             razorpay_client.utility.verify_payment_signature(params_dict)
+#             if order.payment_status == "Processing":
+#                 order.payment_status = "Paid"
+#                 order.payment_method = 'Razorpay'
+#                 order.save()
+#                 clear_cart_items(request)
 
-            return redirect(f"/payment_status/{order.order_id}/?payment_status=paid")
-        except razorpay.errors.SignatureVerificationError:
-            print(f"Payment verification failed: {razorpay.errors.SignatureVerificationError}")
-            return redirect(f"/payment_status/{order.order_id}/?payment_status=failed")
+#             return redirect(f"/payment_status/{order.order_id}/?payment_status=paid")
+#         except razorpay.errors.SignatureVerificationError:
+#             print(f"Payment verification failed: {razorpay.errors.SignatureVerificationError}")
+#             return redirect(f"/payment_status/{order.order_id}/?payment_status=failed")
