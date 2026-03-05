@@ -11,198 +11,264 @@
 
 
 
- 
+ {% comment %} Heading of the page {% endcomment %}
 
   <section class="py-5">
     <div class="container">
       <div class="d-flex justify-content-between align-items-center">
         <h1 class="page-title pb-2">Checkout</h1>
-        <nav class="breadcrumb fs-6">
-          <a class="breadcrumb-item nav-link" href="#">Home</a>
-          <a class="breadcrumb-item nav-link" href="#">Pages</a>
-          <span class="breadcrumb-item active" aria-current="page">Checkout</span>
-        </nav>
+      
       </div>
     </div>
-  </section>
+ 
 
-  <section class="checkout-wrap pb-5">
-    <div class="container">
-      <form class="form-group">
-        <div class="row g-5">
-          <div class="col-lg-6">
-            <h4 class="text-dark pb-4">Billing Details</h4>
-            <div class="billing-details">
-              <label for="fname"> Name*</label>
-              <input type="text" id="fname" name="firstname" class="form-control mt-2 mb-4 ps-3">
+{% comment %} .container - Bootstrap class that centers content and adds horizontal padding on all screen sizes  {% endcomment %}
+  <div class="container">
+  {% comment %} row - Bootstrap flex container that holds columns side by side.
+      g-5 - gutter spacing between columns, adds gap of 3rem between left and right col   {% endcomment %}
+    <div class="row g-5">
 
-              <label for="cname">Company Name(optional)*</label>
-              <input type="text" id="cname" name="companyname" class="form-control mt-2 mb-4">
-              <label for="cname">Country / Region*</label>
-              <select class="form-select form-control mt-2 mb-4" aria-label="Default select example">
-                <option selected="" hidden="">India</option>
-                {% comment %} <option value="1">UK</option>
-                <option value="2">Australia</option>
-                <option value="3">Canada</option> {% endcomment %}
-              </select>
-              <label for="address">Street Address*</label>
-              <input type="text" id="adr" name="address" placeholder="House number and street name" class="form-control mt-3 ps-3 mb-3">
-              <input type="text" id="adr" name="address" placeholder="Appartments, suite, etc." class="form-control ps-3 mb-4">
-              <label for="city">Town / City *</label>
-              <input type="text" id="city" name="city" class="form-control mt-3 ps-3 mb-4">
-              <label for="state">State *</label>
-              <select class="form-select form-control mt-2 mb-4" aria-label="Default select example">
-                <option selected="" hidden="">West Bengal</option>
-                <option value="1">Delhi</option>
-                <option value="2">Mumbai</option>
-                <option value="3">Bengaluru</option>
-                <option value="3">Jaipur</option>
-                <option value="3">Hyderabad</option>
-              </select>
-              <label for="zip">Zip Code *</label>
-              <input type="text" id="zip" name="zip" class="form-control mt-2 mb-4 ps-3">
-              <label for="email">Phone *</label>
-              <input type="text" id="phone" name="phone" class="form-control mt-2 mb-4 ps-3">
-              <label for="email">Email address *</label>
-              <input type="text" id="email" name="email" class="form-control mt-2 mb-4 ps-3">
-            </div>
-          </div>
-          <div class="col-lg-6">
-            <h4 class="text-dark pb-4">Additional Information</h4>
-            <div class="billing-details">
-              <label for="fname">Order notes (optional)</label>
-              <textarea class="form-control pt-3 pb-3 ps-3 mt-2" placeholder="Notes about your order. Like special notes for delivery."></textarea>
-            </div>
-            <div class="your-order mt-5">
-              <h4 class="display-7 text-dark pb-4">Cart Totals</h4>
-              <div class="total-price">
-                <table cellspacing="0" class="table">
-                  <tbody>
-                    <tr class="subtotal border-top border-bottom pt-2 pb-2 text-uppercase">
-                      <th>Subtotal</th>
-                      <td data-title="Subtotal">
-                        <span class="price-amount amount ps-5">
-                          <bdi>
-                            <span class="price-currency-symbol">$</span>2,370.00 </bdi>
-                        </span>
-                      </td>
-                    </tr>
-                    <tr class="order-total border-bottom pt-2 pb-2 text-uppercase">
-                      <th>Total</th>
-                      <td data-title="Total">
-                        <span class="price-amount amount ps-5">
-                          <bdi>
-                            <span class="price-currency-symbol">$</span>2,370.00 </bdi>
-                        </span>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-                <div class="list-group mt-5 mb-3">
-                  <label class="list-group-item d-flex gap-2 border-0">
-                    <input class="form-check-input flex-shrink-0" type="radio" name="listGroupRadios" id="listGroupRadios1" value="" checked>
-                    <span>
-                      <strong class="text-uppercase">Direct bank transfer</strong>
-                      <small class="d-block text-body-secondary">Make your payment directly into our bank account. Please use your Order ID. Your order will shipped after funds have cleared in our account.</small>
-                    </span>
-                  </label>
-                  <label class="list-group-item d-flex gap-2 border-0">
-                    <input class="form-check-input flex-shrink-0" type="radio" name="listGroupRadios" id="listGroupRadios2" value="">
-                    <span>
-                      <strong class="text-uppercase">Check payments</strong>
-                      <small class="d-block text-body-secondary">Please send a check to Store Name, Store Street, Store Town, Store State / County, Store Postcode.</small>
-                    </span>
-                  </label>
-                  <label class="list-group-item d-flex gap-2 border-0">
-                    <input class="form-check-input flex-shrink-0" type="radio" name="listGroupRadios" id="listGroupRadios3" value="">
-                    <span>
-                      <strong class="text-uppercase">Cash on delivery</strong>
-                      <small class="d-block text-body-secondary">Pay with cash upon delivery.</small>
-                    </span>
-                  </label>
-                  <label class="list-group-item d-flex gap-2 border-0">
-                    <input class="form-check-input flex-shrink-0" type="radio" name="listGroupRadios" id="listGroupRadios3" value="">
-                    <span>
-                      <strong class="text-uppercase">Paypal</strong>
-                      <small class="d-block text-body-secondary">Pay via PayPal; you can pay with your credit card if you don’t have a PayPal account.</small>
-                    </span>
-                  </label>
-                </div>
-                <button type="submit" name="submit" class="btn btn-dark btn-lg text-uppercase btn-rounded-none w-100">Place an order</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </form>
-    </div>
-  </section>
+        {% comment %} ==================== LEFT COLUMN - Cart Summary ====================   {% endcomment %}
 
-  <section class="bg-light" style="background: url(images/pattern-bg.png) no-repeat;">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-md-8 py-5 my-5">
-          <div class="subscribe-header text-center pb-3">
-            <h3 class="section-title text-uppercase">Sign Up for our newsletter</h3>
-          </div>
-          <form id="form" class="d-flex flex-wrap gap-2">
-            <input type="text" name="email" placeholder="Your Email Addresss" class="form-control form-control-lg">
-            <button class="btn btn-dark btn-lg text-uppercase w-100">Sign Up</button>
-          </form>
+        {% comment %} col-lg-6 - on large screens, this div takes 6 out of 12 Bootstrap grid units = 50% width.
+        So left col (cart) and right col (payment) each take 50%, sitting side by side   {% endcomment %}
+      <div class="col-lg-6">
+
+          {% comment %} your-order - custom CSS class for styling this section.
+          mt-5 - Bootstrap margin-top of 3rem, pushes section down from the top   {% endcomment %}
+        <div class="your-order mt-5">
+  {% comment %} 
+            display-7 - large heading font size.
+            text-dark - Bootstrap class making text near-black.
+            pb-4 - padding-bottom of 1.5rem, creates space between heading and table below   {% endcomment %}
+          <h4 class="display-7 text-dark pb-4">Cart Total</h4>
+
+            {% comment %} cellspacing="0" - HTML attribute that removes default spacing between table cells.
+            .table - Bootstrap class that gives the table clean typography, spacing and borders   {% endcomment %}
+          <table cellspacing="0" class="table">
+
+              {% comment %} thead - semantic HTML for the table header section.
+              Browsers and screen readers treat this differently from tbody - it's the label row   {% endcomment %}
+            <thead>
+
+                {% comment %} text-uppercase - Bootstrap class making all header text CAPITALS.
+                text-muted - Bootstrap class making text lighter/grey, visually de-emphasised  
+                Column 1 header - product name  
+                  text-center - centers "Qty" horizontally in its cell
+                  text-end - right-aligns "Price", matches the price values below  {% endcomment %}
+              <tr class="text-uppercase text-muted">
+                <th>Product</th>                            
+                <th class="text-center">Qty</th>              
+                <th class="text-end">Price</th>              
+              </tr>
+            </thead>
+
+              {% comment %} tbody - semantic HTML for the table body. Holds all the actual data rows   {% endcomment %}
+            <tbody>
+
+                {% comment %} Django template loop - which iterates over every OrderItem related to this Order.
+                How? in models, class Order has user= models.ForeignKey(User) and 
+                class OrderItem has order = models.ForeignKey(Order, related_name="order_items"), product and qty and price
+
+                The line order = models.ForeignKey(Order, ...) is what creates the link. OrderItem says "I belong to an Order".
+                Then, in views.py, the order object is passed to the template context. In the template, we can access all related OrderItems 
+                order.order_items.all - accesses the reverse ForeignKey relation from Order → OrderItem.
+                Foreign Key have 2 directions: forward (OrderItem → Order) and reverse (Order → OrderItem).
+                .all - gets all OrderItems related to this Order as a queryset, which we can loop over with {% for %}.
+                Each iteration gives us one `item` object with fields: product, qty, price   {% endcomment %}
+              {% for item in order.order_items.all %}
+
+                {% comment %} border-top - Bootstrap class adding a top border line to visually separate each product row.
+                pt-2 pb-2 - padding top and bottom of 0.5rem each, giving rows some breathing room   {% endcomment %}
+                <tr class="border-top pt-2 pb-2">
+
+                    {% comment %} item.product - accesses the Product object via ForeignKey on OrderItem.
+                    .name - accesses the name field of that Product model   {% endcomment %}
+                  <td>{{ item.product.name }}</td>
+
+                    {% comment %} item.qty - the quantity field on OrderItem, how many units of this product were ordered.
+                    text-center - centers the number under the "Qty" header   {% endcomment %}
+                  <td class="text-center">{{ item.qty }}</td>
+
+                    {% comment %} item.price - the price stored on OrderItem at time of purchase (snapshot, not live product price).
+                    intcomma - Django humanize filter, formats numbers with commas e.g. 1200 → 1,200.
+                    text-end - right-aligns the price to match the "Price" header above   {% endcomment %}
+                  <td class="text-end">₹ {{ item.price | intcomma }}</td>
+                </tr>
+
+                {% comment %} End of the for loop - no more item rows after this   {% endcomment %}
+               {% endfor %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+                {% comment %} This is the totals row, outside the loop so it only renders once.
+                border-top border-bottom - adds lines above and below to visually separate it from item rows.
+                text-uppercase - makes "Total" all caps   {% endcomment %}
+              <tr class="border-top border-bottom pt-2 pb-2 text-uppercase">
+  {% comment %} 
+                  colspan="2" - makes this <th> span across 2 columns (Product + Qty),
+                  so "Total" label sits on the left and the price value sits on the far right   {% endcomment %}
+                <th colspan="2">Total</th>
+
+                  {% comment %} cart_total - context variable passed from views.py, sum of all item prices.
+                  fw-bold - Bootstrap font-weight bold, makes the total stand out visually   {% endcomment %}
+                <td class="text-end fw-bold">₹ {{ order.sub_total | intcomma }}</td>
+              </tr>
+
+            </tbody>
+          </table>
+         
         </div>
       </div>
+
+        {% comment %} ==================== RIGHT COLUMN - Payment Method ====================   {% endcomment %}
+
+        {% comment %} col-lg-6 - same as left col, takes 50% width on large screens.
+        Together with the left col-lg-6, they fill the full row (6+6=12)   {% endcomment %}
+      <div class="col-lg-6">
+        <div class="mt-5">
+
+          <h4 class="display-7 text-dark pb-4">Payment Method</h4>
+
+            {% comment %} list-group - Bootstrap component that stacks items as a vertical group with shared styling.
+            mb-3 - margin-bottom of 1rem, adds space between the options and the submit button   {% endcomment %}
+          <div class="list-group mb-3">
+
+              {% comment %} Each payment option is a <label> wrapping both the radio input and its text.
+              Wrapping in <label> means clicking anywhere on the text also selects the radio - better UX.
+              list-group-item - Bootstrap class giving each option consistent padding and borders.
+              d-flex - flexbox display so the radio and text sit side by side horizontally.
+              gap-2 - adds 0.5rem space between the radio input and the text span.
+              border-0 - removes the default border Bootstrap adds to list-group-items   {% endcomment %}
+
+            {% comment %} <label class="list-group-item d-flex gap-2 border-0"> {% endcomment %}
+
+                {% comment %} form-check-input - Bootstrap class styling the radio button consistently.
+                flex-shrink-0 - prevents the radio button from shrinking if the text beside it is long.
+                type="radio" - HTML radio input, only one in this group can be selected at a time.
+                name="payment_method" - groups all 4 radios together. Only one value posts to Django.
+                                        In views.py: request.POST.get("payment_method") reads this.
+                value="bank_transfer" - the actual value sent to Django when this option is selected.
+                checked - HTML attribute making this option selected by default on page load   {% endcomment %}
+              {% comment %} <input class="form-check-input flex-shrink-0" type="radio" name="payment_method" value="bank_transfer" checked> {% endcomment %}
+
+              {% comment %} <span>
+                  {% comment %} text-uppercase - makes the payment method name all caps for visual emphasis   {% endcomment %}
+                {% comment %} <strong class="text-uppercase">Direct Bank Transfer</strong> {% endcomment %}
+
+                  {% comment %} d-block - makes <small> a block element so it sits on its own line below the <strong>.
+                  text-body-secondary - Bootstrap class for muted/secondary grey text, de-emphasises the description   {% endcomment %}
+                {% comment %} <small class="d-block text-body-secondary">Make your payment directly into our bank account. Please use your Order ID as reference.</small> 
+              </span>
+            </label> {% endcomment %}
+
+              {% comment %} Same structure repeated for each payment option.
+              Only difference is value= changes: "check", "cod", "paypal"
+              These values are what request.POST.get("payment_method") will return in views.py   {% endcomment %}
+{% comment %} 
+            <label class="list-group-item d-flex gap-2 border-0">
+              <input class="form-check-input flex-shrink-0" type="radio" name="payment_method" value="paypal">
+              <span>
+                <strong class="text-uppercase">PayPal</strong>
+                <small class="d-block text-body-secondary">Pay via PayPal; you can pay with your credit card if you don't have a PayPal account.</small>
+              </span>
+            </label> {% endcomment %}
+
+            <label class="list-group-item d-flex gap-2 border-0">
+              <input class="form-check-input flex-shrink-0" type="radio" name="payment_method" value="cod" disabled>
+              <span>
+                <strong class="text-uppercase">Cash on Delivery</strong>
+                <small class="d-block text-body-secondary">Pay with cash upon delivery.</small>
+              </span>
+            </label>
+
+            
+          </div>
+
+            {% comment %} type="submit" - submits the parent <form> when clicked, sending all field values to Django.
+            name="submit" - lets views.py detect the button click via request.POST.get("submit").
+            btn btn-dark btn-lg - Bootstrap button classes: dark background, large size.
+            text-uppercase - all caps text on the button.
+            btn-rounded-none - custom CSS class, removes border-radius making button edges sharp.
+            w-100 - Bootstrap width 100%, button stretches full width of its column   {% endcomment %}
+          {% comment %} <button type="submit" name="submit" class="btn btn-dark btn-lg text-uppercase btn-rounded-none w-100">Place an Order</button> {% endcomment %}
+           <div id="paypal-button-container" class="mt-3"></div>
+
+        </div>
+      </div>
+
+    {% comment %} Closes the .row div opened at the top. All col- divs must live inside a .row   {% endcomment %}
     </div>
-  </section>
+
+    {% comment %} Closes the .container div   {% endcomment %}
+  </div>
+</section>
+<script src="https://www.paypal.com/sdk/js?client-id={{ paypal_client_id }}&currency=INR"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<script>
+  function initPayPalButton() {
+    paypal.Buttons({
+      style: {
+        shape: 'rect',
+        color: 'gold',
+        layout: 'vertical',
+        label: 'paypal',
+        
+      },
+
+      createOrder: function(data, actions) {
+        return actions.order.create({
+          purchase_units: [
+          {
+            amount:{
+              currency_code:"INR",
+              value:"{{ order.total }}"
+            }
+          }]
+        });
+      },
+
+      onApprove: function(data, actions) {
+        return actions.order.capture().then(function(details) {
+          //alert('Transaction completed by ' + details.payer.name.given_name + '!');
+          
+          console.log("Capture result", details, JSON.stringify(orderData,null,2));
+
+          const element = document.getElementById('paypal-button-container');
+          element.innerHTML = '<h3>Thank you for your payment!</h3>';
+          element.innerHTML += '<p>Transaction completed by ' + details.payer.name.given_name + '.</p>';
+          window.location.href ='/paypal_payment_verify/{{ order.order_id }}/?transaction_id=' + details.id;
+        });
+      },
+
+      onError: function(err) {
+        console.log(err);
+      },
+    })
+    .render('#paypal-button-container');
+  }
+  initPayPalButton();
+</script>
+
+
+
+ 
+
   
-  <section class="instagram py-5">
-    <div class="container">
-      <div class="row g-3">
-        <h6 class="element-title text-center">Follow us on Instagram</h6>
-        <div class="col-6 col-sm-4 col-md-2">
-          <div class="insta-item">
-            <a href="https://www.instagram.com/templatesjungle/" target="_blank">
-              <img src="images/insta-item1.jpg" alt="instagram" class="insta-image img-fluid">
-            </a>
-          </div>
-        </div>
-        <div class="col-6 col-sm-4 col-md-2">
-          <div class="insta-item">
-            <a href="https://www.instagram.com/templatesjungle/" target="_blank">
-              <img src="images/insta-item2.jpg" alt="instagram" class="insta-image img-fluid">
-            </a>
-          </div>
-        </div>
-        <div class="col-6 col-sm-4 col-md-2">
-          <div class="insta-item">
-            <a href="https://www.instagram.com/templatesjungle/" target="_blank">
-              <img src="images/insta-item3.jpg" alt="instagram" class="insta-image img-fluid">
-            </a>
-          </div>
-        </div>
-        <div class="col-6 col-sm-4 col-md-2">
-          <div class="insta-item">
-            <a href="https://www.instagram.com/templatesjungle/" target="_blank">
-              <img src="images/insta-item4.jpg" alt="instagram" class="insta-image img-fluid">
-            </a>
-          </div>
-        </div>
-        <div class="col-6 col-sm-4 col-md-2">
-          <div class="insta-item">
-            <a href="https://www.instagram.com/templatesjungle/" target="_blank">
-              <img src="images/insta-item5.jpg" alt="instagram" class="insta-image img-fluid">
-            </a>
-          </div>
-        </div>
-        <div class="col-6 col-sm-4 col-md-2">
-          <div class="insta-item">
-            <a href="https://www.instagram.com/templatesjungle/" target="_blank">
-              <img src="images/insta-item6.jpg" alt="instagram" class="insta-image img-fluid">
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
   
+
  
 </body>
 </html>

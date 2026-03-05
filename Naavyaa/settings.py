@@ -12,7 +12,10 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+
 from environs import Env
+from django.contrib import messages
+
 # Initialising environment reader
 env = Env()
 env.read_env()
@@ -35,6 +38,7 @@ SECRET_KEY = 'django-insecure-)grf%_(lmf)ic6_^ff18_7e2al^m%y)zda84)m*()nh9q(gn!k
 DEBUG =  True
 
 ALLOWED_HOSTS = []
+SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin-allow-popups'
 
 
 # Application definition
@@ -158,9 +162,17 @@ AUTH_USER_MODEL = 'userauths.User'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField' 
 
-# Paypal_ID = env("PAYPAL_CLIENT_ID")
+PAYPAL_CLIENT_ID = env("PAYPAL_CLIENT_ID")
+PAYPAL_SECRET_ID = env("PAYPAL_SECRET_ID")
+
+
+
+MESSAGE_TAGS = {
+    messages.DEBUG: 'danger',    
+}
+
 
 
 ############## Heeya's Code ####################
