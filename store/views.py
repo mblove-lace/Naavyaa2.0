@@ -1,7 +1,7 @@
 # This page will:
 # 1. get all Product objects from your database where status = "Published".
 # 2. Passes them into a dictionary (context) under the key "products".
-# 3.Renders the template store/index.html with this context.
+# 3. Renders the template store/index.html with this context.
 
 from decimal import Decimal
 from django.shortcuts import render , redirect
@@ -23,7 +23,7 @@ from plugin.tax_calculation import tax_calculation
 import requests
 import razorpay
 
-# from plugin.tax_calculation import tax_calculation
+from plugin.tax_calculation import tax_calculation
 
 razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 # // -------------------------------------------- ---------------------------- -----------------------------------------//

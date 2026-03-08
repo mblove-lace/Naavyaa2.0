@@ -3,11 +3,6 @@
 {% load static %}
 {% block content %}
 
-<body class="homepage">
-
-
-  <div class="preloader text-white fs-6 text-uppercase overflow-hidden"></div>
-
 
 
 
@@ -59,7 +54,7 @@
               <tr class="text-uppercase text-muted">
                 <th>Product</th>                            
                 <th class="text-center">Qty</th>              
-                <th class="text-end">Price</th>              
+                <th class="text-end">Price/Item </th>              
               </tr>
             </thead>
 
@@ -175,14 +170,21 @@
               {% comment %} Same structure repeated for each payment option.
               Only difference is value= changes: "check", "cod", "paypal"
               These values are what request.POST.get("payment_method") will return in views.py   {% endcomment %}
-{% comment %} 
+
             <label class="list-group-item d-flex gap-2 border-0">
-              <input class="form-check-input flex-shrink-0" type="radio" name="payment_method" value="paypal">
+              <input class="form-check-input flex-shrink-0" type="radio" name="payment_method" value="upi">
               <span>
-                <strong class="text-uppercase">PayPal</strong>
-                <small class="d-block text-body-secondary">Pay via PayPal; you can pay with your credit card if you don't have a PayPal account.</small>
+                <strong class="text-uppercase">UPI</strong>
+                <small class="d-block text-body-secondary">Pay securely using  UPI - Google Pay, PhonePe, or Paytm. You can pay with your credit card if you don't have a UPI account.</small>
               </span>
-            </label> {% endcomment %}
+            </label> 
+                <label class="list-group-item d-flex gap-2 border-0">
+              <input class="form-check-input flex-shrink-0" type="radio" name="payment_method" value="PayPal">
+              <span>
+                <strong class="text-uppercase">UPI</strong>
+                <small class="d-block text-body-secondary">Pay securely using PayPal.</small>
+              </span>
+            </label> 
 
             <label class="list-group-item d-flex gap-2 border-0">
               <input class="form-check-input flex-shrink-0" type="radio" name="payment_method" value="cod" disabled>
@@ -191,6 +193,8 @@
                 <small class="d-block text-body-secondary">Pay with cash upon delivery.</small>
               </span>
             </label>
+
+            
 
             
           </div>
@@ -213,11 +217,115 @@
     {% comment %} Closes the .container div   {% endcomment %}
   </div>
 </section>
-<script src="https://www.paypal.com/sdk/js?client-id={{ paypal_client_id }}&currency=INR"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+
+{% comment %} Here lies the Razorpay integration {% endcomment %}
+
+
+{% comment %} RazorPay integration ends {% endcomment %}
+
+
+
+
+
+
+{% comment %} Script for initializing PayPal button {% endcomment %}
+{% comment %} Loading PayPal Javascript SDK - Software Development Kit - PAckage of tools , libraries and code provided by platform so developers can easily integrate with their system.
+In this case, we load the PayPal SDK from their CDN (Content Delivery Network) with our client ID and currency as query parameters.
+in django, views.py has a context variable called "paypal_client_id" - with context = {"paypal_client_id": "YOUR_CLIENT_ID"}  - which ccalls to settings.py- PAYPAL_CLIENT_ID for the browser to finally see the  client_id .
+So, the structure goes like -
+settings.py -> PAYPAL_CLIENT_ID = "YOUR_CLIENT_ID" 
+ views.py -> passes client id + order data
+Template :   checkout.html
+                ↓
+            loads PayPal SDK
+Browser :
+PayPal SDK loads
+   ↓
+paypal.Buttons() creates payment UI
+
+user approves payment
+   ↓
+payment captured
+
+Django Verification:
+/paypal_payment_verify/
+   ↓
+order marked paid
+
+>>>>> What this does is it loads the PayPal SDK with our client ID, which then allows us to render "PayPal buttons" on the page.
+  When the user clicks the PayPal button and approves the payment, we capture the transaction details and redirect to a Django view that verifies the payment and updates our order status accordingly. 
+  This way, we can securely process payments through PayPal while keeping our server informed of the transaction status.
+
+{% endcomment %}
+
+<script src="https://www.paypal.com/sdk/js?client-id={{ paypal_client_id }}&currency=USD"></script>
+
 
 
 <script>
+  {% comment %} 
+  1. document represents the entire HTML page loaded in the browser. It is the part of DOM - Document Object Model  
+        How the DOM reads the HTML? Through parsing - Reading the code and converting it into a structure the computer/browser can understand.
+        Read HTML
+          ↓
+        Create DOM nodes
+          ↓
+        If <script> appears → pause parsing
+          ↓
+        Run script
+          ↓
+        Continue parsing
+
+        Analogy: Reading a sentence: "The cat sits on the mat." Here, the browser reads each word and creates a mental image (DOM node) for it.
+        If suddenly you encounter a footnote (script), you pause reading the sentence, read the footnote, understand it, and then go back to finish the sentence.
+
+  2. addEventListener -   is a method that allows us to listen for specific events on the page and run a function when that event occurs.
+     It follows the syntax: element.addEventListener(event, function) event - what to listen for and function - what to do when that event happens.
+  
+  3. "DOMContentLoaded" - is a specific event that fires when the initial HTML document has been completely loaded and parsed by the browser, without waiting for stylesheets, images, and subframes to finish loading. It tell to run the JavaScript after the HTML page structure has finished loading.
+  Function is the entire block of code after {} which will run once the DOM is ready- which was the event.
+      
+        {% endcomment %}
+  document.addEventListener("DOMContentLoaded", function () {
+    // What is the function here? 
+    // 1. printing a debug message to the console to confirm that the DOM is ready and our script is running at the right time.
+      console.log("DOM is ready");
+    // 2. variable container is assigned to the HTML element with the ID "paypal-button-container". 
+    //The variable type is constant, meaning it can't be reassigned to a different value later in the code. 'container'is the name of the variable with const keyword.
+    
+    // This is where the PayPal buttons will be rendered on the page.
+    //[ container ] → PayPal DIV element
+    // getElementById() - is a method that retrieves an HTML element based on its unique ID attribute. 
+    //In this case, it looks for an element with id="paypal-button-container" and assigns it to the variable container.
+   
+  
+    
+      const container = document.getElementById("paypal-button-container");
+   // 3. Initially, we set the display style of the container to "none", hiding the PayPal buttons when the page first loads.
+      container.style.display = "none";
+   // 4. document = the entire HTML page loaded in the browser. It is the part of DOM - Document Object Model
+    // querySelectorAll() - is a "method" that finds all elements in the document that match a specified CSS selector and
+    // returns them as a NodeList (which is like an array of elements).     
+    // 5. We then loop through each of these radio buttons using forEach() and add a "change" event listener to them.
+    //Example - Find all <input> elements ,whose name attribute = "payment_method" . So, this will select all the radio buttons for payment methods.
+
+      document.querySelectorAll('input[name="payment_method"]').forEach(radio => 
+      {
+          radio.addEventListener("change", function () {
+              if (this.value === "PayPal") {
+                  container.style.display = "block";
+              } 
+              else {
+                  container.style.display = "none";
+              }
+          });
+      });
+  });
+
+
+
   function initPayPalButton() {
     paypal.Buttons({
       style: {
@@ -227,14 +335,15 @@
         label: 'paypal',
         
       },
-
+// This following is the one that creates the API call to PayPal when the user clicks the PayPal button. It sets up the transaction details, including the amount and currency, that will be sent to PayPal for processing the payment.
+      // createOrder - is a function that sets up the transaction details when the user clicks the PayPal button.
       createOrder: function(data, actions) {
         return actions.order.create({
           purchase_units: [
           {
             amount:{
-              currency_code:"INR",
-              value:"{{ order.total }}"
+              currency_code:"USD",
+              value:"{{ order.total|floatformat:2 }}",
             }
           }]
         });
@@ -244,7 +353,9 @@
         return actions.order.capture().then(function(details) {
           //alert('Transaction completed by ' + details.payer.name.given_name + '!');
           
-          console.log("Capture result", details, JSON.stringify(orderData,null,2));
+          console.log("Capture result", details,
+           //JSON.stringify(details, null, 2)
+           );
 
           const element = document.getElementById('paypal-button-container');
           element.innerHTML = '<h3>Thank you for your payment!</h3>';
@@ -269,7 +380,4 @@
   
   
 
- 
-</body>
-</html>
 {% endblock content %}
