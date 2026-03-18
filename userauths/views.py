@@ -60,7 +60,7 @@ def register_view(request):
     # .is_authenticated: Boolean property that returns True if user is logged in, False if anonymous
     # Why check? Prevent logged-in users from creating another account
     if request.user.is_authenticated:
-        # ❌ NOTE: There's an extra space in "request.user .is_authenticated" (should be request.user.is_authenticated)
+        
         
         # messages.warning(): Displays a warning message to the user
         # request: Needed to attach the message to this specific request/session

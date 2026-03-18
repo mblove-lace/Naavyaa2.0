@@ -19,6 +19,7 @@ from django.contrib import messages
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from plugin.tax_calculation import tax_calculation
+from django.core.mail import EmailMultiAlternatives
 
 import requests
 import razorpay
@@ -451,8 +452,16 @@ def checkout(request,order_id):
 #     cart_sub_total = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user)if request.user.is_authenticated else Q(cart_id=cart_id)).aggregate(sub_total= Sum("sub_total"))['sub_total']
 
     order =store_models.Order.objects.get(order_id=order_id)
-    
-    # requests.request
+    # amount_in_inr = convert_usd_to_inr(order.total)
+
+    try: 
+        razorpay_order = razorpay_client.order.create({
+            "amount": int( * 100),  
+            "currency": "INR",
+            "payment_capture": "1",
+            })
+    except:
+        razorpay_order = None
 
     context = {
         "items": order.order_items,
@@ -460,6 +469,8 @@ def checkout(request,order_id):
         
         "order": order,
         "paypal_client_id": settings.PAYPAL_CLIENT_ID,
+        "razorpay_order_id": razorpay_order['id'] if razorpay_order else None,
+ 
     }
     return render (request, "store/checkout.html", context)
 
@@ -733,33 +744,35 @@ def payment_status(request, order_id):
 
 
 
-# @csrf_exempt
-# def razorpay_payment_verify(request, order_id):
-#     order = store_models.Order.objects.get(order_id=order_id)
-#     payment_method = request.GET.get("payment_method")
+@csrf_exempt
+def razorpay_payment_verify(request, order_id):
+    order = store_models.Order.objects.get(order_id=order_id)
+    payment_method = request.GET.get("payment_method")
 
-#     if request.method == "POST":
-#         data = request.POST
+    if request.method == "POST":
+        data = request.POST
 
-#         razorpay_order_id = data.get("razorpay_order_id")
-#         razorpay_payment_id = data.get("razorpay_payment_id")
-#         razorpay_signature = data.get("razorpay_signature")
+        razorpay_order_id = data.get("razorpay_order_id")
+        razorpay_payment_id = data.get("razorpay_payment_id")
+        razorpay_signature = data.get("razorpay_signature")
 
-#         params_dict = {
-#             "razorpay_order_id": razorpay_order_id,
-#             "razorpay_payment_id": razorpay_payment_id,
-#             "razorpay_signature": razorpay_signature
-#         }
+        params_dict = {
+            "razorpay_order_id": razorpay_order_id,
+            "razorpay_payment_id": razorpay_payment_id,
+            "razorpay_signature": razorpay_signature,
+        }
 
-#         try:
-#             razorpay_client.utility.verify_payment_signature(params_dict)
-#             if order.payment_status == "Processing":
-#                 order.payment_status = "Paid"
-#                 order.payment_method = 'Razorpay'
-#                 order.save()
-#                 clear_cart_items(request)
+        try:
+            razorpay_client.utility.verify_payment_signature(params_dict)
+            if order.payment_status == "Processing":
+                order.payment_status = "Paid"
+                order.payment_method = 'Razorpay'
+                order.save()
+                clear_cart_items(request)
 
-#             return redirect(f"/payment_status/{order.order_id}/?payment_status=paid")
-#         except razorpay.errors.SignatureVerificationError:
-#             print(f"Payment verification failed: {razorpay.errors.SignatureVerificationError}")
-#             return redirect(f"/payment_status/{order.order_id}/?payment_status=failed")
+            return redirect(f"/payment_status/{order.order_id}/?payment_status=paid")
+        except razorpay.errors.SignatureVerificationError:
+            print(f"Payment verification failed: {razorpay.errors.SignatureVerificationError}")
+            return redirect(f"/payment_status/{order.order_id}/?payment_status=failed")
+        
+

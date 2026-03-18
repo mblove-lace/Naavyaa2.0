@@ -146,7 +146,7 @@
               gap-2 - adds 0.5rem space between the radio input and the text span.
               border-0 - removes the default border Bootstrap adds to list-group-items   {% endcomment %}
 
-            {% comment %} <label class="list-group-item d-flex gap-2 border-0"> {% endcomment %}
+            <label class="list-group-item d-flex gap-2 border-0">
 
                 {% comment %} form-check-input - Bootstrap class styling the radio button consistently.
                 flex-shrink-0 - prevents the radio button from shrinking if the text beside it is long.
@@ -155,33 +155,51 @@
                                         In views.py: request.POST.get("payment_method") reads this.
                 value="bank_transfer" - the actual value sent to Django when this option is selected.
                 checked - HTML attribute making this option selected by default on page load   {% endcomment %}
-              {% comment %} <input class="form-check-input flex-shrink-0" type="radio" name="payment_method" value="bank_transfer" checked> {% endcomment %}
+              <input class="form-check-input flex-shrink-0" type="radio" name="payment_method" value="bank_transfer" checked>
 
-              {% comment %} <span>
-                  {% comment %} text-uppercase - makes the payment method name all caps for visual emphasis   {% endcomment %}
-                {% comment %} <strong class="text-uppercase">Direct Bank Transfer</strong> {% endcomment %}
+              <span>
+                  {% comment %} strong class - makes the payment method name bold for emphasis. Emphasising - a very important message
+                    text-uppercase - makes the payment method name all caps for visual emphasis   {% endcomment %}
+                <strong class="text-uppercase">RazorPay</strong> 
 
                   {% comment %} d-block - makes <small> a block element so it sits on its own line below the <strong>.
                   text-body-secondary - Bootstrap class for muted/secondary grey text, de-emphasises the description   {% endcomment %}
-                {% comment %} <small class="d-block text-body-secondary">Make your payment directly into our bank account. Please use your Order ID as reference.</small> 
+                 <small class="d-block text-body-secondary"> Pay securely using Razorpay. Pay with UPI, cards, netbanking and more.
+                 </small> 
               </span>
+            </label>
+
+             
+  {% comment %} Razorpay Integration- Desphixs using form {% endcomment %}
+              {% comment %} <div class "w-100 mt -3">
+                <form action="/razorpay_payment_verify/<ORDER_ID>?payment_method=razorpay/" method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" name="payment_method" value="razorpay">
+                  <button type="submit" name="submit" class="btn btn-dark btn-lg text-uppercase btn-rounded-none w-100">Pay with Razorpay</button>
+                </form>
+              </div> 
+            
+            
+            ======= Razorpay Integration ======= {% endcomment %}
+{% comment %} 
+            <label class="list-group-item d-flex gap-2 border-0">
+              <input class="form-check-input flex-shrink-0" type="radio"  name="payment_method" value="razorpay">
+              <span>
+
+                <strong class="text-uppercase">Razorpay</strong>
+                <small class="d-block text-body-secondary">
+                  Pay securely using Razorpay. </small>
+                 </span>
             </label> {% endcomment %}
 
-              {% comment %} Same structure repeated for each payment option.
-              Only difference is value= changes: "check", "cod", "paypal"
-              These values are what request.POST.get("payment_method") will return in views.py   {% endcomment %}
 
+
+
+            
             <label class="list-group-item d-flex gap-2 border-0">
-              <input class="form-check-input flex-shrink-0" type="radio" name="payment_method" value="upi">
-              <span>
-                <strong class="text-uppercase">UPI</strong>
-                <small class="d-block text-body-secondary">Pay securely using  UPI - Google Pay, PhonePe, or Paytm. You can pay with your credit card if you don't have a UPI account.</small>
-              </span>
-            </label> 
-                <label class="list-group-item d-flex gap-2 border-0">
               <input class="form-check-input flex-shrink-0" type="radio" name="payment_method" value="PayPal">
               <span>
-                <strong class="text-uppercase">UPI</strong>
+                <strong class="text-uppercase">PayPal</strong>
                 <small class="d-block text-body-secondary">Pay securely using PayPal.</small>
               </span>
             </label> 

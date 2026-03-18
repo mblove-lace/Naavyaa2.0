@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'django_ckeditor_5',
+    'django_recaptcha',
     'import_export',
 
 
@@ -62,7 +63,7 @@ INSTALLED_APPS = [
     'vendor',
     'blog',
     
-    'anymail',
+    'anymail',              
 ]
 
 MIDDLEWARE = [
@@ -108,7 +109,9 @@ DATABASES = {
 }
 
 
+
 ANYMAIL = {
+    # ANYMAIL is a configuration dictionary used by Anymail
     "MAILGUN_API_KEY": os.environ.get("MAILGUN_API_KEY"),
     "MAILGUN_SENDER_DOMAIN": os.environ.get("MAILGUN_SENDER_DOMAIN"),
 }
@@ -356,3 +359,4 @@ CKEDITOR_5_CONFIGS = {
         ],
     },
 }
+SILENCED_SYSTEM_CHECKS = ['django_recaptcha.recaptcha_test_key_error']
