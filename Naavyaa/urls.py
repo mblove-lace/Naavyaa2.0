@@ -30,7 +30,7 @@ urlpatterns = [
     # This tells Django:  “If the URL doesn’t start with /admin/ or /ckeditor5/, check inside the file store/urls_store.py for more URL patterns.”
     path('', include('store.urls_store')),
 
-    path('userauths/', include('userauths.urls_userauth')),
+    path('user/', include('userauths.urls_userauth')),
     # This line connects your project with a third-party app called django-ckeditor-5
     # It provides URLs that handle uploading, browsing, and managing images/files for your text editor in the admin panel.
     path("ckeditor5/", include("django_ckeditor_5.urls")),

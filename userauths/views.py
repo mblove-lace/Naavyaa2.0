@@ -289,3 +289,43 @@ def register_view(request):
 #    f. Set user_Type on profile
 #    g. Save profile
 #    h. Redirect to intended page or homepage
+
+
+
+def login_view(request):
+    if request.user.is_authenticated:
+        messages.warning(request, "You are already logged in.")
+        return redirect("/")
+    
+    if request.method == "POST":
+        form = userauth_forms.LoginForm(request.POST or None)
+        if form.is_valid():
+            email = form.cleaned_data.get("email")
+            password = form.cleaned_data.get("password")
+            captcha_verified = form.cleaned_data.get("captcha", False)
+
+            if captcha_verified:
+                try:
+                    user_instance = userauth_models.User.objects.get(email=email,is_active=True)
+                    user_authenticate = authenticate(request, email=email, password=password)
+
+                    if user_instance is not None:
+                        login(request, user_authenticate)
+                        messages.success(request, f"Welcome back, {user_instance.profile.full_name}!")
+                        next_url = request.GET.get("next", "store:index")
+                        return redirect(next_url)
+                    else:
+                        messages.error(request, "Invalid email or password.")
+
+
+                except:
+                    messages.error(request, "No active account found with this email.")
+            else:
+                messages.error(request, "Captcha verification failed. Please try again.")
+    else:
+        form = userauth_forms.LoginForm()
+    
+    context = {
+        "form": form,
+    }
+    return render(request, "userauths/login.html", context)
