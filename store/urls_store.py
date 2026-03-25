@@ -9,7 +9,7 @@ from store import views
 # Set the application namespace to 'store'
 # This allows you to reference URLs as 'store:index' or 'store:product_detail'
 # when using reverse() or {% url %} template tags
-app_name = 'store'
+app_name = "store"
 
 
 # Define the list of URL patterns for this app

@@ -17,8 +17,9 @@
     </div>
  
 
-{% comment %} .container - Bootstrap class that centers content and adds horizontal padding on all screen sizes  {% endcomment %}
-  <div class="container">
+ {% comment %} .container - Bootstrap class that centers content and adds horizontal padding on all screen sizes  {% endcomment %}
+
+<div class="container">
   {% comment %} row - Bootstrap flex container that holds columns side by side.
       g-5 - gutter spacing between columns, adds gap of 3rem between left and right col   {% endcomment %}
     <div class="row g-5">
@@ -95,17 +96,6 @@
                {% endfor %}
 
 
-
-
-
-
-
-
-
-
-
-
-
                 {% comment %} This is the totals row, outside the loop so it only renders once.
                 border-top border-bottom - adds lines above and below to visually separate it from item rows.
                 text-uppercase - makes "Total" all caps   {% endcomment %}
@@ -124,76 +114,81 @@
           </table>
          
         </div>
-      </div>
+    </div>
+
+
+
+    
+<!---  =========== Payment Options===========  -->
+
+
 
         {% comment %} ==================== RIGHT COLUMN - Payment Method ====================   {% endcomment %}
 
-        {% comment %} col-lg-6 - same as left col, takes 50% width on large screens.
-        Together with the left col-lg-6, they fill the full row (6+6=12)   {% endcomment %}
+
+
+
+         {% comment %} ======= Razorpay Integration ======= {% endcomment %}
+                      
+  {% comment %} Razorpay Integration- Desphixs using form {% endcomment %}
+              {% comment %} <div class "w-100 mt-3">
+                <form action="{% url 'store:razorpay_payment_verify' order.order_id %}?payment_method=razorpay" method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" name="payment_method" value="razorpay">
+                  <button type="submit" name="submit" class="btn btn-dark btn-lg text-uppercase btn-rounded-none w-100">Pay with Razorpay</button>
+                </form>
+              </div>  {% endcomment %}
+              {% comment %} <script src="https://checkout.razorpay.com/v1/checkout.js"> </script> {% endcomment %}
+            
+         
+        
+       <!--- col-lg-6 - same as left col, takes 50% width on large screens.
+        Together with the left col-lg-6, they fill the full row (6+6=12)  -->
       <div class="col-lg-6">
         <div class="mt-5">
 
           <h4 class="display-7 text-dark pb-4">Payment Method</h4>
 
-            {% comment %} list-group - Bootstrap component that stacks items as a vertical group with shared styling.
-            mb-3 - margin-bottom of 1rem, adds space between the options and the submit button   {% endcomment %}
+           <!--- list-group - Bootstrap component that stacks items as a vertical group with shared styling.
+            mb-3 - margin-bottom of 1rem, adds space between the options and the submit button  -->
           <div class="list-group mb-3">
 
-              {% comment %} Each payment option is a <label> wrapping both the radio input and its text.
+           <!---  Each payment option is a <label> wrapping both the radio input and its text.
               Wrapping in <label> means clicking anywhere on the text also selects the radio - better UX.
               list-group-item - Bootstrap class giving each option consistent padding and borders.
               d-flex - flexbox display so the radio and text sit side by side horizontally.
               gap-2 - adds 0.5rem space between the radio input and the text span.
-              border-0 - removes the default border Bootstrap adds to list-group-items   {% endcomment %}
+              border-0 - removes the default border Bootstrap adds to list-group-items -->
 
-            <label class="list-group-item d-flex gap-2 border-0">
+              <label class="list-group-item d-flex gap-2 border-0">
 
-                {% comment %} form-check-input - Bootstrap class styling the radio button consistently.
+               <!---form-check-input - Bootstrap class styling the radio button consistently.
                 flex-shrink-0 - prevents the radio button from shrinking if the text beside it is long.
                 type="radio" - HTML radio input, only one in this group can be selected at a time.
                 name="payment_method" - groups all 4 radios together. Only one value posts to Django.
                                         In views.py: request.POST.get("payment_method") reads this.
                 value="bank_transfer" - the actual value sent to Django when this option is selected.
-                checked - HTML attribute making this option selected by default on page load   {% endcomment %}
-              <input class="form-check-input flex-shrink-0" type="radio" name="payment_method" value="bank_transfer" checked>
+                checked - HTML attribute making this option selected by default on page load -->
+             <input class="form-check-input flex-shrink-0" type="radio" name="payment_method" value="razorpay"> 
 
-              <span>
-                  {% comment %} strong class - makes the payment method name bold for emphasis. Emphasising - a very important message
-                    text-uppercase - makes the payment method name all caps for visual emphasis   {% endcomment %}
+              <span> 
+                 <!--- strong class - makes the payment method name bold for emphasis. Emphasising - a very important message
+                    text-uppercase - makes the payment method name all caps for visual emphasis   -->
                 <strong class="text-uppercase">RazorPay</strong> 
 
-                  {% comment %} d-block - makes <small> a block element so it sits on its own line below the <strong>.
-                  text-body-secondary - Bootstrap class for muted/secondary grey text, de-emphasises the description   {% endcomment %}
+                 <!--- d-block - makes <small> a block element so it sits on its own line below the <strong>.
+                  text-body-secondary - Bootstrap class for muted/secondary grey text, de-emphasises the description   -->
                  <small class="d-block text-body-secondary"> Pay securely using Razorpay. Pay with UPI, cards, netbanking and more.
                  </small> 
               </span>
             </label>
 
-             
-  {% comment %} Razorpay Integration- Desphixs using form {% endcomment %}
-              {% comment %} <div class "w-100 mt -3">
-                <form action="/razorpay_payment_verify/<ORDER_ID>?payment_method=razorpay/" method="POST">
-                  {% csrf_token %}
-                  <input type="hidden" name="payment_method" value="razorpay">
-                  <button type="submit" name="submit" class="btn btn-dark btn-lg text-uppercase btn-rounded-none w-100">Pay with Razorpay</button>
-                </form>
-              </div> 
-            
-            
-            ======= Razorpay Integration ======= {% endcomment %}
-{% comment %} 
-            <label class="list-group-item d-flex gap-2 border-0">
-              <input class="form-check-input flex-shrink-0" type="radio"  name="payment_method" value="razorpay">
-              <span>
-
-                <strong class="text-uppercase">Razorpay</strong>
-                <small class="d-block text-body-secondary">
-                  Pay securely using Razorpay. </small>
-                 </span>
-            </label> {% endcomment %}
+          
+ 
 
 
 
+            {% comment %} PayPal payment {% endcomment %}
 
             
             <label class="list-group-item d-flex gap-2 border-0">
@@ -205,7 +200,7 @@
             </label> 
 
             <label class="list-group-item d-flex gap-2 border-0">
-              <input class="form-check-input flex-shrink-0" type="radio" name="payment_method" value="cod" disabled>
+              <input class="form-check-input flex-shrink-0" type="radio" name="payment_method" value="cod" >
               <span>
                 <strong class="text-uppercase">Cash on Delivery</strong>
                 <small class="d-block text-body-secondary">Pay with cash upon delivery.</small>
@@ -223,7 +218,7 @@
             text-uppercase - all caps text on the button.
             btn-rounded-none - custom CSS class, removes border-radius making button edges sharp.
             w-100 - Bootstrap width 100%, button stretches full width of its column   {% endcomment %}
-          {% comment %} <button type="submit" name="submit" class="btn btn-dark btn-lg text-uppercase btn-rounded-none w-100">Place an Order</button> {% endcomment %}
+          <button type="submit" name="submit" class="btn btn-dark btn-lg text-uppercase btn-rounded-none w-100">Pay Now</button> 
            <div id="paypal-button-container" class="mt-3"></div>
 
         </div>
@@ -238,14 +233,82 @@
 
 
 
-{% comment %} Here lies the Razorpay integration {% endcomment %}
 
+
+ <!---  =========== PAyPal script button goes here, after the payment options ===========  -->
+
+{% comment %} Here lies the Razorpay integration {% endcomment %}
+      
+ <button id="rzp-button1"></button> 
+{% comment %} Loading the Javascript library for Razorpay from their CDN into my browser {% endcomment %}
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+  var options = {
+      "key": "{{ razorpay_key_id }}", // Enter the Key ID generated from the Dashboard
+      "amount": "{{ amount }}", // Amount is in currency subunits. 
+      "currency": "INR", //your 3 letter currency code
+      "name": "Naavyaa", //your business name
+      "description": "Test Transaction",
+    // "image": "https://example.com/your_logo",
+      "order_id": "{{ razorpay_order_id }}", // This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+      //"callback_url": "https://eneqd3r9zrjok.x.pipedream.net/",
+      //"callback_url": "/razorpay_payment_verify/{{ order.order_id }}",
+      "handler": function (response){
+      // send data manually to Django
+      fetch("/razorpay_payment_verify/{{ order.order_id }}/", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              "X-CSRFToken": "{{ csrf_token }}"
+          },
+          body: new URLSearchParams({
+              "razorpay_order_id": response.razorpay_order_id,
+              "razorpay_payment_id": response.razorpay_payment_id,
+              "razorpay_signature": response.razorpay_signature
+          })
+     }).then(res => res.json())
+  .then(data => {
+    if (data.success) {
+        window.location.href = "/payment_status/{{ order.order_id }}/?payment_status=paid";
+    } else {
+        window.location.href = "/payment_status/{{ order.order_id }}/?payment_status=failed";
+    }
+  });
+  },
+
+    "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
+        "name": "{{ order.customer.name }}", //your customer's name
+        "email": "{{ order.customer.email }}",
+        "contact": "{{ order.customer.phone }}" //Provide the customer's phone number for better conversion rates 
+    },
+    "notes": {
+        "address": "Razorpay Corporate Office"
+    },
+    "theme": {
+        "color": "#3399cc"
+    }
+};
+var rzp1 = new Razorpay(options);
+
+ document.addEventListener("DOMContentLoaded", function () {
+    document.querySelector('input[value="razorpay"]').addEventListener('change', function(){
+        if (this.checked) {
+            rzp1.open();
+        }
+    });
+});
+</script>
 
 {% comment %} RazorPay integration ends {% endcomment %}
 
 
 
 
+
+
+
+ <!---  =========== PAyPal script button goes here, after the payment options ===========  -->
 
 
 {% comment %} Script for initializing PayPal button {% endcomment %}
@@ -278,118 +341,123 @@ order marked paid
 
 {% endcomment %}
 
-<script src="https://www.paypal.com/sdk/js?client-id={{ paypal_client_id }}&currency=USD"></script>
+{% comment %}  {% endcomment %}
+  <script src="https://www.paypal.com/sdk/js?client-id={{ paypal_client_id }}&currency=USD"></script>
 
 
 
-<script>
-  {% comment %} 
-  1. document represents the entire HTML page loaded in the browser. It is the part of DOM - Document Object Model  
-        How the DOM reads the HTML? Through parsing - Reading the code and converting it into a structure the computer/browser can understand.
-        Read HTML
-          ↓
-        Create DOM nodes
-          ↓
-        If <script> appears → pause parsing
-          ↓
-        Run script
-          ↓
-        Continue parsing
+  <script>
+    {% comment %} 
+    1. document represents the entire HTML page loaded in the browser. It is the part of DOM - Document Object Model  
+          How the DOM reads the HTML? Through parsing - Reading the code and converting it into a structure the computer/browser can understand.
+          Read HTML
+            ↓
+          Create DOM nodes
+            ↓
+          If <script> appears → pause parsing
+            ↓
+          Run script
+            ↓
+          Continue parsing
 
-        Analogy: Reading a sentence: "The cat sits on the mat." Here, the browser reads each word and creates a mental image (DOM node) for it.
-        If suddenly you encounter a footnote (script), you pause reading the sentence, read the footnote, understand it, and then go back to finish the sentence.
+          Analogy: Reading a sentence: "The cat sits on the mat." Here, the browser reads each word and creates a mental image (DOM node) for it.
+          If suddenly you encounter a footnote (script), you pause reading the sentence, read the footnote, understand it, and then go back to finish the sentence.
 
-  2. addEventListener -   is a method that allows us to listen for specific events on the page and run a function when that event occurs.
-     It follows the syntax: element.addEventListener(event, function) event - what to listen for and function - what to do when that event happens.
-  
-  3. "DOMContentLoaded" - is a specific event that fires when the initial HTML document has been completely loaded and parsed by the browser, without waiting for stylesheets, images, and subframes to finish loading. It tell to run the JavaScript after the HTML page structure has finished loading.
-  Function is the entire block of code after {} which will run once the DOM is ready- which was the event.
-      
-        {% endcomment %}
-  document.addEventListener("DOMContentLoaded", function () {
-    // What is the function here? 
-    // 1. printing a debug message to the console to confirm that the DOM is ready and our script is running at the right time.
-      console.log("DOM is ready");
-    // 2. variable container is assigned to the HTML element with the ID "paypal-button-container". 
-    //The variable type is constant, meaning it can't be reassigned to a different value later in the code. 'container'is the name of the variable with const keyword.
+    2. addEventListener -   is a method that allows us to listen for specific events on the page and run a function when that event occurs.
+      It follows the syntax: element.addEventListener(event, function) event - what to listen for and function - what to do when that event happens.
     
-    // This is where the PayPal buttons will be rendered on the page.
-    //[ container ] → PayPal DIV element
-    // getElementById() - is a method that retrieves an HTML element based on its unique ID attribute. 
-    //In this case, it looks for an element with id="paypal-button-container" and assigns it to the variable container.
-   
-  
-    
-      const container = document.getElementById("paypal-button-container");
-   // 3. Initially, we set the display style of the container to "none", hiding the PayPal buttons when the page first loads.
-      container.style.display = "none";
-   // 4. document = the entire HTML page loaded in the browser. It is the part of DOM - Document Object Model
-    // querySelectorAll() - is a "method" that finds all elements in the document that match a specified CSS selector and
-    // returns them as a NodeList (which is like an array of elements).     
-    // 5. We then loop through each of these radio buttons using forEach() and add a "change" event listener to them.
-    //Example - Find all <input> elements ,whose name attribute = "payment_method" . So, this will select all the radio buttons for payment methods.
-
-      document.querySelectorAll('input[name="payment_method"]').forEach(radio => 
-      {
-          radio.addEventListener("change", function () {
-              if (this.value === "PayPal") {
-                  container.style.display = "block";
-              } 
-              else {
-                  container.style.display = "none";
-              }
-          });
-      });
-  });
-
-
-
-  function initPayPalButton() {
-    paypal.Buttons({
-      style: {
-        shape: 'rect',
-        color: 'gold',
-        layout: 'vertical',
-        label: 'paypal',
+    3. "DOMContentLoaded" - is a specific event that fires when the initial HTML document has been completely loaded and parsed by the browser, without waiting for stylesheets, images, and subframes to finish loading. It tell to run the JavaScript after the HTML page structure has finished loading.
+    Function is the entire block of code after {} which will run once the DOM is ready- which was the event.
         
-      },
-// This following is the one that creates the API call to PayPal when the user clicks the PayPal button. It sets up the transaction details, including the amount and currency, that will be sent to PayPal for processing the payment.
-      // createOrder - is a function that sets up the transaction details when the user clicks the PayPal button.
-      createOrder: function(data, actions) {
-        return actions.order.create({
-          purchase_units: [
-          {
-            amount:{
-              currency_code:"USD",
-              value:"{{ order.total|floatformat:2 }}",
-            }
-          }]
-        });
-      },
+          {% endcomment %}
+    document.addEventListener("DOMContentLoaded", function () {
+      // What is the function here? 
+      // 1. printing a debug message to the console to confirm that the DOM is ready and our script is running at the right time.
+        console.log("DOM is ready");
+      // 2. variable container is assigned to the HTML element with the ID "paypal-button-container". 
+      //The variable type is constant, meaning it can't be reassigned to a different value later in the code. 'container'is the name of the variable with const keyword.
+      
+      // This is where the PayPal buttons will be rendered on the page.
+      //[ container ] → PayPal DIV element
+      // getElementById() - is a method that retrieves an HTML element based on its unique ID attribute. 
+      //In this case, it looks for an element with id="paypal-button-container" and assigns it to the variable container.
+    
+    
+      
+        const container = document.getElementById("paypal-button-container");
+    // 3. Initially, we set the display style of the container to "none", hiding the PayPal buttons when the page first loads.
+        container.style.display = "none";
+    // 4. document = the entire HTML page loaded in the browser. It is the part of DOM - Document Object Model
+      // querySelectorAll() - is a "method" that finds all elements in the document that match a specified CSS selector and
+      // returns them as a NodeList (which is like an array of elements).     
+      // 5. We then loop through each of these radio buttons using forEach() and add a "change" event listener to them.
+      //Example - Find all <input> elements ,whose name attribute = "payment_method" . So, this will select all the radio buttons for payment methods.
 
-      onApprove: function(data, actions) {
-        return actions.order.capture().then(function(details) {
-          //alert('Transaction completed by ' + details.payer.name.given_name + '!');
+        document.querySelectorAll('input[name="payment_method"]').forEach(radio => 
+        {
+      // 6. addEventListener("change", function() { ... }) - This sets up a listener for the "change" event on each radio button.
+      // When a user selects a different payment method (i.e., changes the selected radio button), this function will run.
+            radio.addEventListener("change", function () {
+                if (this.value === "PayPal") {
+                    container.style.display = "block";
+                } 
+                else {
+                    container.style.display = "none";
+                }
+            });
+        });
+    });
+
+
+
+    function initPayPalButton() {
+      paypal.Buttons({
+        style: {
+          shape: 'rect',
+          color: 'gold',
+          layout: 'vertical',
+          label: 'paypal',
           
-          console.log("Capture result", details,
-           //JSON.stringify(details, null, 2)
-           );
+        },
+    // This following is the one that creates the API call to PayPal when the user clicks the PayPal button. It sets up the transaction details, including the amount and currency, that will be sent to PayPal for processing the payment.
+          // createOrder - is a function that sets up the transaction details when the user clicks the PayPal button.
+        createOrder: function(data, actions) {
+          return actions.order.create({
+            purchase_units: [
+            {
+              amount:{
+                currency_code:"USD",
+                value:"{{ order.total|floatformat:2 }}",
+              }
+            }]
+          });
+        },
 
-          const element = document.getElementById('paypal-button-container');
-          element.innerHTML = '<h3>Thank you for your payment!</h3>';
-          element.innerHTML += '<p>Transaction completed by ' + details.payer.name.given_name + '.</p>';
-          window.location.href ='/paypal_payment_verify/{{ order.order_id }}/?transaction_id=' + details.id;
-        });
-      },
+        onApprove: function(data, actions) {
+          return actions.order.capture().then(function(details) {
+            //alert('Transaction completed by ' + details.payer.name.given_name + '!');
+            
+            console.log("Capture result", details,
+            //JSON.stringify(details, null, 2)
+            );
 
-      onError: function(err) {
-        console.log(err);
-      },
-    })
-    .render('#paypal-button-container');
-  }
-  initPayPalButton();
-</script>
+            const element = document.getElementById('paypal-button-container');
+            element.innerHTML = '<h3>Thank you for your payment!</h3>';
+            element.innerHTML += '<p>Transaction completed by ' + details.payer.name.given_name + '.</p>';
+            window.location.href ='/paypal_payment_verify/{{ order.order_id }}/?transaction_id=' + details.id;
+          });
+        },
+
+        onError: function(err) {
+          console.log(err);
+        },
+      })
+      .render('#paypal-button-container');
+    }
+    initPayPalButton();
+  </script>
+
+
 
 
 

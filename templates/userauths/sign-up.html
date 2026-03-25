@@ -35,7 +35,11 @@
 </section><!-- /.hero-section -->
 
 
-  {% comment %} Sign Up Form {% endcomment %}
+
+
+
+
+  {% comment %} Log-in & Sign Up Form {% endcomment %}
 
    <!-- login -->
     <!-- Main section wrapper (no additional classes — full-width block-level container) -->
@@ -101,16 +105,19 @@
                         - aria-labelledby="component-1-1": links this panel to its controlling tab button for screen readers.
                       -->
                 <div class="tab-pane fade show active" id="component-1-1" role="tabpanel" aria-labelledby="component-1-1">
-                    <!-- Outer row with gutter spacing (gutter-2 = custom or Bootstrap 5 gap utility).
+                  <form method="POST">
+                    {% csrf_token %}
+                    <!-- Outer row with spacing (g-2 = custom or Bootstrap 5 gap utility).
                     Acts as the main layout wrapper for all form elements inside this tab. -->
-                  <div class="row gutter-2">
+                  <div class="row g-2">
                     <!-- Full-width column for the form fields (col-12 = 100% width) -->
                     <div class="col-12">
                       <!-- Fieldset groups related form controls together. In this case, it wraps the email and password inputs. -->
                       <fieldset>
+                        
                         <div class="row">
                           <div class="col-12">
-                            <div class="form-label-group">
+                            <div class="form-floating">
                               <input type="text" id="inputEmail" class="form-control form-control-lg" placeholder="Email address" required="">
                               <label for="inputEmail">Email address</label>
                             </div>
@@ -119,18 +126,21 @@
                         <div class="row">
                           <div class="col-12">
                             <div class="form-label-group">
+                              
                               <input type="password" id="inputPassword" class="form-control form-control-lg" placeholder="Password" required="">
-                              <label for="inputPassword">Password</label>
+                              
                             </div>
                           </div>
                         </div>
                       </fieldset>
                     </div>
+                  </form>
+
                     <div class="col-12 text-center">
-                      <a href="" class="underline fs-14">Forgot Password ?</a>
+                      <a href="" class="underline fs-14">Forgot Password ? We got you covered!</a>
                     </div>
                     <div class="col-12">
-                      <a href="" class="btn btn-primary btn-block">Sign In</a>
+                      <button type="submit" class="btn btn-primary w-100">Sign In</button>
                     </div>
                   </div>
                 </div>
@@ -210,58 +220,7 @@
     </div>
   </section>
 
- {% comment %} <section id="login-form" class="py-5">
-    <div class="container-sm">
-      <div class="row justify-content-center">
-        <div class="col-4">
-          <h2 class="section-title text-uppercase">Sign Up</h2>
-          <form id="form" class="form-group flex-wrap">
 
-            <div class="col-12 pb-3">
-              <label>Name *</label>
-              {{ form.full_name }}
-            </div>
-
-            <div class="col-12 pb-3">
-              <label>Mobile Number *</label>
-              {{ form.mobile }}
-            </div>
-
-
-            <div class="col-12 pb-3">
-              <label>Username or email address *</label>
-              {{ form.email}}
-            </div>
-
-            <div class="col-12 pb-3">
-              <label>Password *</label>
-              {{ form.password1 }}
-            </div>
-              <div class="col-12 pb-3">
-              <label>Confirm Password *</label>
-              {{ form.password2 }}
-            </div>
-
-             Captcha 
-            <div class="col-md-12 pb-6">
-              <label>Captcha *</label>
-              {{ form.captcha }}
-            </div>
-            <div class="col-12 pb-3">
-              <label>
-                <input type="checkbox" required="">
-                <span class="label-body">Remember me</span>
-              </label>
-            </div>
-            <div class="col-12">
-              <button type="submit" name="submit" class="btn btn-dark btn-large text-uppercase pb-3">Log in</button>
-              <p><a href="#">Lost your password?</a></p>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </section>  {% endcomment %}
 
 <section class="bg-light" style="background: url(images/pattern-bg.png) no-repeat;">
   <div class="container">

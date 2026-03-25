@@ -15,7 +15,7 @@ from django.contrib import messages
 # Importing Django's authentication functions for user login and verification
 # login: Logs a user into the system (creates a session)
 # authenticate: Verifies user credentials (checks if email/password are correct)
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 
 # Importing form classes from the userauths app with an alias to avoid naming conflicts
 # userauth_forms: Contains form classes like UserRegisterForm, LoginForm, etc.
@@ -329,3 +329,15 @@ def login_view(request):
         "form": form,
     }
     return render(request, "userauths/login.html", context)
+
+def logout_view(request):
+    if 'cart_id' in request.session:
+        cart_id = request.session['card_id']
+    else:
+        cart_id = None
+    
+    logout(request)
+
+    request.session ['cart_id'] = cart_id
+    messages.success(request, "You have been logged out successfully.")
+    return redirect("userauths:sign-in")
