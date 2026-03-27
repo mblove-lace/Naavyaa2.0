@@ -206,14 +206,15 @@ def add_to_cart(request):
         cart.color = color
         # Storing the selected size for this cart item.
         cart.size = size
-            # Calculating and setting the subtotal for this cart item (price * quantity).
+            # Calculating and setting the subtotal for this cart item (price * quantity). Subtotal and total are different- subtotal is the cost of the items in the cart, while total includes additional costs like shipping and taxes.
         cart.sub_total= Decimal(product.price) * Decimal(qty)
             # Calculating and setting the shipping cost for this cart item (shipping * quantity).
-        cart.shipping = Decimal(product.shipping) * Decimal(qty)
+        # cart.shipping = Decimal(product.shipping) * Decimal(qty)
+        cart.shipping = Decimal('99')
             # Calculating and setting the total cost for this cart item (subtotal + shipping).
         cart.total = cart.sub_total + cart.shipping 
             # Associating the cart item with the current user if they are logged in.
-        cart.user = request.user if request.user.is_authenticated else None
+        cart.user = request.user if request.user.is_authenticated else None  
             # Assigning the cart_id to this cart item.
         cart.cart_id = cart_id
         # Saving the new cart item to the database. This actually creates the record in the Cart table.
@@ -413,7 +414,9 @@ def create_order(request):
         order.shipping = cart_shipping_total
         # tax_calculation(address.country, cart_sub_total) → This function calculates the tax amount based on the country of the shipping address and the cart subtotal. The tax is likely calculated as a percentage of the subtotal, and the specific tax rate may vary depending on the country. The calculated tax amount is then assigned to the order's tax field.
         order.tax = tax_calculation(address.country, cart_sub_total)
-        order.total = order.sub_total + order.shipping + Decimal(order.tax)
+        # As my Naavyaa is not under GST taxing system, so I am not calculating tax for each item, instead I am calculating tax for the whole order based on the country of the shipping address and the cart subtotal. This simplifies the tax calculation process while still ensuring that the appropriate tax amount is applied to the order based on the customer's location.
+        # order.total = order.sub_total + order.shipping + Decimal(order.tax)
+        order.total = order.sub_total + order.shipping
         order.service_fee = calculate_service_fee(order.total)
         order.total += order.service_fee
         order.initial_total = order.total

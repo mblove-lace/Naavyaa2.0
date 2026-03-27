@@ -103,11 +103,11 @@
   {% comment %} 
                   colspan="2" - makes this <th> span across 2 columns (Product + Qty),
                   so "Total" label sits on the left and the price value sits on the far right   {% endcomment %}
-                <th colspan="2">Total</th>
+                <th colspan="2">Total with Shipping </th>
 
                   {% comment %} cart_total - context variable passed from views.py, sum of all item prices.
                   fw-bold - Bootstrap font-weight bold, makes the total stand out visually   {% endcomment %}
-                <td class="text-end fw-bold">₹ {{ order.sub_total | intcomma }}</td>
+                <td class="text-end fw-bold">₹ {{ order.total | intcomma }}</td>
               </tr>
 
             </tbody>
