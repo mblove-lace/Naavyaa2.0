@@ -293,11 +293,21 @@ def register_view(request):
 
 
 def login_view(request):
+    # if user is already logged in with the current session, show a warning and redirect to homepage
+    # request.user.is_authenticated is built into Django's authentication system and returns True if the user is logged in, False if anonymous.
+    # request is the HTTP request OBJECT that contains information about the user's request, including their authentication status.
+    # user.is_authenticated is a property of the user object that indicates whether the user is logged in or not. It returns True if the user is authenticated (logged in) and False if the user is anonymous (not logged in).
     if request.user.is_authenticated:
+# messages.warning() is a function from Django's messaging framework that allows you to display a warning message to the user. 
+# It takes two arguments: the request object and the message text. 
+# In this case, it will display "You are already logged in." as a warning message on the next page the user visits.
         messages.warning(request, "You are already logged in.")
         return redirect("/")
-    
+    # This section handles the login form submission. 
+    # It checks if the request method is POST, which means the user has submitted the login form.
     if request.method == "POST":
+        # form is an instance of the LoginForm class, which is a Django form that handles user login. 
+        # The form is initialized with the POST data from the request, which contains the user's inputted email and password.
         form = userauth_forms.LoginForm(request.POST or None)
         if form.is_valid():
             email = form.cleaned_data.get("email")

@@ -1,0 +1,19 @@
+{% extends 'partials/base.html' %}
+{% load humanize %}
+{% load static %}
+{% block content %}
+
+<div class="d-flex justify-content-center my-5">
+    <div class=" text-center" style="max-width: 400px;">
+        
+        <h2 class="text-success  mb-3">Payment Successful 🎉</h2>
+        <p class='mb-2'>Thank you for your purchase! Your payment has been processed successfully.</p>
+        <p class='mb-4'>Your <strong>Order ID:</strong> {{ order.order_id }} will be shipped to you soon.</p>
+   
+        <a href="{% url 'store:index' %}" class="btn btn-primary">Continue Shopping</a>
+    </div>
+</div>
+
+
+
+{% endblock %}

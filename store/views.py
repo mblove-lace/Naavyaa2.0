@@ -772,7 +772,7 @@ def razorpay_payment_verify(request, order_id):
     }
 
     try:
-        # 🔐 Verify signature
+        
         razorpay_client.utility.verify_payment_signature(params_dict)
 
         if order.payment_status != "Paid":
