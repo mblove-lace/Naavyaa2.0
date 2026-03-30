@@ -119,6 +119,11 @@ ANYMAIL = {
     "MAILGUN_SENDER_DOMAIN": os.environ.get("MAILGUN_SENDER_DOMAIN"),
 }
 
+FROM_EMAIL= env("FROM_EMAIL")
+EMAIL_BACKEND=env("EMAIL_BACKEND")
+DEFAULT_FROM_EMAIL= env("DEFAULT_FROM_EMAIL")
+SERVER_EMAIL= env("SERVER_EMAIL")
+
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 

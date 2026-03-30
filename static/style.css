@@ -1530,3 +1530,167 @@ a.btn-link.text-light:after {
 }
 
 
+:root {
+      --brand-purple: #7c4f8a;
+      --brand-purple-light: #e8d8ef;
+      --brand-purple-muted: #a07ab0;
+      --text-dark: #1a1a2e;
+      --text-muted: #666;
+      --border: #e0d4e8;
+      --bg: #f4f1f6;
+}
+
+.email-wrapper {
+      max-width: 640px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 30px rgba(124, 79, 138, 0.12);
+    }
+
+    /* Header */
+    .email-header {
+      background-color: var(--brand-purple-light);
+      padding: 36px 40px 32px;
+    }
+
+    .email-header h1 {
+      font-family: 'DM Serif Display', serif;
+      color: var(--brand-purple);
+      font-size: 2rem;
+      margin: 0;
+      letter-spacing: -0.5px;
+    }
+
+    .greeting {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .greeting span {
+      color: var(--brand-purple);
+    }
+
+    .order-id {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 28px;
+    }
+
+    .order-id span {
+      color: var(--brand-purple);
+      font-weight: 500;
+    }
+
+    /* Loop comment */
+    .template-comment {
+      font-size: 0.82rem;
+      color: #999;
+      font-style: italic;
+      margin-bottom: 6px;
+    }
+
+    /* Items table */
+    .table-items {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .table-items thead th {
+      background-color: #f9f5fb;
+      color: var(--brand-purple);
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .table-items tbody td {
+      padding: 10px 16px;
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .table-items tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Totals table */
+    .table-totals {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 32px;
+    }
+
+    .table-totals td {
+      padding: 10px 16px;
+      font-size: 0.93rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .table-totals tr:last-child td {
+      border-bottom: none;
+    }
+
+    .table-totals .label {
+      font-weight: 600;
+      color: var(--text-dark);
+      width: 50%;
+    }
+
+    .table-totals .value {
+      color: var(--text-muted);
+    }
+
+    .table-totals tr:last-child .label,
+    .table-totals tr:last-child .value {
+      font-weight: 700;
+      color: var(--brand-purple);
+    }
+
+    /* Bio Data */
+    .bio-section h5 {
+      font-family: 'DM Serif Display', serif;
+      color: var(--brand-purple);
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+    }
+
+    .bio-section p {
+      font-size: 0.88rem;
+      color: var(--brand-purple-muted);
+      margin-bottom: 3px;
+    }
+
+    /* Footer */
+    .email-footer {
+      padding: 28px 40px 36px;
+      border-top: 1px solid var(--border);
+    }
+
+    .email-footer p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .email-footer .brand-sig {
+      color: var(--brand-purple);
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    /* Divider */
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 28px 0;
+    }

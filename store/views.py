@@ -21,6 +21,7 @@ from django.views.decorators.csrf import csrf_exempt
 from plugin.tax_calculation import tax_calculation
 from django.core.mail import EmailMultiAlternatives
 from django.http import JsonResponse
+from django.template.loader import render_to_string
 
 import requests
 import razorpay
@@ -596,7 +597,7 @@ def get_paypal_access_token():
         # Exception: A Python error that stops the program and shows an error message
         # The error message includes the status code to help with debugging
         raise Exception(f"failed to get access token from Paypal. Status code: {response.status_code}")
-        # ✅ FIXED VERSION: raise Exception(f"failed to get access token from Paypal. Status code: {response.status_code}")
+       
 
 
 # # ====================================
@@ -693,6 +694,31 @@ def paypal_payment_verify(request, order_id):
                 # clear_cart_items(): A function (defined elsewhere) that removes items from the cart
                 # request: Passed so the function knows which user's cart to clear
                 clear_cart_items(request)
+
+
+
+                customer_merge_data = {
+                    'order' :order,
+                    'order_items': order.order_items,
+                }
+
+                subject = f"New Order Placed"
+                text_body = render_to_string('emails/new_order_email.txt', customer_merge_data)
+                html_body = render_to_string('emails/new_order_email.html', customer_merge_data)
+
+                msg = EmailMultiAlternatives(
+                    subject=subject, from_email=settings.FROM_EMAIL, to=[order.address.email], body=text_body
+                    )
+                msg.attach_alternative(html_body, "text/html")
+                msg.send()
+
+                for item in order.order_items():
+                    vendor_merge_data ={
+                        'item': item,
+                    }
+                    subject = f"New Order for {item.product.name}"
+                    text_body = render_to_string('store/emails/new_order_vendor_email.txt', vendor_merge_data)
+                    html_body = render_to_string('store/emails/new_order_vendor_email.html', vendor_merge_data)
 
                 # Redirecting the user to a success page
                 # redirect(): Django function that sends the user to a different URL

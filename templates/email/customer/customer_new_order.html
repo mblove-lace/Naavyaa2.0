@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>New Order Email</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+ 
+</head>
+
+<body>
+
+<div class="email-wrapper">
+
+  <!-- Header -->
+  <div class="email-header">
+    <h1>New Order!</h1>
+  </div>
+
+  <!-- Body -->
+  <div class="email-body">
+
+    <p class="greeting">Hey, <span>{{ order.address.full_name }}</span>!</p>
+    <p class="order-id">
+      Thanks for partnering with Desphixs<br/>
+      The order ID is <span>#{{ order.order_id }}</span>
+    </p>
+
+    <!-- Order Items -->
+    <p class="template-comment">{% for item in order_items %} {% endfor %}</p>
+    <div class="table-items">
+      <table class="table table-borderless mb-0">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Qty</th>
+            <th>Sub Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ item.product.name }}</td>
+            <td>{{ item.qty }}</td>
+            <td>${{ item.sub_total }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Order Totals -->
+    <div class="table-totals">
+      <table class="table table-borderless mb-0">
+        <tbody>
+          <tr>
+            <td class="label">Sub Total:</td>
+            <td class="value">${{ order.sub_total }}</td>
+          </tr>
+          <tr>
+            <td class="label">Shipping Fee:</td>
+            <td class="value">${{ order.shipping }}</td>
+          </tr>
+          <tr>
+            <td class="label">Tax Fee:</td>
+            <td class="value">${{ order.tax }}</td>
+          </tr>
+          <tr>
+            <td class="label">Total:</td>
+            <td class="value">${{ order.total }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <hr class="section-divider"/>
+
+    <!-- Bio Data -->
+    <div class="bio-section">
+      <h5>Bio Data</h5>
+      <p>Full Name: {{ order.address.full_name }}</p>
+      <p>Email: {{ order.address.email }}</p>
+      <p>Mobile: {{ order.address.mobile }}</p>
+      <p>Address: {{ order.address.address }}</p>
+      <p>City: {{ order.address.city }}</p>
+      <p>State: {{ order.address.state }}</p>
+      <p>Country: {{ order.address.country }}</p>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="email-footer">
+    <p>Feel free to contact us if you have any questions!</p>
+    <p>Sincerely,</p>
+    <p class="brand-sig">Team Naavyaa</p>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

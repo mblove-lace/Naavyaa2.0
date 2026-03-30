@@ -98,6 +98,7 @@
               <div class="tab-content" id="component-1-content">
 
                 <!-- LOG IN TAB -->
+
                  <!-- Tab pane for the "Sign In" tab.
                         - "fade show active": makes this the visible/active tab on page load with a fade transition.
                         - id="component-1-1": referenced by the corresponding tab trigger (aria-labelledby).
@@ -105,44 +106,36 @@
                         - aria-labelledby="component-1-1": links this panel to its controlling tab button for screen readers.
                       -->
                 <div class="tab-pane fade show active" id="component-1-1" role="tabpanel" aria-labelledby="component-1-1">
-                  <form method="POST">
-                    {% csrf_token %}
-                    <!-- Outer row with spacing (g-2 = custom or Bootstrap 5 gap utility).
-                    Acts as the main layout wrapper for all form elements inside this tab. -->
+                  <form method="POST" action="{% url 'userauths:login' %}">
+                  {% csrf_token %}
                   <div class="row g-2">
-                    <!-- Full-width column for the form fields (col-12 = 100% width) -->
                     <div class="col-12">
-                      <!-- Fieldset groups related form controls together. In this case, it wraps the email and password inputs. -->
                       <fieldset>
-                        
                         <div class="row">
                           <div class="col-12">
                             <div class="form-floating">
-                              <input type="text" id="inputEmail" class="form-control form-control-lg" placeholder="Email address" required="">
-                              <label for="inputEmail">Email address</label>
+                              <input type="email" name="email" id="inputEmail" class="form-control form-control-lg" placeholder="Email address" required>
+                              {% comment %} <label for="inputEmail">Email address</label> {{ form.email }} {% endcomment %}
                             </div>
                           </div>
                         </div>
                         <div class="row">
                           <div class="col-12">
-                            <div class="form-label-group">
-                              
-                              <input type="password" id="inputPassword" class="form-control form-control-lg" placeholder="Password" required="">
-                              
-                            </div>
+                            <input type="password" name="password" id="inputPassword" class="form-control form-control-lg" placeholder="Password" required>
+                            {% comment %} <label for="inputPassword">Password</label> {{ form.password }} {% endcomment %}
                           </div>
                         </div>
                       </fieldset>
                     </div>
-                  </form>
-
                     <div class="col-12 text-center">
-                      <a href="" class="underline fs-14">Forgot Password ? We got you covered!</a>
+                      <a href="" class="underline fs-14">Forgot Password?</a>
                     </div>
                     <div class="col-12">
                       <button type="submit" class="btn btn-primary w-100">Sign In</button>
                     </div>
                   </div>
+                </form>
+                  
                 </div>
 
                 <!-- SIGN UP TAB -->
