@@ -14,7 +14,7 @@ from django.conf import settings
 from decimal import Decimal,InvalidOperation
 from django.shortcuts import get_object_or_404
 from django.db.models import Q, Avg, Sum
-from customer import models as customer_models
+
 from django.contrib import messages
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
@@ -25,6 +25,9 @@ from django.template.loader import render_to_string
 
 import requests
 import razorpay
+
+from customer import models as customer_models
+from vendor import models as vendor_models
 
 from plugin.tax_calculation import tax_calculation
 
@@ -703,22 +706,41 @@ def paypal_payment_verify(request, order_id):
                 }
 
                 subject = f"New Order Placed"
-                text_body = render_to_string('emails/new_order_email.txt', customer_merge_data)
-                html_body = render_to_string('emails/new_order_email.html', customer_merge_data)
+                text_body = render_to_string('emails/order/customer_new_order_email.txt', customer_merge_data)
+                html_body = render_to_string('emails/order/customer_new_order_email.html', customer_merge_data)
 
                 msg = EmailMultiAlternatives(
                     subject=subject, from_email=settings.FROM_EMAIL, to=[order.address.email], body=text_body
                     )
                 msg.attach_alternative(html_body, "text/html")
                 msg.send()
+                customer_models.Notification.objects.create(type="New Order", user=request.user)
+                
+
+
+
+
+                # vendor notification
 
                 for item in order.order_items():
+                    
                     vendor_merge_data ={
                         'item': item,
                     }
                     subject = f"New Order for {item.product.name}"
-                    text_body = render_to_string('store/emails/new_order_vendor_email.txt', vendor_merge_data)
-                    html_body = render_to_string('store/emails/new_order_vendor_email.html', vendor_merge_data)
+                    text_body = render_to_string('emails/order/vendor_new_order_vendor_email.txt', vendor_merge_data)
+                    html_body = render_to_string('emails/order/vendor_new_order_vendor_email.html', vendor_merge_data)
+
+                    msg = EmailMultiAlternatives(
+                        subject=subject, from_email=settings.FROM_EMAIL, 
+                        to=[item.vendor.user.email], body=text_body
+                        )
+                    msg.attach_alternative(html_body, "text/html")
+                    msg.send()
+                    vendor_models.Notification.objects.create(type="New Order", user=item.vendor, order=item)
+
+                   
+                                                                             
 
                 # Redirecting the user to a success page
                 # redirect(): Django function that sends the user to a different URL
@@ -776,44 +798,107 @@ def payment_status(request, order_id):
 
 
 # ==================================== RAZORPAY PAYMENT VERIFICATION FUNCTION  ====================================
-
+# Django protects against Cross-Site Request Forgery (CSRF) attacks by default, which can interfere with payment gateway callbacks.
+# @csrf_exempt: This decorator tells Django to skip CSRF protection for this view, allowing it to accept requests from Razorpay's servers without requiring a CSRF token. This is necessary because Razorpay will send a POST request to this endpoint to verify the payment, and it won't include a CSRF token in that request. 
+# By using @csrf_exempt, we ensure that our payment verification endpoint can receive and process Razorpay's callback without being blocked by Django's security measures.
 @csrf_exempt
+# This function verifies the payment made through Razorpay by checking the payment signature sent by Razorpay against the expected signature generated using our Razorpay credentials.
+# If the verification is successful, it updates the order status to "Paid" and sends notifications to the customer and vendors. If the verification fails, it returns an error response.
 def razorpay_payment_verify(request, order_id):
+    # Fetching the order from the database using the provided order_id. with the help of get_object_or_404. If the order with the given order_id does not exist, it will automatically return a 404 error response to the client. This ensures that we only proceed with payment verification if a valid order is found.
+    #Django receives request → /razorpay_payment_verify/O-123/
+    # order_id = "O-123" comes from URL
+    #Django queries DB:
+    #SELECT * FROM order WHERE order_id = 'O-123';
     
     order = get_object_or_404(store_models.Order, order_id=order_id)
 
-    # 🔹 Get data from POST or GET (handles both flows)
+
+   # Now Django receives a POST request from Razorpay with the payment details after the user completes the payment on Razorpay's platform. The request will contain the following parameters:
+    # razorpay_order_id: The unique identifier for the order generated by Razorpay.
+    # Why do we need POST and GET?
+    #  Because Razorpay might send the payment details as either a POST request (if it's a server-to-server callback) or as GET parameters (if the user is redirected back to our site after payment).
+    #  By checking both POST and GET, we ensure that we can capture the necessary data regardless of how Razorpay sends it.
     razorpay_order_id = request.POST.get("razorpay_order_id") or request.GET.get("razorpay_order_id")
+    # razorpay_payment_id: The unique identifier for the payment transaction generated by Razorpay.
     razorpay_payment_id = request.POST.get("razorpay_payment_id") or request.GET.get("razorpay_payment_id")
+    # razorpay_signature: A cryptographic signature sent by Razorpay to verify the authenticity of the payment details. We will use this signature to confirm that the payment information has not been tampered with and is indeed from Razorpay.
+    #In naavyaa notes, i will explain how the signature verification works in detail, but for now, just understand that this signature is crucial for ensuring the security of the payment verification process.
     razorpay_signature = request.POST.get("razorpay_signature") or request.GET.get("razorpay_signature")
 
-    # If any data missing → fail early
+    # This block checks if any of the required parameters .
+    # all() is a Python built-in that checks if every item in a list is okay.
+    #all([value1, value2, value3])
+    # Returns True  → if ALL values exist (not None, not empty)
+    # Returns False → if ANY value is missing/None/empty
+
+    print(f"DEBUG: Received - razorpay_order_id={razorpay_order_id}, razorpay_payment_id={razorpay_payment_id}, razorpay_signature={razorpay_signature}")
+    # if any of the required parameters (razorpay_order_id, razorpay_payment_id, razorpay_signature) is missing, it means we cannot verify the payment properly. In this case, we redirect the user to a payment failure page, passing the order_id and a payment_status of "failed" as URL parameters. This way, the user will see a message indicating that their payment could not be verified.
     if not all([razorpay_order_id, razorpay_payment_id, razorpay_signature]):
         return redirect(f"/payment_status/{order.order_id}/?payment_status=failed")
-
+ # making a dictionary of the parameters we received from Razorpay. This dictionary will be used to verify the payment signature. The keys in this dictionary must match what the Razorpay client library expects for signature verification.
     params_dict = {
         "razorpay_order_id": razorpay_order_id,
         "razorpay_payment_id": razorpay_payment_id,
         "razorpay_signature": razorpay_signature,
     }
+    print(f"DEBUG: Params for signature verification: {params_dict}")
 
+    # Now, we will use the Razorpay client library to verify the payment signature.
+    #  This is a crucial step to ensure that the payment details we received are legitimate and have not been tampered with. 
+    # The razorpay_client.utility.verify_payment_signature(params_dict) function will check the signature against the expected value based on our Razorpay credentials and the payment details. 
+    # If the verification is successful, it means the payment is valid, and we can proceed to update the order status and send notifications.
+    #  If the verification fails, it will raise a SignatureVerificationError, which we catch in the except block to handle the failure case appropriately.
     try:
         
         razorpay_client.utility.verify_payment_signature(params_dict)
-
+    
         if order.payment_status != "Paid":
-            order.payment_status = "Paid"
-            order.payment_method = "Razorpay"
-            order.razorpay_payment_id = razorpay_payment_id  # optional (good practice)
-            order.save()
-            clear_cart_items(request)
+            if order.payment_status == "Processing":
+                order.payment_method = "Razorpay"
+                order.razorpay_payment_id = razorpay_payment_id  # optional (good practice)
+                order.save()
+                clear_cart_items(request)
+             # Customer notification
+                customer_merge_data = {
+                    'order': order,
+                    'order_items': order.order_items,
+                }
+                subject = "New Order Placed"
+                text_body = render_to_string('emails/order/customer_new_order_email.txt', customer_merge_data)
+                html_body = render_to_string('emails/order/customer_new_order_email.html', customer_merge_data)
 
-        return JsonResponse({"message": "Payment verified successfully"}, status=200)
+                msg = EmailMultiAlternatives(
+                    subject=subject, from_email=settings.FROM_EMAIL, to=[order.address.email], body=text_body
+                )
+                msg.attach_alternative(html_body, "text/html")
+                msg.send()
+                customer_models.Notification.objects.create(type="New Order", user=request.user)
+
+                # ✅ Vendor notifications
+                for item in order.order_items():
+                    vendor_merge_data = {
+                        'item': item,
+                    }
+                    subject = f"New Order for {item.product.name}"
+                    text_body = render_to_string('emails/order/vendor_new_order_vendor_email.txt', vendor_merge_data)
+                    html_body = render_to_string('emails/order/vendor_new_order_vendor_email.html', vendor_merge_data)
+
+                    msg = EmailMultiAlternatives(
+                        subject=subject, from_email=settings.FROM_EMAIL,
+                        to=[item.vendor.user.email], body=text_body
+                    )
+                    msg.attach_alternative(html_body, "text/html")
+                    msg.send()
+                    vendor_models.Notification.objects.create(type="New Order", user=item.vendor, order=item) 
+            
+
+        return redirect(f"/payment_status/{order.order_id}/?payment_status=paid")
 
        
 
     except razorpay.errors.SignatureVerificationError as e:
-        print(f"❌ Payment verification failed: {str(e)}")
+        print(f"Payment verification failed: {str(e)}")
         return JsonResponse({"error": "Payment verification failed"}, status=400)
         
 
