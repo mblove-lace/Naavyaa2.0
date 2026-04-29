@@ -859,14 +859,14 @@ def razorpay_payment_verify(request, order_id):
                 order.razorpay_payment_id = razorpay_payment_id  # optional (good practice)
                 order.save()
                 clear_cart_items(request)
-             # Customer notification
+             # SEndinf email to Customer through notification
                 customer_merge_data = {
                     'order': order,
-                    'order_items': order.order_items,
+                    'order_items': order.order_items(),
                 }
-                subject = "New Order Placed"
-                text_body = render_to_string('emails/order/customer_new_order_email.txt', customer_merge_data)
-                html_body = render_to_string('emails/order/customer_new_order_email.html', customer_merge_data)
+                subject = f"New Order Placed"
+                text_body = render_to_string('email/order/customer_new_order_email.txt', customer_merge_data)
+                html_body = render_to_string('email/order/customer_new_order_email.html', customer_merge_data)
 
                 msg = EmailMultiAlternatives(
                     subject=subject, from_email=settings.FROM_EMAIL, to=[order.address.email], body=text_body
@@ -875,7 +875,6 @@ def razorpay_payment_verify(request, order_id):
                 msg.send()
                 customer_models.Notification.objects.create(type="New Order", user=request.user)
 
-                # ✅ Vendor notifications
                 for item in order.order_items():
                     vendor_merge_data = {
                         'item': item,
