@@ -36,5 +36,7 @@ urlpatterns = [
     path ("paypal_payment_verify/<order_id>/",views.paypal_payment_verify,name= "paypal_payment_verify"),
     path ("razorpay_payment_verify/<order_id>/",views.razorpay_payment_verify,name= "razorpay_payment_verify"),
     path ("payment_status/<order_id>/",views.payment_status,name= "payment_status"),
-
+    path ("blouse_cat/",views.blouse_cat,name= "blouse_cat"),
+    path ("saree_cat/",views.saree_cat,name= "saree_cat"),
+    path ("kurti_cat/",views.kurti_cat,name= "kurti_cat"),
 ]
