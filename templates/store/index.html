@@ -180,18 +180,14 @@
               {% comment %} <a href="index.html"> → clickable link around the image ---- Connects to homepage (index.html) {% endcomment %}
                
 
-              <div class="image-holder"> <a href="index.html">
-                  <img src="{% static 'assets/images/cat-item1.jpg' %}" alt="categories" class="product-image img-fluid">
+              <div class="image-holder"> <a href="{% url 'store:blouse_cat' %}">
+                  <img src="{% static 'assets/images/3.png' %}" alt="categories" class="product-image img-fluid">
                 </a>
-
-
                 {% comment %} Category-content → text/button overlay area under the image. Includes wrapper for styling button {% endcomment %}
-
-                
               </div>
               <div class="category-content">
                 <div class="product-button">
-                  <a href="index.html" class="btn btn-common text-uppercase">Shop for Blouses</a>
+                  <a href="{% url 'store:blouse_cat' %}" class="btn btn-common text-uppercase">Shop for Blouses</a>
                 </div>
               </div>
             </div>
@@ -199,13 +195,13 @@
           <div class="col-md-4">
             <div class="cat-item image-zoom-effect">
               <div class="image-holder">
-                <a href="index.html">
+                <a href="{% url 'store:index' %}">
                   <img src="{% static 'assets/images/cat-item2.jpg' %}" alt="categories" class="product-image img-fluid">
                 </a>
               </div>
               <div class="category-content">
                 <div class="product-button">
-                  <a href="index.html" class="btn btn-common text-uppercase">Shop for Kurti</a>
+                  <a href="{% url 'store:kurti_cat' %}" class="btn btn-common text-uppercase">Shop for Kurti</a>
                 </div>
               </div>
             </div>
@@ -213,13 +209,13 @@
           <div class="col-md-4">
             <div class="cat-item image-zoom-effect">
               <div class="image-holder">
-                <a href="index.html">
+                <a href="{% url 'store:index' %}">
                   <img src="{% static 'assets/images/cat-item3.jpg' %}" alt="categories" class="product-image img-fluid">
                 </a>
               </div>
               <div class="category-content">
                 <div class="product-button">
-                  <a href="index.html" class="btn btn-common text-uppercase">Shop for Saree</a>
+                  <a href="{% url 'store:saree_cat' %}" class="btn btn-common text-uppercase">Shop for Saree</a>
                 </div>
               </div>
             </div>
@@ -343,7 +339,7 @@
       {% comment %} This portion contains BEst sElling and view all products portion or line {% endcomment %}
 
       <div class="d-flex flex-wrap justify-content-between align-items-center mt-5 mb-3">
-        <h4 class="text-uppercase">Our Products</h4>
+        <h4 class="text-uppercase">Our BestSellers</h4>
         
       </div>
 
@@ -484,137 +480,6 @@
 
 
 
-  <section id="related-products" class="related-products product-carousel py-5 position-relative overflow-hidden">
-    <div class="container">
-      
-      <div class="d-flex flex-wrap justify-content-between align-items-center mt-5 mb-3">
-        <h4 class="text-uppercase"> Our Best Selling Products </h4>
-        <a href="#" class="btn-link">View All Products</a>
-      </div>
-
-      <div class="swiper product-swiper open-up" data-aos="zoom-out">
-        <div class="swiper-wrapper d-flex">
-        {% comment %} {% for product in products %} {% comment %} Loops through all products 
-
-          <div class="swiper-slide">
-            <div class="product-item image-zoom-effect link-effect">
-              <div class="image-holder">
-                <a href="{% url 'store:product_detail' product.slug %}">
-                  {% if product.image %}
-                    <img src="{{product.image.url}} %}" alt="{{product.name}}" class="product-image img-fluid">
-                  {% else %}
-                    <img src="{% static 'assets/images/product-item-5.jpg' %}" alt="{{product.name}}" class="product-image img-fluid">
-                  {% endif %}
-                  </a>
-                <a href="{% url 'store:product_detail' product.slug %}" class="btn-icon btn-wishlist">
-                  <svg width="24" height="24" viewBox="0 0 24 24">
-                    <use xlink:href="#heart"></use>
-                  </svg>
-                </a>
-
-                <div class="product-content">
-                  <h5 class="text-uppercase fs-5 mt-3">
-                    <a href="{% url 'store:product_detail' product.slug %}">{{ product.name}}</a>
-                  </h5>
-
-                  <a href="index.html" class="text-decoration-none" data-after="View More"><span>{{ product.price}}</span></a>
-                </div>
-              </div>
-            </div>
-          </div>
-          {% empty %}
-          {% endfor %} {% endcomment %}
-          <div class="swiper-slide">
-            <div class="product-item image-zoom-effect link-effect">
-              <div class="image-holder">
-                <a href="index.html">
-                  <img src="{% static 'assets/images/product-item-6.jpg' %}" alt="product" class="product-image img-fluid">
-                </a>
-                <a href="index.html" class="btn-icon btn-wishlist">
-                  <svg width="24" height="24" viewBox="0 0 24 24">
-                    <use xlink:href="#heart"></use>
-                  </svg>
-                </a>
-                <div class="product-content">
-                  <h5 class="text-uppercase fs-5 mt-3">
-                    <a href="index.html">Hakoba White Blouse</a>
-                  </h5>
-                  <a href="index.html" class="text-decoration-none" data-after="Add to cart"><span>$55.00</span></a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="swiper-slide">
-            <div class="product-item image-zoom-effect link-effect">
-              <div class="image-holder">
-                <a href="index.html">
-                  <img src="{% static 'assets/images/product-item-7.jpg' %}" alt="product" class="product-image img-fluid">
-                </a>
-                <a href="index.html" class="btn-icon btn-wishlist">
-                  <svg width="24" height="24" viewBox="0 0 24 24">
-                    <use xlink:href="#heart"></use>
-                  </svg>
-                </a>
-                <div class="product-content">
-                  <h5 class="text-uppercase fs-5 mt-3">
-                    <a href="index.html">Ajrakh Royal Blue</a>
-                  </h5>
-                  <a href="index.html" class="text-decoration-none" data-after="Add to cart"><span>$65.00</span></a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="swiper-slide">
-            <div class="product-item image-zoom-effect link-effect">
-              <div class="image-holder">
-                <a href="index.html">
-                  <img src="{% static 'assets/images/product-item-8.jpg' %}" alt="product" class="product-image img-fluid">
-                </a>
-                <a href="index.html" class="btn-icon btn-wishlist">
-                  <svg width="24" height="24" viewBox="0 0 24 24">
-                    <use xlink:href="#heart"></use>
-                  </svg>
-                </a>
-                <div class="product-content">
-                  <h5 class="text-uppercase fs-5 mt-3">
-                    <a href="index.html">Green Kasturi</a>
-                  </h5>
-                  <a href="index.html" class="text-decoration-none" data-after="Add to cart"><span>$50.00</span></a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="swiper-slide">
-            <div class="product-item image-zoom-effect link-effect">
-              <div class="image-holder">
-                <a href="index.html">
-                  <img src="{% static 'assets/images/product-item-1.jpg' %}" alt="product" class="product-image img-fluid">
-                </a>
-                <a href="index.html" class="btn-icon btn-wishlist">
-                  <svg width="24" height="24" viewBox="0 0 24 24">
-                    <use xlink:href="#heart"></use>
-                  </svg>
-                </a>
-                <div class="product-content">
-                  <h5 class="text-uppercase fs-5 mt-3">
-                    <a href="index.html">Hakoba purple Rani</a>
-                  </h5>
-                  <a href="index.html" class="text-decoration-none" data-after="Add to cart"><span>$70.00</span></a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="swiper-pagination"></div>
-      </div>
-      <div class="icon-arrow icon-arrow-left"><svg width="50" height="50" viewBox="0 0 24 24">
-          <use xlink:href="#arrow-left"></use>
-        </svg></div>
-      <div class="icon-arrow icon-arrow-right"><svg width="50" height="50" viewBox="0 0 24 24">
-          <use xlink:href="#arrow-right"></use>
-        </svg></div>
-    </div>
-  </section>
 
     <!-- ============================================ ==========================  ============================================ -->
   {% comment %} --------------------------    Blog Post -- To our makers --------------------------     {% endcomment %}
@@ -623,13 +488,13 @@
     <div class="container">
       <div class="d-flex flex-wrap justify-content-between align-items-center mt-5 mb-3">
         <h4 class="text-uppercase">Read Blog Posts</h4>
-        <a href="index.html" class="btn-link">View All</a>
+        <a href="{% url 'store:index' %}" class="btn-link">View All</a>
       </div>
       <div class="row">
         <div class="col-md-4">
           <article class="post-item">
             <div class="post-image">
-              <a href="index.html">
+              <a href="{% url 'store:index' %}">
                 <img src="{% static 'assets/images/post-image1.jpg' %}" alt="image" class="post-grid-image img-fluid">
               </a>
             </div>
@@ -639,7 +504,7 @@
                 <span class="meta-day"> jul 11, 2022</span>
               </div>
               <h5 class="post-title text-uppercase">
-                <a href="index.html">How to look outstanding in pastel</a>
+                <a href="{% url 'store:index' %}">How to look outstanding in pastel</a>
               </h5>
               <p>Dignissim lacus,turpis ut suspendisse vel tellus.Turpis purus,gravida orci,fringilla...</p>
             </div>
@@ -648,7 +513,7 @@
         <div class="col-md-4">
           <article class="post-item">
             <div class="post-image">
-              <a href="index.html">
+              <a href="{% url 'store:index' %}">
                 <img src="{% static 'assets/images/post-image2.jpg' %}" alt="image" class="post-grid-image img-fluid">
               </a>
             </div>

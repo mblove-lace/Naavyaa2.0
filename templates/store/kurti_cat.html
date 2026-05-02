@@ -12,8 +12,8 @@
         <h1 class="text-uppercase fs-3">Shop For Kurtis</h1>
         <nav class="breadcrumb">
           <a class="breadcrumb-item" href="#">Home</a>
-          <a class="breadcrumb-item" href="#">Pages</a>
-          <span class="breadcrumb-item active" aria-current="page">Shop</span>
+          <a class="breadcrumb-item" href="#">Kurti</a>
+          <span class="breadcrumb-item active" aria-current="page">All</span>
         </nav>
       </div>
     </div>
@@ -22,15 +22,16 @@
   <section class="py-5">
     <div class="container-fluid">
       <div class="row py-2">
-        <div class="col-md-9">
+        {% comment %} <div class="col-md-9">
           <span>Showing 1–12 of 55 results</span>
-        </div>
+        </div> {% endcomment %}
         <div class="col-md-3">
           <select class="form-select border-0" aria-label="Default select example">
             <option selected>Default Sorting</option>
-            <option value="1">Color</option>
-            <option value="2">Size</option>
-            <option value="3">Price</option>
+            <option value="1">Date new to old</option>
+            <option value="2">Date old to new</option>
+            <option value="3">Price high to low</option>
+            <option value="4">Price low to high</option>
           </select>
         </div>
       </div>
