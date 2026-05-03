@@ -183,16 +183,7 @@ class Product(models.Model):
         return self.name
     
     def average_rating(self):
-        return Review.objects.filter(product=self).aggregate(avg_rating=models.Avg('rating'))['avg_rating']
-    
-    def reviews(self):
-        return Review.objects.filter(product=self)
-    
-    def gallery (self):
-        return Gallery.objects.filter(product=self)
-    
-    def variants(self):
-        return Variant.objects.filter(product=self)
+        return Review.objects.filter(product=self).aggregate(avg_rating=models.Avg('rating'))['avg_rating']    
     
     def vendor_orders(self):
         return OrderItem.objects.filter(product=self, vendor=self.vendor)
@@ -206,7 +197,7 @@ class Product(models.Model):
 
 class Variant (models.Model):
         
-        product =models.ForeignKey(Product, on_delete=models.CASCADE,null=True)
+        product =models.ForeignKey(Product, on_delete=models.CASCADE,null=True,related_name="variants")
         name = models.CharField(max_length=1000, verbose_name="Variant Name", null=True, blank=True)
 
         def items(self):
@@ -227,7 +218,7 @@ class VariantItem(models.Model):
     
 
 class Gallery(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE,null=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE,null=True,related_name="gallery")
     image = models.ImageField(upload_to="images", null=True, blank=True)
     gallery_id = ShortUUIDField(length=5, max_length= 10, prefix='G-', alphabet="0123456789")
 

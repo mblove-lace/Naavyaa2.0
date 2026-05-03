@@ -1,0 +1,221 @@
+{% extends "partials/base.html" %}
+{% load static %}
+{% block content %}
+
+<section class="pt-3 border-bottom">
+  <div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center">
+      <h1 class="text-uppercase fs-3">Shop For {{ category.title }}</h1>
+      {% comment %} This is a simple breadcrumb navigation to show the user's current location within the site. 
+      Like in this case, it shows "Home > Category Name". You can expand this to include more levels if needed.
+       {% endcomment %}
+      <nav class="breadcrumb">
+        <a class="breadcrumb-item" href="{% url 'store:index' %}">Home</a>
+        {% comment %} Here we display the current category name by accessing the 'title' attribute of the 'category' object from the context dictionary in the view under def catalogue {% endcomment %}
+        <span class="breadcrumb-item active">{{ category.title }}</span>
+      </nav>
+    </div>
+  </div>
+</section>
+
+<section class="py-5">
+  <div class="container-fluid">
+    <div class="row">
+{% comment %} Creating a sidebar for filtering products {% endcomment %}
+      <!-- ========== SIDEBAR ========== -->
+      <div class="col-md-3">
+
+        <div class="mb-4">
+          <h6 class="text-uppercase fw-bold mb-3">Filter By Color</h6>
+          <ul class="list-unstyled">
+            <li class="mb-2">
+              <a href="?color=Red" class="text-decoration-none d-flex align-items-center gap-2 {% if selected_color == 'Red' %}fw-bold text-dark{% else %}text-secondary{% endif %}">
+                <span style="width:16px;height:16px;border-radius:50%;background:rgb(220,53,69);display:inline-block;border:1px solid #ddd;flex-shrink:0;"></span> Red
+              </a>
+            </li>
+            <li class="mb-2">
+              <a href="?color=Green" class="text-decoration-none d-flex align-items-center gap-2 {% if selected_color == 'Green' %}fw-bold text-dark{% else %}text-secondary{% endif %}">
+                <span style="width:16px;height:16px;border-radius:50%;background:rgb(40,167,69);display:inline-block;border:1px solid #ddd;flex-shrink:0;"></span> Green
+              </a>
+            </li>
+            <li class="mb-2">
+              <a href="?color=Blue" class="text-decoration-none d-flex align-items-center gap-2 {% if selected_color == 'Blue' %}fw-bold text-dark{% else %}text-secondary{% endif %}">
+                <span style="width:16px;height:16px;border-radius:50%;background:rgb(17, 63, 168);display:inline-block;border:1px solid #ddd;flex-shrink:0;"></span> Blue
+              </a>
+            </li>
+            <li class="mb-2">
+              <a href="?color=Black" class="text-decoration-none d-flex align-items-center gap-2 {% if selected_color == 'Black' %}fw-bold text-dark{% else %}text-secondary{% endif %}">
+                <span style="width:16px;height:16px;border-radius:50%;background:rgb(0,0,0);display:inline-block;border:1px solid #ddd;flex-shrink:0;"></span> Black
+              </a>
+            </li>
+            <li class="mb-2">
+              <a href="?color=White" class="text-decoration-none d-flex align-items-center gap-2 {% if selected_color == 'White' %}fw-bold text-dark{% else %}text-secondary{% endif %}">
+                <span style="width:16px;height:16px;border-radius:50%;background:rgb(255,255,255);display:inline-block;border:1px solid #333;flex-shrink:0;"></span> White
+              </a>
+            </li>
+            <li class="mb-2">
+              <a href="?color=Yellow" class="text-decoration-none d-flex align-items-center gap-2 {% if selected_color == 'Yellow' %}fw-bold text-dark{% else %}text-secondary{% endif %}">
+                <span style="width:16px;height:16px;border-radius:50%;background:rgb(255,193,7);display:inline-block;border:1px solid #ddd;flex-shrink:0;"></span> Yellow
+              </a>
+            </li>
+            <li class="mb-2">
+              <a href="?color=Pink" class="text-decoration-none text-secondary d-flex align-items-center gap-2 {% if selected_color == 'Pink' %}fw-bold text-dark{% else %}text-secondary{% endif %}">
+                <span style="width:16px;height:16px;border-radius:50%;background:rgb(243, 66, 154);display:inline-block;border:1px solid #ddd;flex-shrink:0;"></span> Pink
+              </a>
+            </li>
+            <li class="mb-2">
+              <a href="?color=Maroon" class="text-decoration-none text-secondary d-flex align-items-center gap-2 {% if selected_color == 'Maroon' %}fw-bold text-dark{% else %}text-secondary{% endif %}">
+                <span style="width:16px;height:16px;border-radius:50%;background:rgb(128,0,0);display:inline-block;border:1px solid #ddd;flex-shrink:0;"></span> Maroon
+              </a>
+            </li>
+            <li class="mb-2">
+              <a href="?color=Orange" class="text-decoration-none text-secondary d-flex align-items-center gap-2 {% if selected_color == 'Orange' %}fw-bold text-dark{% else %}text-secondary{% endif %}">
+                <span style="width:16px;height:16px;border-radius:50%;background:rgb(210, 123, 17);display:inline-block;border:1px solid #ddd;flex-shrink:0;"></span> Orange
+              </a>
+            </li>
+            <li class="mb-2">
+              <a href="?color=Purple" class="text-decoration-none text-secondary d-flex align-items-center gap-2 {% if selected_color == 'Purple' %}fw-bold text-dark{% else %}text-secondary{% endif %}">
+                <span style="width:16px;height:16px;border-radius:50%;background:rgb(128,0,128);display:inline-block;border:1px solid #ddd;flex-shrink:0;"></span> Purple
+              </a>
+            </li>
+          </ul>
+
+   
+        </div>
+
+        <hr>
+
+        <div class="mb-4">
+          <h6 class="text-uppercase fw-bold mb-3">Filter By Size</h6>
+          <ul class="list-unstyled">
+            <li class="mb-1">
+              <a href="?size=XS" class="text-decoration-none {% if selected_size == 'XS' %}fw-bold text-dark{% else %}text-secondary{% endif %}">XS</a>
+            </li>
+            <li class="mb-1">
+              <a href="?size=S" class="text-decoration-none {% if selected_size == 'S' %}fw-bold text-dark{% else %}text-secondary{% endif %}">S</a>
+            </li>
+            <li class="mb-1">
+              <a href="?size=M" class="text-decoration-none {% if selected_size == 'M' %}fw-bold text-dark{% else %}text-secondary{% endif %}">M</a>
+            </li>
+            <li class="mb-1">
+              <a href="?size=L" class="text-decoration-none {% if selected_size == 'L' %}fw-bold text-dark{% else %}text-secondary{% endif %}">L</a>
+            </li>
+            <li class="mb-1">
+              <a href="?size=XL" class="text-decoration-none {% if selected_size == 'XL' %}fw-bold text-dark{% else %}text-secondary{% endif %}">XL</a>
+            </li>
+            <li class="mb-1">
+              <a href="?size=XXL" class="text-decoration-none {% if selected_size == 'XXL' %}fw-bold text-dark{% else %}text-secondary{% endif %}">XXL</a>
+            </li>
+            <li class="mb-1">
+              <a href="?size=3XL" class="text-decoration-none {% if selected_size == '3XL' %}fw-bold text-dark{% else %}text-secondary{% endif %}">3XL</a>
+            </li>
+            <li class="mb-1">
+              <a href="?size=4XL" class="text-decoration-none {% if selected_size == '4XL' %}fw-bold text-dark{% else %}text-secondary{% endif %}">4XL</a>
+            </li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="mb-4">
+          <h6 class="text-uppercase fw-bold mb-3">Filter By Price</h6>
+          <ul class="list-unstyled">
+            <li class="mb-1"><a href="?price=under500" class="text-decoration-none {% if selected_price == 'under500' %}fw-bold text-dark{% else %}text-secondary{% endif %}">Under ₹500</a></li>
+            <li class="mb-1"><a href="?price=500-1000" class="text-decoration-none {% if selected_price == '500-1000' %}fw-bold text-dark{% else %}text-secondary{% endif %}">₹500 – ₹1000</a></li>
+            <li class="mb-1"><a href="?price=1000-2000" class="text-decoration-none {% if selected_price == '1000-2000' %}fw-bold text-dark{% else %}text-secondary{% endif %}">₹1000 – ₹2000</a></li>
+            <li class="mb-1"><a href="?price=above2000" class="text-decoration-none {% if selected_price == 'above2000' %}fw-bold text-dark{% else %}text-secondary{% endif %}">Above ₹2000</a></li>
+          </ul>
+        </div>
+
+      </div>
+      <!-- ========== END SIDEBAR ========== -->
+
+      <!-- ========== PRODUCTS ========== -->
+      <div class="col-md-9">
+
+        <div class="row py-2 mb-3">
+          <div class="col-md-8">
+            <span>Showing {{ products.count }} results</span>
+          </div>
+          <div class="col-md-4">
+            <select class="form-select border-0" id="sortSelect">
+              <option value="" {% if not selected_sort %}selected{% endif %}>Default Sorting</option>
+              <option value="price_asc"  {% if selected_sort == 'price_asc'  %}selected{% endif %}>Price: Low to High</option>
+              <option value="price_desc" {% if selected_sort == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
+              <option value="date_asc"   {% if selected_sort == 'date_asc'   %}selected{% endif %}>Date: Oldest First</option>
+              <option value="date_desc"  {% if selected_sort == 'date_desc'  %}selected{% endif %}>Date: Newest First</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          {% for product in products %}
+          <div class="col-md-4">
+            <div class="product-item image-zoom-effect link-effect mb-5">
+              <div class="image-holder">
+                <a href="{% url 'store:product_detail' product.slug %}">
+                  {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image img-fluid">
+                  {% else %}
+                    <img src="{% static 'assets/images/cat-item1.jpg' %}" alt="{{ product.name }}" class="product-image img-fluid">
+                  {% endif %}
+                </a>
+                <a href="{% url 'store:product_detail' product.slug %}" class="btn-icon btn-wishlist">
+                  <svg width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#heart"></use></svg>
+                </a>
+                <div class="product-content">
+                  <h3 class="fs-5 mt-3 text-uppercase">
+                    <a href="{% url 'store:product_detail' product.slug %}">{{ product.name }}</a>
+                  </h3>
+                  <a href="{% url 'store:product_detail' product.slug %}" class="text-decoration-none" data-after="Click to View">
+                    <span>{% if product.price %}₹ {{ product.price|floatformat:2 }}{% endif %}</span>
+                  </a>
+
+                  <!-- Add to Cart / Out of Stock -->
+                  <div class="mt-2">
+                    {% if product.stock > 0 %}
+                      <button
+                        type="button"
+                        class="btn btn-dark product-cart-submit add_to_cart btn-sm text-uppercase w-100"
+                        data-id="{{ product.id }}"
+                        data-max="{{ product.stock }}">
+                        Add to Cart
+                      </button>
+                    {% else %}
+                      <button type="button" class="btn btn-secondary btn-sm text-uppercase w-100" disabled>
+                        Out of Stock
+                      </button>
+                    {% endif %}
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+          {% empty %}
+            <p class="text-center w-100">No products found in this category.</p>
+          {% endfor %}
+        </div>
+
+      </div>
+      <!-- ========== END PRODUCTS ========== -->
+
+    </div>
+  </div>
+</section>
+
+
+
+<!-- Adding the sorting script -->
+ <script>
+  document.getElementById('sortSelect').addEventListener('change', function () {
+    const url = new URL(window.location.href);
+    if (this.value) {
+      url.searchParams.set('sort', this.value);
+    } else {
+      url.searchParams.delete('sort');
+    }
+    window.location.href = url.toString();
+  });
+</script>
+{% endblock content %}

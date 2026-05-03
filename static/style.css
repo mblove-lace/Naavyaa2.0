@@ -1527,3 +1527,134 @@ a.btn-link.text-light:after {
   position: relative;
   margin-top: 30px;
 }
+/* ============================================
+   MOBILE RESPONSIVENESS
+   ============================================ */
+
+@media (max-width: 768px) {
+
+  /* Typography scale down */
+  h1, .h1 { font-size: 2.5rem; }
+  h2, .h2 { font-size: 2rem; }
+  h3, .h3 { font-size: 1.6rem; }
+  h4, .h4 { font-size: 1.2rem; }
+
+  /* Title xlarge */
+  .title-xlarge {
+    font-size: calc(2rem + 8vw);
+    top: -20px;
+  }
+
+  /* Features — 2 per row */
+  .features .col-md-3 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+  .features .col-md-3 .py-5 {
+    padding: 1rem 0.5rem !important;
+  }
+  .features h4 {
+    font-size: 0.9rem;
+  }
+  .features p {
+    font-size: 0.8rem;
+  }
+  .features svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  /* Categories */
+  .categories .col-md-4 {
+    margin-bottom: 1rem;
+  }
+
+  /* Collection — stack vertically */
+  .collection .collection-item {
+    flex-direction: column;
+  }
+  .collection .col-md-6 {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  .collection .collection-content {
+    padding: 1.5rem !important;
+    margin: 0 !important;
+  }
+  .collection .collection-content h3 {
+    font-size: 1.2rem;
+  }
+  .collection .collection-content p {
+    font-size: 0.85rem;
+  }
+
+  /* Testimonials */
+  .testimonial-swiper .testimonial-item blockquote {
+    font-size: 1rem;
+  }
+  .testimonial-swiper .swiper-slide {
+    width: 80% !important;
+  }
+
+  /* Blog */
+  .blog .col-md-4 {
+    margin-bottom: 1.5rem;
+  }
+  .blog .post-title {
+    font-size: 1rem;
+  }
+  .blog p {
+    font-size: 0.85rem;
+  }
+
+  /* Product swiper */
+  .product-content h5 {
+    font-size: 0.9rem !important;
+  }
+  .star-rating {
+    font-size: 0.8rem;
+  }
+
+  /* General spacing */
+  section {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+  }
+
+  /* Swiper arrows already hidden by your existing CSS at 991px */
+}
+
+@media (max-width: 576px) {
+
+  /* Billboard heading */
+  #billboard .section-title {
+    font-size: 1.3rem;
+    margin-top: 0.5rem !important;
+  }
+
+  /* Features — still 2 per row but tighter */
+  .features .col-md-3 .py-5 {
+    padding: 0.75rem 0.25rem !important;
+  }
+
+  /* Best sellers heading */
+  #best-sellers h4 {
+    font-size: 1rem;
+  }
+
+  /* Collection title */
+  .title-xlarge {
+    font-size: calc(1.5rem + 6vw);
+    top: -10px;
+  }
+
+  /* Blog */
+  .blog h4 {
+    font-size: 1rem;
+  }
+
+  /* Breadcrumb */
+  .breadcrumb {
+    font-size: 0.8rem;
+  }
+}

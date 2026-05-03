@@ -495,146 +495,35 @@
         </div>
         <div class="swiper product-swiper overflow-hidden">
           <div class="swiper-wrapper d-flex">
-            <div class="swiper-slide">
-              <div class="product-item image-zoom-effect link-effect">
-                <div class="image-holder">
-                  <a href="single-product.html">
-                    <img src="{% static 'assets/images/cat-item2.jpg' %}" alt="product" class="product-image img-fluid">
-                  </a>
-                  <a href="wishlist.html" class="btn-icon btn-wishlist">
-                    <svg width="24" height="24" viewBox="0 0 24 24">
-                      <use xlink:href="#heart"></use>
-                    </svg>
-                  </a>
-                  <div class="product-content">
-                    <h5 class="text-uppercase fs-5 mt-3">
-                      <a href="single-product.html">Dark florish onepiece</a>
-                    </h5>
-                    <a href="cart" class="text-decoration-none" data-after="Add to cart"><span>$95.00</span></a>
+              {% for related in related_products %}
+                <div class="swiper-slide">
+                  <div class="product-item image-zoom-effect link-effect">
+                    <div class="image-holder">
+                      <a href="{% url 'store:product_detail' related.slug %}">
+                        {% if related.gallery.first %}
+                          <img src="{{ related.gallery.first.image.url }}" alt="{{ related.name }}" class="product-image img-fluid">
+                        {% elif related.image %}
+                          <img src="{{ related.image.url }}" alt="{{ related.name }}" class="product-image img-fluid">
+                        {% endif %}
+                      </a>
+                      <a href="wishlist.html" class="btn-icon btn-wishlist">
+                        <svg width="24" height="24" viewBox="0 0 24 24">
+                          <use xlink:href="#heart"></use>
+                        </svg>
+                      </a>
+                      <div class="product-content">
+                        <h5 class="text-uppercase fs-5 mt-3">
+                          <a href="{% url 'store:product_detail' related.slug %}">{{ related.name }}</a>
+                        </h5>
+                        <span>₹{{ related.price }}</span>
+                      </div>
+
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-            <div class="swiper-slide">
-              <div class="product-item image-zoom-effect link-effect">
-                <div class="image-holder">
-                  <a href="single-product.html">
-                    <img src="{% static 'assets/images/cat-item2.jpg' %}" alt="product" class="product-image img-fluid">
-                  </a>
-                  <a href="wishlist.html" class="btn-icon btn-wishlist">
-                    <svg width="24" height="24" viewBox="0 0 24 24">
-                      <use xlink:href="#heart"></use>
-                    </svg>
-                  </a>
-                  <div class="product-content">
-                    <h5 class="text-uppercase fs-5 mt-3">
-                      <a href="single-product.html">Baggy Shirt</a>
-                    </h5>
-                    <a href="cart.html" class="text-decoration-none" data-after="Add to cart"><span>$55.00</span></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="swiper-slide">
-              <div class="product-item image-zoom-effect link-effect">
-                <div class="image-holder">
-                  <a href="single-product.html">
-                    <img src="{% static 'assets/images/cat-item2.jpg' %}" alt="product" class="product-image img-fluid">
-                  </a>
-                  <a href="wishlist.html" class="btn-icon btn-wishlist">
-                    <svg width="24" height="24" viewBox="0 0 24 24">
-                      <use xlink:href="#heart"></use>
-                    </svg>
-                  </a>
-                  <div class="product-content">
-                    <h5 class="text-uppercase fs-5 mt-3">
-                      <a href="single-product.html">Cotton off-white shirt</a>
-                    </h5>
-                    <a href="cart.html" class="text-decoration-none" data-after="Add to cart"><span>$65.00</span></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="swiper-slide">
-              <div class="product-item image-zoom-effect link-effect">
-                <div class="image-holder">
-                  <a href="single-product.html">
-                    <img src="{% static 'assets/images/cat-item2.jpg' %}" alt="product" class="product-image img-fluid">
-                  </a>
-                  <a href="wishlist.html" class="btn-icon btn-wishlist">
-                    <svg width="24" height="24" viewBox="0 0 24 24">
-                      <use xlink:href="#heart"></use>
-                    </svg>
-                  </a>
-                  <div class="product-content">
-                    <h5 class="text-uppercase fs-5 mt-3">
-                      <a href="single-product.html">Handmade crop sweater</a>
-                    </h5>
-                    <a href="cart.html" class="text-decoration-none" data-after="Add to cart"><span>$50.00</span></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="swiper-slide">
-              <div class="product-item image-zoom-effect link-effect">
-                <div class="image-holder">
-                  <a href="single-product.html">
-                    <img src="{% static 'assets/images/cat-item2.jpg' %}" alt="product" class="product-image img-fluid">
-                  </a>
-                  <a href="wishlist.html" class="btn-icon btn-wishlist">
-                    <svg width="24" height="24" viewBox="0 0 24 24">
-                      <use xlink:href="#heart"></use>
-                    </svg>
-                  </a>
-                  <div class="product-content">
-                    <h5 class="text-uppercase fs-5 mt-3">
-                      <a href="single-product.html">Handmade crop sweater</a>
-                    </h5>
-                    <a href="cart.html" class="text-decoration-none" data-after="Add to cart"><span>$70.00</span></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="swiper-slide">
-              <div class="product-item image-zoom-effect link-effect">
-                <div class="image-holder">
-                  <a href="single-product.html">
-                    <img src="{% static 'assets/images/cat-item2.jpg' %}" alt="product" class="product-image img-fluid">
-                  </a>
-                  <a href="wishlist.html" class="btn-icon btn-wishlist">
-                    <svg width="24" height="24" viewBox="0 0 24 24">
-                      <use xlink:href="#heart"></use>
-                    </svg>
-                  </a>
-                  <div class="product-content">
-                    <h5 class="text-uppercase fs-5 mt-3">
-                      <a href="single-product.html">Handmade crop sweater</a>
-                    </h5>
-                    <a href="cart.html" class="text-decoration-none" data-after="Add to cart"><span>$70.00</span></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="swiper-slide">
-              <div class="product-item image-zoom-effect link-effect">
-                <div class="image-holder">
-                  <a href="single-product.html">
-                    <img src="{% static 'assets/images/cat-item2.jpg' %}" alt="product" class="product-image img-fluid">
-                  </a>
-                  <a href="wishlist.html" class="btn-icon btn-wishlist">
-                    <svg width="24" height="24" viewBox="0 0 24 24">
-                      <use xlink:href="#heart"></use>
-                    </svg>
-                  </a>
-                  <div class="product-content">
-                    <h5 class="text-uppercase fs-5 mt-3">
-                      <a href="single-product.html">Handmade crop sweater</a>
-                    </h5>
-                    <a href="cart.html" class="text-decoration-none" data-after="Add to cart"><span>$70.00</span></a>
-                  </div>
-                </div>
-              </div>
-            </div>
+                {% empty %}
+                  <p class="text-muted ps-3">No related products found.</p>
+                {% endfor %}
           </div>
           <div class="swiper-pagination"></div>
         </div>

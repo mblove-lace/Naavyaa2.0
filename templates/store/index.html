@@ -17,7 +17,7 @@
   <section id="billboard" class="bg-light py-5">
     <div class="container">
       <div class="row justify-content-center">
-        <h1 class="section-title text-center mt-4" data-aos="fade-up">Festive Collections</h1>
+        <h1 class="section-title text-center mt-4" data-aos="fade-up"> Collections</h1>
         <div class="col-md-6 text-center" data-aos="fade-up" data-aos-delay="300">
        
         </div>
@@ -162,7 +162,7 @@
 
      <div class="d-flex flex-wrap justify-content-between align-items-center mt-5 mb-3">
         <h4 class="text-uppercase">Categories</h4>
-        <a href="index.html" class="btn-link">View All Products</a>
+        {% comment %} <a href="index.html" class="btn-link">View All Products</a> {% endcomment %}
       </div> 
     {% comment %} Bootstrap’s container. - provides proper spacing & alignment. Keeps content centered with margins {% endcomment %}
     <div class="container">
@@ -180,14 +180,14 @@
               {% comment %} <a href="index.html"> → clickable link around the image ---- Connects to homepage (index.html) {% endcomment %}
                
 
-              <div class="image-holder"> <a href="{% url 'store:blouse_cat' %}">
-                  <img src="{% static 'assets/images/3.png' %}" alt="categories" class="product-image img-fluid">
+              <div class="image-holder"> <a href="{% url 'store:catalogue' 'blouse' %}">
+                  <img src="{% static 'assets/images/3.jpg' %}" alt="categories" class="product-image img-fluid">
                 </a>
                 {% comment %} Category-content → text/button overlay area under the image. Includes wrapper for styling button {% endcomment %}
               </div>
               <div class="category-content">
                 <div class="product-button">
-                  <a href="{% url 'store:blouse_cat' %}" class="btn btn-common text-uppercase">Shop for Blouses</a>
+                  <a href="{% url 'store:catalogue' 'blouse' %}" class="btn btn-common text-uppercase">Shop for Blouses</a>
                 </div>
               </div>
             </div>
@@ -195,13 +195,13 @@
           <div class="col-md-4">
             <div class="cat-item image-zoom-effect">
               <div class="image-holder">
-                <a href="{% url 'store:index' %}">
-                  <img src="{% static 'assets/images/cat-item2.jpg' %}" alt="categories" class="product-image img-fluid">
+                <a href="{% url 'store:catalogue' 'saree' %}">
+                  <img src="{% static 'assets/images/3a.jpg' %}" alt="categories" class="product-image img-fluid">
                 </a>
               </div>
               <div class="category-content">
                 <div class="product-button">
-                  <a href="{% url 'store:kurti_cat' %}" class="btn btn-common text-uppercase">Shop for Kurti</a>
+                  <a href="{% url 'store:catalogue' 'saree' %}" class="btn btn-common text-uppercase">Shop for Saree</a>
                 </div>
               </div>
             </div>
@@ -209,13 +209,13 @@
           <div class="col-md-4">
             <div class="cat-item image-zoom-effect">
               <div class="image-holder">
-                <a href="{% url 'store:index' %}">
-                  <img src="{% static 'assets/images/cat-item3.jpg' %}" alt="categories" class="product-image img-fluid">
+                <a href="{% url 'store:catalogue' 'kurti' %}">
+                  <img src="{% static 'assets/images/24.jpg' %}" alt="categories" class="product-image img-fluid">
                 </a>
               </div>
               <div class="category-content">
                 <div class="product-button">
-                  <a href="{% url 'store:saree_cat' %}" class="btn btn-common text-uppercase">Shop for Saree</a>
+                  <a href="{% url 'store:catalogue' 'kurti' %}" class="btn btn-common text-uppercase">Shop for Kurti</a>
                 </div>
               </div>
             </div>
@@ -227,83 +227,6 @@
 
  <!-- ============================================ ==========================  ============================================ -->
 
-{% comment %} --------------------------    Product Views - Our New Arrivals --------------------------     {% endcomment %}
-
-
-  {% comment %}<section id="new-arrival" class="new-arrival product-carousel py-5 position-relative overflow-hidden">
-    <div class="container">
-      <div class="d-flex flex-wrap justify-content-between align-items-center mt-5 mb-3">
-        <h4 class="text-uppercase"> Our New Arrivals</h4>
-        <a href="index.html" class="btn-link">View All Products</a>
-      </div>
-
-
-      <div class="swiper product-swiper open-up" data-aos="zoom-out">
-      
-        <div class="swiper-wrapper d-flex">
-          {% for product in products %}
-            <div class="swiper-slide">
-              <div class="product-item image-zoom-effect link-effect">
-                <div class="image-holder position-relative">
-                  <a href="#">
-                    {% if product.image %}
-                      <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image img-fluid">
-                    {% else %}
-                    {% comment %} the product is loaded from admin> Store> Products  {% endcomment %}
-                   {% comment %}    <img src="{% static '' %}" alt="{{ product.name }}" class="product-image img-fluid">
-                    {% endif %}
-                  </a>
-                  <a href="#" class="btn-icon btn-wishlist">
-                    <svg width="24" height="24" viewBox="0 0 24 24">
-                      <use xlink:href="#heart"></use>
-                    </svg>
-                  </a>
-                  <div class="product-content">
-                    <h5 class="element-title text-uppercase fs-5 mt-3">
-                      <a href="#">{{ product.name }}</a>
-                    </h5>
-                    <a href="#" class="text-decoration-none" data-after="Add to cart">
-                      <span>{% if product.price %}${{ product.price }}{% else %}  ₹ 1000 {% endif %}</span>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          {% empty %}
-          
-            <div class="swiper-slide">
-              <div class="product-item image-zoom-effect link-effect">
-                <div class="image-holder position-relative">
-                  <a href="#">
-                    <img src="{% static 'assets/images/product-item-1.jpg' %}" alt="Default product" class="product-image img-fluid">
-                  </a>
-                  <a href="#" class="btn-icon btn-wishlist">
-                    <svg width="24" height="24" viewBox="0 0 24 24">
-                      <use xlink:href="#heart"></use>
-                    </svg>
-                  </a>
-                  <div class="product-content">
-                    <h5 class="element-title text-uppercase fs-5 mt-3">
-                      <a href="#">Sample Product</a>
-                    </h5>
-                    <a href="#" class="text-decoration-none" data-after="Add to cart"><span>$95.00</span></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          {% endfor %}
-        </div>
-        <div class="swiper-pagination"></div>
-      </div>
-      <div class="icon-arrow icon-arrow-left"><svg width="50" height="50" viewBox="0 0 24 24">
-          <use xlink:href="#arrow-left"></use>
-        </svg></div>
-      <div class="icon-arrow icon-arrow-right"><svg width="50" height="50" viewBox="0 0 24 24">
-          <use xlink:href="#arrow-right"></use>
-        </svg></div>
-        
-    </div>
-  </section> {% endcomment %}
 
     <!-- ============================================ ==========================  ============================================ -->
     {% comment %} --------------------------    Collection Section --------------------------     {% endcomment %}
@@ -323,7 +246,7 @@
                    <h3 class="element-title text-uppercase"> Empowering Women Through Cotton </h3>
                   <p>Embrace elegance that breathes with you! Our exquisite collection of cotton blouses, sarees, and kurtis combines festive sophistication with unmatched comfort. Each piece is lovingly handcrafted to your unique specifications by skilled women artisans who understand what women truly desire. Our designs celebrate femininity, comfort, and individuality—bringing you timeless style that feels as good as it looks.</p>
 
-                  <a href="#" class="btn btn-dark text-uppercase mt-3">Shop Collection</a>
+                  <a href="#" class="btn btn-dark text-uppercase mt-3">ABOUT US</a>
                 </div>
               </div>
             </div>
@@ -339,7 +262,7 @@
       {% comment %} This portion contains BEst sElling and view all products portion or line {% endcomment %}
 
       <div class="d-flex flex-wrap justify-content-between align-items-center mt-5 mb-3">
-        <h4 class="text-uppercase">Our BestSellers</h4>
+        <h4 class="text-uppercase">Our Products</h4>
         
       </div>
 
@@ -553,97 +476,6 @@
   </section> 
 
 
-  <!-- ============================================ ==========================  ============================================ -->
-  {% comment %} --------------------------    Logo or Featured in newspaper or Featured in Social Media --------------------------     {% endcomment %}
-
-  {% comment %} <section class="logo-bar py-5 my-5">
-    <div class="container">
-      <div class="row">
-        <div class="logo-content d-flex flex-wrap justify-content-between">
-          <img src="{% static 'assets/images/logo1.png' %}" alt="logo" class="logo-image img-fluid">
-          <img src="{% static 'assets/images/logo2.png' %}" alt="logo" class="logo-image img-fluid">
-          <img src="{% static 'assets/images/logo3.png' %}" alt="logo" class="logo-image img-fluid">
-          <img src="{% static 'assets/images/logo4.png' %}" alt="logo" class="logo-image img-fluid">
-          <img src="{% static 'assets/images/logo5.png' %}" alt="logo" class="logo-image img-fluid">
-        </div>
-      </div>
-    </div>
-  </section> {% endcomment %}
-
-  {% comment %} <section class="newsletter bg-light" style="background: url(images/pattern-bg.png) no-repeat;">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-md-8 py-5 my-5">
-          <div class="subscribe-header text-center pb-3">
-            <h4 class="section-title text-uppercase"> Thank you for visiting!!!! </h4>
-          </div>
-          {% comment %} <form id="form" class="d-flex flex-wrap gap-2">
-            <input type="text" name="email" placeholder="Your Email Addresss" class="form-control form-control-lg">
-            <button class="btn btn-dark btn-lg text-uppercase w-100">Sign Up</button>
-          </form>
-        </div>
-      </div> {% endcomment %}
-       {% comment %}   
-      </div>
-    </div>
-  </section>   {% endcomment %}
-
-
-
-  <!-- ============================================ ==========================  ============================================ -->
-  {% comment %} --------------------------    Follow on Instagram--------------------------     {% endcomment %}
-
-
-  {% comment %} <section class="instagram position-relative">
-  
-        <div class="d-flex justify-content-center w-100 position-absolute bottom-0 z-1">
-          <a href="https://www.instagram.com/templatesjungle/" class="btn btn-dark px-5">Follow us on Instagram</a>
-        </div>
-        <div class="row g-0">
-          <div class="col-6 col-sm-4 col-md-2">
-            <div class="insta-item">
-              <a href="https://www.instagram.com/templatesjungle/" target="_blank">
-                <img src="{% static 'assets/images/insta-item1.jpg' %}" alt="instagram" class="insta-image img-fluid">
-              </a>
-            </div>
-          </div>
-          <div class="col-6 col-sm-4 col-md-2">
-            <div class="insta-item">
-              <a href="https://www.instagram.com/na_a_v_y_aa/?hl=en" target="_blank">
-                <img src="{% static 'assets/images/insta-item2.jpg' %}" alt="instagram" class="insta-image img-fluid">
-              </a>
-            </div>
-          </div>
-          <div class="col-6 col-sm-4 col-md-2">
-            <div class="insta-item">
-              <a href="https://www.instagram.com/na_a_v_y_aa/?hl=en" target="_blank">
-                <img src="{% static 'assets/images/insta-item3.jpg' %}" alt="instagram" class="insta-image img-fluid">
-              </a>
-            </div>
-          </div>
-          <div class="col-6 col-sm-4 col-md-2">
-            <div class="insta-item">
-              <a href="https://www.instagram.com/na_a_v_y_aa/?hl=en" target="_blank">
-                <img src="{% static 'assets/images/insta-item4.jpg' %}" alt="instagram" class="insta-image img-fluid">
-              </a>
-            </div>
-          </div>
-          <div class="col-6 col-sm-4 col-md-2">
-            <div class="insta-item">
-              <a href="https://www.instagram.com/na_a_v_y_aa/?hl=en" target="_blank">
-                <img src="{% static 'assets/images/insta-item5.jpg' %}" alt="instagram" class="insta-image img-fluid">
-              </a>
-            </div>
-          </div>
-          <div class="col-6 col-sm-4 col-md-2">
-            <div class="insta-item">
-              <a href="https://www.instagram.com/na_a_v_y_aa/?hl=en" target="_blank">
-                <img src="{% static 'assets/images/insta-item6.jpg' %}" alt="instagram" class="insta-image img-fluid">
-              </a>
-            </div>
-          </div>
-        </div>
-  </section> {% endcomment %}
 
 {% endblock content %} 
 

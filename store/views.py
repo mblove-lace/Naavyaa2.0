@@ -49,19 +49,65 @@ def index(request):
     # We are sayig that the template should have access to a variable named 'products' which contains the filtered product records
     return render (request, 'store/index.html', context) 
 
-def blouse_cat(request):
-    products = store_models.Product.objects.filter(category__title="Blouse", status="Published")
-    context = {'products': products}
-    return render (request, 'store/blouse_cat.html', context)
 
-def saree_cat(request):
-    products = store_models.Product.objects.filter(category__title="Saree", status="Published")
-    context = {'products': products}
-    return render (request, 'store/saree_cat.html', context)
-def kurti_cat(request):
-    products = store_models.Product.objects.filter(category__title="Kurti", status="Published")
-    context = {'products': products}
-    return render (request, 'store/kurti_cat.html', context)
+# This view function is responsible for displaying the product catalogue based on a specific category. It takes a category_slug as a parameter, retrieves the corresponding category and products, applies filters based on size, color, and price if provided in the request, and renders the 'catalogue.html' template with the filtered products and category information.
+def catalogue(request, category_slug):
+    # get_object_or_404 is a Django shortcut function that retrieves an object from the database based on the given parameters.
+    # If the object does not exist, it raises a 404 error. In this case, it tries to fetch a Category object where the slug field matches the category_slug parameter passed to the view. 
+    # If no such category exists, it will return a 404 error page.
+    category = get_object_or_404(store_models.Category, slug=category_slug)
+    # This line retrieves all Product objects from the database that belong to the specified category (using category__slug to filter by the related Category's slug) and have a status of "Published". The resulting queryset is stored in the variable products.
+    products = store_models.Product.objects.filter(category__slug=category_slug, status="Published")
+    # The following lines retrieve filter parameters (size, color, price) from the GET request. 
+    # These parameters are used to further filter the products queryset based on the user's selections in the catalogue page.
+    size = request.GET.get('size')
+    # color: This line retrieves the value of the 'color' parameter from the GET request.
+    #  If the user has selected a color filter on the catalogue page, this variable will hold that value (e.g., "Red", "Blue"). If no color filter is applied, it will be None.
+    color = request.GET.get('color')
+    # price: This line retrieves the value of the 'price' parameter from the GET request. Similar to size and color, this variable will hold the selected price filter value (e.g., "under500", "500-1000") if the user has applied a price filter on the catalogue page. If no price filter is applied, it will be None.
+    price = request.GET.get('price')
+    # The following lines apply additional filters to the products queryset based on the retrieved size, color, and price parameters.
+    if size:
+        products = products.filter(variant__variant_items__content=size).distinct()
+    # The color filter is applied to the products queryset by checking if the color parameter is present in the GET request. If it is, the queryset is filtered to include only products that have a variant with a variant item whose content matches the selected color. The distinct() method is used to ensure that duplicate products are not returned in case multiple variants match the color filter.
+    if color:
+        products = products.filter(variant__variant_items__content=color).distinct()
+    # The price filter is applied by checking the value of the price parameter and filtering the products queryset accordingly. Depending on the selected price range (e.g., "under500", "500-1000"), the queryset is filtered to include products that fall within that price range using Django's field lookups (e.g., price__lt, price__gte, price__lte).
+    if price:
+        if price == "under500":
+            products = products.filter(price__lt=500)
+        elif price == "500-1000":
+            products = products.filter(price__gte=500, price__lte=1000)
+        elif price == "1000-2000":
+            products = products.filter(price__gte=1000, price__lte=2000)
+        elif price == "above2000":
+            products = products.filter(price__gt=2000)
+    #  Applying sorting based on the sort parameter from the GET request. The sort_map dictionary defines the mapping of sorting options to their corresponding field names in the Product model. If a valid sort option is provided in the GET request, the products queryset is ordered accordingly using the order_by() method.
+    sort = request.GET.get('sort')
+    # sort_map is a dictionary that maps sorting options (like 'price_asc', 'price_desc', 'date_asc', 'date_desc') to their corresponding field names in the Product model. This allows the view to dynamically apply sorting based on the user's selection in the catalogue page.
+    sort_map = {
+        'price_asc':  'price',
+        'price_desc': '-price',
+        'date_asc':   'date',       # oldest first
+        'date_desc':  '-date',      # newest first
+    }
+    # This line checks if the sort parameter from the GET request matches any of the keys in the sort_map dictionary. If it does, it applies the corresponding sorting to the products queryset using the order_by() method. For example, if sort is 'price_asc', it will order the products by price in ascending order; if sort is 'price_desc', it will order by price in descending order, and so on.
+    if sort in sort_map:
+        products = products.order_by(sort_map[sort])
+
+    # The context dictionary is created to pass the filtered products, category information, and selected filter values (size, color, price) to the template. This allows the template to display the products based on the applied filters and also indicate which filters are currently active.
+    context = {
+        'products': products,
+        'category': category,
+        'selected_size': size,
+        'selected_color': color,
+        'selected_price': price,
+        'selected_sort': sort, # This line adds the selected sorting option to the context, allowing the template to indicate which sorting option is currently active (e.g., by highlighting it in the sorting dropdown).
+    }
+    # Finally, the view renders the 'catalogue.html' template with the context containing the filtered products and category information. The template can then use this context to display the products in the catalogue page according to the user's selected filters.
+    return render(request, 'store/catalogue.html', context)
+
+
 
 
 # slug- the part of URL that uniquely identifies a particular page on a website in a form that is easy to read for both users and search engines
@@ -72,7 +118,7 @@ def product_detail(request, slug):
 
     # Retrieve a single product based on the provided slug and its published status
     product = store_models.Product.objects.get(slug= slug, status="Published")
-    related_products = store_models.Product.objects.filter(category=product.category, status="Published").exclude(id=product.id)#[:4]
+    related_products = store_models.Product.objects.filter(category=product.category, status="Published").exclude(id=product.id)[:4]
     product_stock_range = range(1, product.stock +1)
 
     # print("DEBUG: entered attributes of product_detail method")
