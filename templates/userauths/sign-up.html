@@ -3,206 +3,139 @@
 {% load static %}
 {% block content %}
 
-<!-- Hero section with light background and vertical padding -->
-<section class="hero-section bg-light py-4">
-
-  <!-- Wrapper for hero content (can be used for positioning/styling) -->
-  <div class="hero-content">
-
-    <!-- Bootstrap container for centered, responsive horizontal padding -->
-    <div class="container">
-
-      <!-- Bootstrap row for the grid layout -->
-      <div class="row">
-
-        <!-- Center-aligns the breadcrumb text -->
-        <div class="text-center">
-
-          <!-- Breadcrumb navigation showing the current page hierarchy -->
-          <div class="breadcrumbs">
-
-            <!-- First breadcrumb item: clickable link back to the homepage -->
-            <span class="item"><a href="index.html">Home /</a></span>
-
-            <!-- Second breadcrumb item: current page (non-clickable) -->
-            <span class="item">My Account</span>
-
-          </div><!-- /.breadcrumbs -->
-        </div><!-- /.text-center -->
-      </div><!-- /.row -->
-    </div><!-- /.container -->
-  </div><!-- /.hero-content -->
-</section><!-- /.hero-section -->
-
-
-
-
-
-
-  {% comment %} Log-in & Sign Up Form {% endcomment %}
-
-   <!-- login -->
-    <!-- Main section wrapper (no additional classes — full-width block-level container) -->
   <section>
-    <!-- Bootstrap container with vertical padding (py-5 = padding top & bottom: 3rem) -->
     <div class="container py-5">
-      <!-- Bootstrap row: justify-content-center horizontally centers the child column -->
-    
       <div class="row justify-content-center">
-        <!-- Bootstrap column: col-lg-4 = 4/12 width (33%) on large screens+, full width on smaller -->
-    
         <div class="col-lg-4">
-          <!-- Bootstrap card component with a custom 'boxed' class (likely adds border/shadow) -->
           <div class="card boxed">
-            <!-- Card header with navigation tabs for Log In and Sign Up -->
             <div class="card-header">
-                <!--
-              Bootstrap tab navigation:
-              - nav-tabs     : styled as tabs (underline style)
-              - nav-fill     : each tab item takes equal width
-              - card-header-tabs : removes bottom border to blend seamlessly with the card header
-              - lavalamp     : custom class, likely a sliding indicator animation effect
-              - id="component-1" : used as a reference point for the tab system
-              - role="tablist" : ARIA role for accessibility, groups the tab items
-            -->
               <ul class="nav nav-tabs nav-fill card-header-tabs lavalamp" id="component-1" role="tablist">
-
                 <li class="nav-item">
-                  <!--
-                  Tab link for "Sign Up":
-                  - No 'active' class  : this tab is inactive by default
-                  - href="#component-1-2" : points to the tab pane with id="component-1-2"
-                  - aria-selected="false" : ARIA state indicating this tab is not currently active
-                -->
                   <a class="nav-link active" data-bs-toggle="tab" href="#component-1-1" role="tab" aria-controls="component-1-1" aria-selected="true">Log In</a>
                 </li>
                 <li class="nav-item">
-                  <!--
-                  Tab link for "Sign Up":
-                  - No 'active' class  : this tab is inactive by default
-                  - href="#component-1-2" : points to the tab pane with id="component-1-2"
-                  - aria-selected="false" : ARIA state indicating this tab is not currently active
-                -->
                   <a class="nav-link" data-bs-toggle="tab" href="#component-1-2" role="tab" aria-controls="component-1-2" aria-selected="false">Sign Up</a>
                 </li>
               </ul>
             </div>
-            <!-- Card body: holds the actual tab content panels -->
+
             <div class="card-body">
-              <!--
-              Tab content wrapper:
-              - tab-content  : Bootstrap class that wraps all tab panes
-              - id="component-1-content" : can be referenced by JS or custom scripts
-                                           to manage which pane is visible-->
-            
               <div class="tab-content" id="component-1-content">
 
                 <!-- LOG IN TAB -->
-
-                 <!-- Tab pane for the "Sign In" tab.
-                        - "fade show active": makes this the visible/active tab on page load with a fade transition.
-                        - id="component-1-1": referenced by the corresponding tab trigger (aria-labelledby).
-                        - role="tabpanel": ARIA role for accessibility, identifies this as a tab panel.
-                        - aria-labelledby="component-1-1": links this panel to its controlling tab button for screen readers.
-                      -->
                 <div class="tab-pane fade show active" id="component-1-1" role="tabpanel" aria-labelledby="component-1-1">
                   <form method="POST" action="{% url 'userauths:login' %}">
-                  {% csrf_token %}
-                  <div class="row g-2">
-                    <div class="col-12">
-                      <fieldset>
-                        <div class="row">
-                          <div class="col-12">
-                            <div class="form-floating">
-                              <input type="email" name="email" id="inputEmail" class="form-control form-control-lg" placeholder="Email address" required>
-                              {% comment %} <label for="inputEmail">Email address</label> {{ form.email }} {% endcomment %}
+                    {% csrf_token %}
+                    <div class="row g-2">
+                      <div class="col-12">
+                        <fieldset>
+                          <div class="row">
+                            <div class="col-12">
+                              <div class="form-floating">
+                                <input type="email" name="email" id="inputEmail" class="form-control form-control-lg" placeholder="Email address" required>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-12">
-                            <input type="password" name="password" id="inputPassword" class="form-control form-control-lg" placeholder="Password" required>
-                            {% comment %} <label for="inputPassword">Password</label> {{ form.password }} {% endcomment %}
+                          <div class="row">
+                            <div class="col-12">
+                              <input type="password" name="password" id="inputPassword" class="form-control form-control-lg" placeholder="Password" required>
+                            </div>
                           </div>
-                        </div>
-                      </fieldset>
+                        </fieldset>
+                      </div>
+                      <div class="col-12 text-center">
+                        <a href="" class="underline fs-14">Forgot Password?</a>
+                      </div>
+                      <div class="col-12">
+                        <button type="submit" class="btn btn-primary w-100">Sign In</button>
+                      </div>
                     </div>
-                    <div class="col-12 text-center">
-                      <a href="" class="underline fs-14">Forgot Password?</a>
-                    </div>
-                    <div class="col-12">
-                      <button type="submit" class="btn btn-primary w-100">Sign In</button>
-                    </div>
-                  </div>
-                </form>
-                  
+                  </form>
                 </div>
 
                 <!-- SIGN UP TAB -->
-             
                 <div class="tab-pane fade" id="component-1-2" role="tabpanel">
+                  <form method="POST" action="{% url 'userauths:sign-up' %}">
+                    {% csrf_token %}
 
-                    <form method="POST">
-                      {% csrf_token %}
+                    <!-- Welcome blurb -->
+                    <div class="text-center mb-4" style="padding: 1rem 0 0.5rem;">
+                      <span style="font-size: 2rem;">🎉</span>
+                      <h5 class="mt-2 mb-1" style="font-weight: 700; letter-spacing: -0.02em;">Create your account</h5>
+                      <p class="text-muted" style="font-size: 0.85rem; margin: 0;">Join thousands of happy customers</p>
+                    </div>
 
-                      <div class="row g-2">
+                    <div class="row g-2">
 
-                        <!-- FULL NAME -->
-                        <div class="col-12 pb-3">
-                          <label>Full Name *</label>
-                          {{ form.full_name }}
-                        </div>
-
-                        <!-- EMAIL -->
-                        <div class="col-12 pb-3">
-                          <label>Email address *</label>
-                          {{ form.email }}
-                        </div>
-
-                        <!-- MOBILE -->
-                        <div class="col-12 pb-3">
-                          <label>Mobile Number *</label>
-                          {{ form.mobile }}
-                        </div>
-
-                        <!-- PASSWORD -->
-                        <div class="col-12 pb-3">
-                          <label>Password *</label>
-                          {{ form.password1 }}
-                        </div>
-
-                        <!-- CONFIRM PASSWORD -->
-                        <div class="col-12 pb-3">
-                          <label>Confirm Password *</label>
-                          {{ form.password2 }}
-                        </div>
-
-                        <!-- CAPTCHA -->
-                        <div class="col-12 pb-3">
-                          <label>Captcha *</label>
-                          {{ form.captcha }}
-                        </div>
-
-                       <!-- INFO TEXT -->
-                        <div class="col-12">
-                          <small class="text-muted d-block mt-2">
-                            By creating an account, you agree to our 
-                            <a href="" class="underline">Terms and Conditions</a>
-                          </small>
-                        </div>
-                        
-
-
-                        <!-- SUBMIT -->
-                        <div class="col-12">
-                          <button type="submit" class="btn btn-primary w-100">
-                            Create an account
-                          </button>
-                        </div>
-
+                      <!-- FULL NAME -->
+                      <div class="col-12">
+                        <label class="form-label" style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #6c757d;">Full Name *</label>
+                        {{ form.full_name }}
                       </div>
-                    </form>
 
+                      <!-- EMAIL -->
+                      <div class="col-12">
+                        <label class="form-label" style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #6c757d;">Email address *</label>
+                        {{ form.email }}
+                      </div>
+
+                      <!-- MOBILE -->
+                      <div class="col-12">
+                        <label class="form-label" style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #6c757d;">Mobile Number *</label>
+                        {{ form.mobile }}
+                      </div>
+
+                      <!-- PASSWORD + CONFIRM side by side on larger screens -->
+                      <div class="col-12 col-sm-6">
+                        <label class="form-label" style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #6c757d;">Password *</label>
+                        {{ form.password1 }}
+                      </div>
+                      <div class="col-12 col-sm-6">
+                        <label class="form-label" style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #6c757d;">Confirm *</label>
+                        {{ form.password2 }}
+                      </div>
+                      <!-- USER TYPE Customer/Vendor name has to be added . it is a required field  -->
+                      <div class="col-12">
+                        <label class="form-label" style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #6c757d;">Account Type *</label>
+                        {{ form.user_type }}
+                      </div>
+
+                      {% comment %} <!-- CAPTCHA -->
+                      <div class="col-12">
+                        <label class="form-label" style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #6c757d;">Captcha *</label>
+                        {{ form.captcha }}
+                      </div> {% endcomment %}
+
+                      <!-- DIVIDER -->
+                      <div class="col-12">
+                        <hr style="border-color: #e9ecef; margin: 0.5rem 0;">
+                      </div>
+
+                      <!-- INFO TEXT -->
+                      <div class="col-12 text-center">
+                        <small class="text-muted" style="font-size: 0.78rem; line-height: 1.5;">
+                          By creating an account, you agree to our
+                          <a href="" class="underline" style="font-weight: 600;">Terms and Conditions</a>
+                        </small>
+                      </div>
+
+
+                      <!-- SUBMIT -->
+                      <div class="col-12">
+                        <button type="submit" class="btn btn-primary w-100" style="padding: 0.75rem; font-weight: 600; letter-spacing: 0.03em;">
+                          Create an account →
+                        </button>
+                      </div>
+
+                      <!-- Social proof nudge -->
+                      <div class="col-12 text-center">
+                        <small class="text-muted" style="font-size: 0.78rem;">
+                          ✅ Free to join &nbsp;·&nbsp; 🔒 Secure &nbsp;·&nbsp; 🚀 Instant access
+                        </small>
+                      </div>
+
+                    </div>
+                  </form>
                 </div>
 
               </div>
@@ -214,23 +147,6 @@
   </section>
 
 
-
-<section class="bg-light" style="background: url(images/pattern-bg.png) no-repeat;">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-md-8 py-5 my-5">
-        <div class="subscribe-header text-center pb-3">
-          <h3 class="section-title text-uppercase">Sign Up for our newsletter</h3>
-            <p class="text-muted">Where we post updates about our artisants and the customers feedback. Its fun, have a look!!</p>
-        </div>
-        <form id="form" class="d-flex flex-wrap gap-2">
-          <input type="text" name="email" placeholder="Your Email Addresss" class="form-control form-control-lg">
-          <button class="btn btn-dark btn-lg text-uppercase w-100">Sign Up</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</section>
 
 
 {% endblock content %}

@@ -485,7 +485,13 @@
         </div>
       </div>
     </section>
-
+{% comment %} Here, using more product recommendations {% endcomment %}
+{% comment %} id "related-products": Used for linking or JS targeting
+class "related-products": For styling and JS targeting
+class "product-carousel": Indicates this section is a carousel of products
+class "py-5": Bootstrap class for vertical padding
+class "position-relative": Allows for absolute positioning of child elements (like navigation arrows)
+ {% endcomment %}
     <section id="related-products" class="related-products product-carousel py-5 position-relative open-up"
       data-aos="zoom-out">
       <div class="container">
@@ -493,16 +499,24 @@
           <h4 class="text-uppercase">You May Also Like</h4>
           <a href="shop-sidebar.html" class="btn-link">View All Products</a>
         </div>
+        {% comment %} swiper js is the main container  {% endcomment %}
         <div class="swiper product-swiper overflow-hidden">
           <div class="swiper-wrapper d-flex">
+            {% comment %} django loop for related product is iterated  {% endcomment %}
               {% for related in related_products %}
+              {% comment %} each product is put through one slide {% endcomment %}
                 <div class="swiper-slide">
                   <div class="product-item image-zoom-effect link-effect">
                     <div class="image-holder">
+                      {% comment %} Builds a clickable link to the related product's detail page. related.slug is the unique URL-friendly name of the product (e.g. /product/blue-cotton-kurti/). {% endcomment %}
                       <a href="{% url 'store:product_detail' related.slug %}">
+                        {% comment %} Checks if the product has any images in its Gallery model. .first returns the first gallery image or None if there are no images. This is the preferred image source since gallery images are high quality uploaded images. {% endcomment %}
                         {% if related.gallery.first %}
+                        {% comment %}If a gallery image exists, use it. .image is the ImageField on the Gallery model, and .url converts it to a full file path like /media/images/kurti.jpg.{% endcomment %}
                           <img src="{{ related.gallery.first.image.url }}" alt="{{ related.name }}" class="product-image img-fluid">
+                          {% comment %} If there are NO gallery images, fall back to checking if the product has a direct image field on the Product model itself. This is a backup in case gallery wasn't populated. {% endcomment %}
                         {% elif related.image %}
+                        {% comment %} Uses the product's own image field as the fallback. {% endcomment %}
                           <img src="{{ related.image.url }}" alt="{{ related.name }}" class="product-image img-fluid">
                         {% endif %}
                       </a>

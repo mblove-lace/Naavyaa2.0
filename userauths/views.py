@@ -131,7 +131,7 @@ def register_view(request):
         
         # password: Variable storing the user's chosen password (plain text at this point)
         # Note: This is used for immediate authentication; the User object already has the hashed version
-        password = form.cleaned_data.get("password")
+        password = form.cleaned_data.get("password1")
         
         # user_type: Variable storing whether user wants to be a "vendor" or "customer"
         # This determines what kind of account and permissions the user gets
@@ -247,7 +247,12 @@ def register_view(request):
         # return: Exits the function and sends this redirect response
         # User is now logged in and redirected to their intended destination
         return redirect(next_url)
-    
+    print("FORM ERRORS:", form.errors)
+    print("FORM DATA:", request.POST)
+
+    context = {
+        "form": form,
+    }
     # ====================================
     # STEP 12: RENDER THE FORM (GET REQUEST OR INVALID FORM)
     # ====================================
@@ -314,62 +319,37 @@ def login_view(request):
             # form.cleaned_data is a dictionary that contains the validated and cleaned data from the form. 
             # .get("email") retrieves the email value from the cleaned_data dictionary.
             email = form.cleaned_data.get("email")
-            # .get("password") retrieves the password value from the cleaned_data dictionary.
-            password = form.cleaned_data.get("password")
+            # .get("password1") retrieves the password1 value from the cleaned_data dictionary.
+            password = form.cleaned_data.get("password1")
             # .get("captcha", False) retrieves the captcha value from the cleaned_data dictionary. 
             # If the captcha field is not present or fails validation, it will return False by default
-            captcha_verified = form.cleaned_data.get("captcha", False)
+#             captcha_verified = form.cleaned_data.get("captcha", False)
 
-            if captcha_verified:
-                try:
-                    # userauth_models.User.objects.get() is a query to the User model in the userauths app. 
-                    # It tries to retrieve a user object that matches the given email and is active (is_active=True). 
-                    # If such a user exists, it will be stored in the user_instance variable.
-                    user_instance = userauth_models.User.objects.get(email=email,is_active=True)
-                    # authenticate() is a Django function that checks if the provided email and password match a valid user in the database. 
-                    # It returns the user object if the credentials are correct, or None if they are not.
-                    
-                    user_authenticate = authenticate(request, email=email, password=password)
-# if user_authenticate is not None checks if the authentication was successful.
-                    if user_authenticate is not None:
-                        # login() is a Django function that logs the user in by creating a session. 
-                        # It takes the request object and the authenticated user object as arguments.
-                        login(request, user_authenticate)
-                        # messages.success() is used to display a success message to the user after they have logged in successfully. 
-                        # It takes the request object and the message text as arguments.
-                        # f"Welcome back, {user_instance.profile.full_name}!" is a formatted string that includes the user's full name from their profile.
-                        # This message will be displayed on the next page the user visits after logging in.
-                        # user_instance.profile.full_name accesses the full_name attribute of the user's profile, which is linked to the user through a one-to-one relationship.
-                        messages.success(request, f"Welcome back, {user_instance.profile.full_name}!")
-                        # request.GET.get("next", "store:index") retrieves the "next" parameter from the URL query string. 
-                        # This is used to redirect the user to the page they originally wanted to access before being prompted to log in.
-                        # If the "next" parameter is not present in the URL, it defaults to "store:index", which is likely the homepage or dashboard of the store.  
-                        next_url = request.GET.get("next", "store:index")
-                        # redirect(next_url) sends the user to the URL specified in next_url after they have logged in successfully.
+            try:
+                user_instance = userauth_models.User.objects.get(email=email, is_active=True)
+                user_authenticate = authenticate(request, email=email, password=password)
+                if user_authenticate is not None:
+                    login(request, user_authenticate)
+                    messages.success(request, f"Welcome back, {user_instance.profile.full_name}!")
+                    next_url = request.GET.get("next", "store:index")
+                    return redirect(next_url)
+                else:
+                    messages.error(request, "Invalid email or password.")
+            except:
+                messages.error(request, "No active account found with this email.")
 
-                        return redirect(next_url)
-                    else:
-                        # If the authentication fails (user_instance is None), it means the email or password was incorrect. 
-                        # messages.error() is used to display an error message to the user in this case.
-                        messages.error(request, "Invalid email or password.")
-
-                # If any error occurs during the process, display an error message.
-                except:
-                    messages.error(request, "No active account found with this email.")
-            else:
-                messages.error(request, "Captcha verification failed. Please try again.")
     else:
         form = userauth_forms.LoginForm() # If the request method is not POST, it means the user is accessing the login page for the first time (GET request).
     # In this case, we create an empty instance of the LoginForm to display the login form to the user.
     # context is a dictionary that contains the form instance, which will be passed to the template for rendering.
-    context = {
-        # "form": The key used in the template to access the form object (e.g., {{ form.as_p }}).
-        # form: The LoginForm instance that will be rendered in the login.html template.
-        "form": form,
-    }
-    # render() is a Django function that combines a template with a context dictionary to produce an HttpResponse object with the rendered text.
-    # request: The HTTP request object that contains information about the user's request.
-    return render(request, "userauths/sign-up.html", context)
+        context = {
+            # "form": The key used in the template to access the form object (e.g., {{ form.as_p }}).
+            # form: The LoginForm instance that will be rendered in the login.html template.
+            "form": form,
+        }
+        # render() is a Django function that combines a template with a context dictionary to produce an HttpResponse object with the rendered text.
+        # request: The HTTP request object that contains information about the user's request.
+        return render(request, "userauths/sign-up.html", context)
 
 
 
@@ -389,4 +369,4 @@ def logout_view(request):
     # After logging out, we restore the 'cart_id' in the session to ensure that the user's shopping cart is preserved. This allows the user to continue shopping without losing their cart contents, even after they log out.
     messages.success(request, "You have been logged out successfully.")
     # messages.success() is used to display a success message to the user after they have logged out successfully. It takes the request object and the message text as arguments. This message will be displayed on the next page the user visits after logging out.
-    return redirect("userauths:sign-in")
+    return redirect("userauths:login")

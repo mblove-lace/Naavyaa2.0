@@ -32,16 +32,15 @@
 
           {% comment %} your-order - custom CSS class for styling this section.
           mt-5 - Bootstrap margin-top of 3rem, pushes section down from the top   {% endcomment %}
-        <div class="your-order mt-5">
+        <div class="card p-4 border rounded-3 mt-4">
   {% comment %} 
             display-7 - large heading font size.
             text-dark - Bootstrap class making text near-black.
             pb-4 - padding-bottom of 1.5rem, creates space between heading and table below   {% endcomment %}
-          <h4 class="display-7 text-dark pb-4">Cart Total</h4>
-
+          <p class="text-uppercase text-muted fw-semibold" style="font-size:12px; letter-spacing:0.06em;">Cart total</p>
             {% comment %} cellspacing="0" - HTML attribute that removes default spacing between table cells.
             .table - Bootstrap class that gives the table clean typography, spacing and borders   {% endcomment %}
-          <table cellspacing="0" class="table">
+          <table class="table table-borderless align-middle">
 
               {% comment %} thead - semantic HTML for the table header section.
               Browsers and screen readers treat this differently from tbody - it's the label row   {% endcomment %}
@@ -99,16 +98,32 @@
                 {% comment %} This is the totals row, outside the loop so it only renders once.
                 border-top border-bottom - adds lines above and below to visually separate it from item rows.
                 text-uppercase - makes "Total" all caps   {% endcomment %}
-              <tr class="border-top border-bottom pt-2 pb-2 text-uppercase">
-  {% comment %} 
-                  colspan="2" - makes this <th> span across 2 columns (Product + Qty),
-                  so "Total" label sits on the left and the price value sits on the far right   {% endcomment %}
-                <th colspan="2">Total with Shipping </th>
-
-                  {% comment %} cart_total - context variable passed from views.py, sum of all item prices.
-                  fw-bold - Bootstrap font-weight bold, makes the total stand out visually   {% endcomment %}
-                <td class="text-end fw-bold">₹ {{ order.total | intcomma }}</td>
-              </tr>
+                <tr class="border-top">
+    {% comment %} 
+                    colspan="2" - makes this <th> span across 2 columns (Product + Qty),
+                    so "Total" label sits on the left and the price value sits on the far right   {% endcomment %}
+                  <td colspan="2" class="text-muted" style="font-size:13px;">Subtotal</td>
+                  <td class="text-end">₹ {{ order.sub_total | intcomma }}</td>
+                </tr>
+                {% if order.shipping > 0 %}
+                  <tr>
+                    <td colspan="2" class="text-muted" style="font-size:13px;">Shipping</td>
+                    <td class="text-end text-muted">₹ {{ order.shipping | intcomma }}</td>
+                  </tr>
+                {% else %}
+                  <tr>
+                    <td colspan="2" class="text-muted" style="font-size:13px;">Shipping</td>
+                    <td class="text-end text-success fw-semibold">Free</td>
+                  </tr>
+                {% endif %}
+                <tr>
+                  <td colspan="2" class="text-muted" style="font-size:13px;">Service fee</td>
+                  <td class="text-end text-muted">₹ {{ order.service_fee | intcomma }}</td>
+                </tr>
+                <tr class="border-top">
+                  <td colspan="2" class="fw-bold">Total</td>
+                  <td class="text-end fw-bold">₹ {{ order.total | intcomma }}</td>
+                </tr>
 
             </tbody>
           </table>
@@ -145,9 +160,9 @@
        <!--- col-lg-6 - same as left col, takes 50% width on large screens.
         Together with the left col-lg-6, they fill the full row (6+6=12)  -->
       <div class="col-lg-6">
-        <div class="mt-5">
+        <div class="card p-4 border rounded-3 mt-4">
 
-          <h4 class="display-7 text-dark pb-4">Payment Method</h4>
+          <p class="text-uppercase text-muted fw-semibold" style="font-size:12px; letter-spacing:0.06em;">Pay with</p>
 
            <!--- list-group - Bootstrap component that stacks items as a vertical group with shared styling.
             mb-3 - margin-bottom of 1rem, adds space between the options and the submit button  -->
@@ -160,7 +175,7 @@
               gap-2 - adds 0.5rem space between the radio input and the text span.
               border-0 - removes the default border Bootstrap adds to list-group-items -->
 
-              <label class="list-group-item d-flex gap-2 border-0">
+              <label class="d-flex gap-3 p-3 mb-2 border rounded-3 align-items-start" style="cursor:pointer;">
 
                <!---form-check-input - Bootstrap class styling the radio button consistently.
                 flex-shrink-0 - prevents the radio button from shrinking if the text beside it is long.
@@ -190,16 +205,16 @@
 
             {% comment %} PayPal payment {% endcomment %}
 
-            
-            <label class="list-group-item d-flex gap-2 border-0">
+{% comment %}             
+            <label class="d-flex gap-3 p-3 mb-2 border rounded-3 align-items-start" style="cursor:pointer;">
               <input class="form-check-input flex-shrink-0" type="radio" name="payment_method" value="PayPal">
               <span>
                 <strong class="text-uppercase">PayPal</strong>
                 <small class="d-block text-body-secondary">Pay securely using PayPal.</small>
               </span>
-            </label> 
+            </label>  {% endcomment %}
 
-            <label class="list-group-item d-flex gap-2 border-0">
+            <label class="d-flex gap-3 p-3 mb-2 border rounded-3 align-items-start" style="cursor: not-allowed; opacity: 0.5; pointer-events: none;">
               <input class="form-check-input flex-shrink-0" type="radio" name="payment_method" value="cod" >
               <span>
                 <strong class="text-uppercase">Cash on Delivery</strong>
@@ -218,8 +233,8 @@
             text-uppercase - all caps text on the button.
             btn-rounded-none - custom CSS class, removes border-radius making button edges sharp.
             w-100 - Bootstrap width 100%, button stretches full width of its column   {% endcomment %}
-          <button type="submit" name="submit" class="btn btn-dark btn-lg text-uppercase btn-rounded-none w-100">Pay Now</button> 
-           <div id="paypal-button-container" class="mt-3"></div>
+          {% comment %} <button type="submit" name="submit" class="btn btn-dark w-100 mt-3 py-3"  style="border-radius:8px; font-size:14px; letter-spacing:0.04em;">Pay Now</button> 
+           <div id="paypal-button-container" class="mt-3"></div> {% endcomment %}
 
         </div>
       </div>
@@ -239,9 +254,11 @@
 
 {% comment %} Here lies the Razorpay integration {% endcomment %}
       
- {% comment %} <button id="rzp-button1"></button>  {% endcomment %}
+
 {% comment %} Loading the Javascript library for Razorpay from their CDN into my browser {% endcomment %}
+
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<p>Debug - Razorpay Order ID: {{ razorpay_order_id }}</p>
 
 <script>
   var options = {
@@ -254,6 +271,7 @@
       "order_id": "{{ razorpay_order_id }}", // This is a sample Order ID. Pass the `id` obtained in the response of Step 1
       //"callback_url": "https://eneqd3r9zrjok.x.pipedream.net/",
       //"callback_url": "/razorpay_payment_verify/{{ order.order_id }}",
+      "allow_rotation: true",
       "handler": function (response){
       // send data manually to Django
       fetch("/razorpay_payment_verify/{{ order.order_id }}/", {
@@ -298,7 +316,7 @@ var rzp1 = new Razorpay(options);
         }
     });
 });
-</script>
+</script> 
 
 {% comment %} RazorPay integration ends {% endcomment %}
 
@@ -341,7 +359,7 @@ order marked paid
 
 {% endcomment %}
 
-{% comment %}  {% endcomment %}
+{% comment %} 
   <script src="https://www.paypal.com/sdk/js?client-id={{ paypal_client_id }}&currency=USD"></script>
 
 
@@ -369,7 +387,7 @@ order marked paid
     3. "DOMContentLoaded" - is a specific event that fires when the initial HTML document has been completely loaded and parsed by the browser, without waiting for stylesheets, images, and subframes to finish loading. It tell to run the JavaScript after the HTML page structure has finished loading.
     Function is the entire block of code after {} which will run once the DOM is ready- which was the event.
         
-          {% endcomment %}
+          
     document.addEventListener("DOMContentLoaded", function () {
       // What is the function here? 
       // 1. printing a debug message to the console to confirm that the DOM is ready and our script is running at the right time.
@@ -456,7 +474,7 @@ order marked paid
     }
     initPayPalButton();
   </script>
-
+ {% endcomment %}
 
 
 

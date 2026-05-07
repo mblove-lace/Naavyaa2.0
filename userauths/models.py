@@ -66,20 +66,18 @@ class User(AbstractUser):
     email = models.EmailField(max_length=255, unique=True)
 
 
-# ❌ INDENTATION ERROR: The following lines should be INSIDE the User class, not outside
-# They're currently at the module level (wrong indentation)
 
 # USERNAME_FIELD: Tells Django which field to use for authentication/login
 # 'email': Users will log in with their email address instead of username
 # This overrides the default 'username' from AbstractUser
-# ✅ SHOULD BE INDENTED: Should be inside the User class
-USERNAME_FIELD = 'email'
+#  
+    USERNAME_FIELD = 'email'
 
 # REQUIRED_FIELDS: List of fields prompted when creating a superuser with 'createsuperuser'
 # ['username']: When creating a superuser, Django will ask for username (in addition to email and password)
 # Note: USERNAME_FIELD and password are always required, so don't list them here
-# ✅ SHOULD BE INDENTED: Should be inside the User class
-REQUIRED_FIELDS = ['username']
+#   
+    REQUIRED_FIELDS = ['username']
 
 
 # ====================================
@@ -91,41 +89,40 @@ REQUIRED_FIELDS = ['username']
 # self: Refers to the current User instance
 # Returns: The user's email address as a string
 # Example: If email is "john@example.com", this returns "john@example.com"
-# ✅ SHOULD BE INDENTED: Should be inside the User class with proper indentation (4 spaces)
-def __str__(self):
-    # self.email: Gets the email field of this User instance
-    # return: Sends this value back when __str__ is called
-    return self.email
+# 
+    def __str__(self):
+        # self.email: Gets the email field of this User instance
+        # return: Sends this value back when __str__ is called
+        return self.email
 
 # save: Custom save method that runs every time a User is saved to the database
 # *args: Accepts any positional arguments
 # **kwargs: Accepts any keyword arguments
 # This method overrides the default save() from AbstractUser
 # Purpose: Automatically generate a username from email if username is not provided
-# ✅ SHOULD BE INDENTED: Should be inside the User class with proper indentation (4 spaces)
-def save(self, *args, **kwargs):
-    # self.email.split('@'): Splits the email at the @ symbol
-    # Example: "john@example.com".split('@') returns ['john', 'example.com']
-    # email_username: Variable storing the part before @ (e.g., 'john')
-    # ❌ BUG: split() returns a list, but you're assigning the whole list to email_username
-    # You probably want: email_username = self.email.split('@')[0]
-    email_username = self.email.split('@')
+#   
+    def save(self, *args, **kwargs):
+        # self.email.split('@'): Splits the email at the @ symbol
+        # Example: "john@example.com".split('@') returns ['john', 'example.com']
+        # email_username: Variable storing the part before @ (e.g., 'john')
+        
+        
+        email_username = self.email.split('@')[0]
     
     # if not self.username: Checks if username is empty/None/blank
     # Only runs if the user didn't provide a username
-    if not self.username:
-        # self.username = email_username: Sets username to the email prefix
-        # ❌ BUG: email_username is a list ['john', 'example.com'], not a string
-        # This will cause an error or unexpected behavior
-        # ✅ SHOULD BE: self.username = email_username[0] or self.email.split('@')[0]
-        self.username = email_username
-    
-    # super(User, self).save(*args, **kwargs): Calls the parent class's save method
-    # super(): Gets the parent class (AbstractUser)
-    # .save(*args, **kwargs): Runs the original save logic from AbstractUser
-    # This actually saves the User to the database
-    # Must be called after your custom logic to persist changes
-    super(User, self).save(*args, **kwargs)
+        if not self.username:
+            # self.username = email_username: Sets username to the email prefix
+            # self.email: Accesses the email field of this User instance
+            # .split('@')[0]: Gets the part before the @ symbol
+            self.username = email_username
+        
+        # super(User, self).save(*args, **kwargs): Calls the parent class's save method
+        # super(): Gets the parent class (AbstractUser)
+        # .save(*args, **kwargs): Runs the original save logic from AbstractUser
+        # This actually saves the User to the database
+        # Must be called after your custom logic to persist changes
+        super(User, self).save(*args, **kwargs)
 
 
 # ====================================
@@ -178,7 +175,7 @@ class Profile(models.Model):
     # null=True: Database can store NULL
     # blank=True: Forms can submit empty
     # default=None: Default value is None/NULL if not specified
-    # ❌ INCONSISTENCY: USER_TYPE uses 'Vendor'/'Customer' but your form uses 'vendor'/'customer'
+    #    INCONSISTENCY: USER_TYPE uses 'Vendor'/'Customer' but your form uses 'vendor'/'customer'
     user_Type = models.CharField(max_length=150, choices=USER_TYPE, null=True, blank=True, default=None)
 
 
@@ -189,32 +186,32 @@ class Profile(models.Model):
 # __str__: String representation of the Profile object
 # Returns: The username of the associated User
 # Example: If profile.user.username is "john_doe", this returns "john_doe"
-# ✅ SHOULD BE INDENTED: Should be inside the Profile class with proper indentation (4 spaces)
-def __str__(self):
-    # self.user: Gets the related User object (via OneToOneField)
-    # .username: Gets the username field from that User
-    # return: Sends this string back when __str__ is called
-    return self.user.username
+#   
+    def __str__(self):
+        # self.user: Gets the related User object (via OneToOneField)
+        # .username: Gets the username field from that User
+        # return: Sends this string back when __str__ is called
+        return self.user.username
 
 # save: Custom save method for Profile
 # Automatically sets full_name to username if full_name is not provided
 # Purpose: Ensures profile always has a name to display
-# ✅ SHOULD BE INDENTED: Should be inside the Profile class with proper indentation (4 spaces)
-def save(self, *args, **kwargs):
-    # if not self.full_name: Checks if full_name is empty/None/blank
-    # Only runs if full_name wasn't provided
-    if not self.full_name:
-        # self.full_name = self.user.username: Sets full_name to the User's username
-        # self.user: Accesses the related User object
-        # .username: Gets that User's username
-        # Example: If username is "john_doe", full_name becomes "john_doe"
-        self.full_name = self.user.username
-    
-    # super(Profile, self).save(*args, **kwargs): Calls parent class's save method
-    # super(): Gets the parent class (models.Model)
-    # .save(*args, **kwargs): Runs the original save logic
-    # This actually saves the Profile to the database
-    super(Profile, self).save(*args, **kwargs)
+#   
+    def save(self, *args, **kwargs):
+        # if not self.full_name: Checks if full_name is empty/None/blank
+        # Only runs if full_name wasn't provided
+        if not self.full_name:
+            # self.full_name = self.user.username: Sets full_name to the User's username
+            # self.user: Accesses the related User object
+            # .username: Gets that User's username
+            # Example: If username is "john_doe", full_name becomes "john_doe"
+            self.full_name = self.user.username
+        
+        # super(Profile, self).save(*args, **kwargs): Calls parent class's save method
+        # super(): Gets the parent class (models.Model)
+        # .save(*args, **kwargs): Runs the original save logic
+        # This actually saves the Profile to the database
+        super(Profile, self).save(*args, **kwargs)
 
 
 # ====================================
