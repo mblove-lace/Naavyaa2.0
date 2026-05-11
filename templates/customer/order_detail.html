@@ -1,0 +1,345 @@
+{% extends "partials/base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="dash-page">
+
+  <!-- =====================================================
+       HERO SECTION
+       =====================================================
+       Reuses the same dash-hero style as dashboard.html.
+       Shows order ID in place of the greeting.
+  ====================================================== -->
+  <div class="dash-hero">
+    <div class="container">
+      <div class="dash-hero-inner">
+
+        <!-- Back link — returns user to dashboard orders panel -->
+        <div class="order-back">
+          <a href="{% url 'customer:dashboard' %}" class="back-link">
+            <!-- Left arrow SVG -->
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.5">
+              <path d="M19 12H5M12 5l-7 7 7 7"/>
+            </svg>
+            Back to Dashboard
+          </a>
+        </div>
+
+        <div class="dash-hero-text">
+          <!-- order.order_id is the ShortUUID e.g. "O-69739" -->
+          <h1>Order <em>{{ order.order_id }}</em></h1>
+          <!-- order.date formatted as "09 May 2026" -->
+          <p>Placed on {{ order.date|date:"d M Y" }} &nbsp;·&nbsp;
+            <!-- Dynamic status badge inline -->
+            <span class="badge-status s-{{ order.order_status|lower }}">
+              {{ order.order_status }}
+            </span>
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!-- END HERO -->
+
+
+  <!-- =====================================================
+       ORDER BODY
+       =====================================================
+       Same two-column grid as dashboard:
+       LEFT  — sidebar nav (included from sidebar.html)
+       RIGHT — order detail content
+  ====================================================== -->
+  <div class="dash-body">
+    <div class="container">
+      <div class="dash-grid">
+
+        <!-- Sidebar included from partial
+             Same sidebar.html used across all customer pages -->
+        {% include "customer/sidebar.html" %}
+
+        <!-- Main order detail content -->
+        <div class="dash-content">
+
+
+          <!-- =================================================
+               ORDER SUMMARY STRIP
+               =================================================
+               Four key facts about the order at a glance.
+               payment_status, payment_method, total, item count.
+          ================================================== -->
+          <div class="order-summary-strip">
+
+            <!-- Payment status -->
+            <div class="osummary-item">
+              <span class="osummary-label">Payment</span>
+              <!-- Dynamic badge: s-paid / s-processing / s-failed -->
+              <span class="badge-status s-{{ order.payment_status|lower }}">
+                {{ order.payment_status }}
+              </span>
+            </div>
+
+            <div class="stat-divider"></div>
+
+            <!-- Payment method e.g. Razorpay / Cash on Delivery -->
+            <div class="osummary-item">
+              <span class="osummary-label">Method</span>
+              <span class="osummary-value">{{ order.payment_method }}</span>
+            </div>
+
+            <div class="stat-divider"></div>
+
+            <!-- Number of items in this order -->
+            <div class="osummary-item">
+              <span class="osummary-label">Items</span>
+              <!-- order_items is passed from the view as a queryset
+                   .count() returns the number of OrderItem objects -->
+              <span class="osummary-value">{{ order_items.count }}</span>
+            </div>
+
+            <div class="stat-divider"></div>
+
+            <!-- Order total in rupees -->
+            <div class="osummary-item">
+              <span class="osummary-label">Total</span>
+              <span class="osummary-value">&#8377;{{ order.total }}</span>
+            </div>
+
+          </div>
+          <!-- END ORDER SUMMARY STRIP -->
+
+
+          <!-- =================================================
+               TWO-COLUMN LAYOUT
+               =================================================
+               LEFT  — items list (wider)
+               RIGHT — order meta (address, cost breakdown)
+          ================================================== -->
+          <div class="order-detail-grid">
+
+
+            <!-- LEFT: ORDER ITEMS -->
+            <div class="order-items-col">
+
+              <h3 class="od-section-title"><em> Items Ordered</em></h3>
+
+              <!-- Loop through order_items queryset passed from view
+                   Each item is an OrderItem model instance -->
+              {% for item in order_items %}
+              <div class="order-item-card">
+
+                <!-- Product thumbnail -->
+                <div class="oic-image">
+                  {% if item.product.image %}
+                  <img src="{{ item.product.image.url }}"
+                       alt="{{ item.product.name }}"/>
+                  {% else %}
+                  <!-- Placeholder if no image -->
+                  <div class="oic-no-image">No Image</div>
+                  {% endif %}
+                </div>
+
+                <!-- Item details -->
+                <div class="oic-details">
+
+                  <!-- Product name -->
+                  <h5 class="oic-name">{{ item.product.name }}</h5>
+
+                  <!-- Variant details — only shown if set -->
+                  <div class="oic-meta">
+                    {% if item.color %}
+                    <!-- item.color — CharField on OrderItem -->
+                    <span>Colour: {{ item.color }}</span>
+                    {% endif %}
+                    {% if item.size %}
+                    <!-- item.size — CharField on OrderItem -->
+                    <span>Size: {{ item.size }}</span>
+                    {% endif %}
+                    <!-- item.qty — PositiveIntegerField on OrderItem -->
+                    <span>Qty: {{ item.qty }}</span>
+                  </div>
+
+                  <!-- Vendor name — item.vendor is a ForeignKey to User
+                       Vendor is the weaver/seller of this specific item -->
+                  {% if item.vendor %}
+                  <div class="oic-vendor">
+                    By {{ item.vendor.profile.full_name|default:item.vendor.username }}
+                  </div>
+                  {% endif %}
+
+                  <!-- Shipping/tracking info -->
+                  <div class="oic-shipping">
+
+                    <!-- order_status on OrderItem (not the parent Order)
+                         Tracks this specific item's fulfilment status -->
+                    <span class="badge-status s-{{ item.order_status|lower }}">
+                      {{ item.order_status }}
+                    </span> 
+
+                  
+                    <!-- Only shown once vendor has dispatched the item -->
+                     <span class="oic-tracking">
+                        {{ item.shipping_service|default:"Carrier not assigned" }}
+                        {% if item.tracking_id %}
+                        &nbsp;·&nbsp; Tracking: <strong>{{ item.tracking_id }}</strong>
+                       
+
+                        <!-- Carrier tracking links — only shown when tracking_id exists -->
+                        {% if item.shipping_service == "DTDC" %}
+                        <a href="https://www.dtdc.in/tracking.asp?Ttype=awb&strCnno={{ item.tracking_id }}"
+                            target="_blank" class="btn-bare" style="margin-left:0.75rem;">
+                            Track on DTDC
+                        </a>
+
+                        {% elif item.shipping_service == "BlueDart" %}
+                        <a href="https://www.bluedart.com/tracking?trackFor=0&trackNo={{ item.tracking_id }}"
+                            target="_blank" class="btn-bare" style="margin-left:0.75rem;">
+                            Track on BlueDart
+                        </a>
+
+                        {% elif item.shipping_service == "Delhivery" %}
+                        <a href="https://www.delhivery.com/track/package/{{ item.tracking_id }}"
+                            target="_blank" class="btn-bare" style="margin-left:0.75rem;">
+                            Track on Delhivery
+                        </a>
+
+                        {% elif item.shipping_service == "India Post" %}
+                        <a href="https://www.indiapost.gov.in/vas/pages/trackconsignment.aspx?id={{ item.tracking_id }}"
+                            target="_blank" class="btn-bare" style="margin-left:0.75rem;">
+                            Track on India Post
+                        </a>
+
+                        {% endif %}
+
+
+
+                    {% else %}
+                    &nbsp;·&nbsp; Tracking: <strong>Not added yet</strong>
+                    {% endif %}
+                </span>
+
+                  </div>
+
+                </div>
+
+                <!-- Item price -->
+                <div class="oic-price">
+                  <!-- item.total is the final price for this line item -->
+                  <span>&#8377;{{ item.total }}</span>
+                  {% if item.saved > 0 %}
+                  <!-- item.saved — amount discounted via coupon -->
+                  <span class="oic-saved">Saved &#8377;{{ item.saved }}</span>
+                  {% endif %}
+                </div>
+
+              </div>
+              {% endfor %}
+              <!-- END items loop -->
+
+            </div>
+            <!-- END LEFT COL -->
+
+
+            <!-- RIGHT: ORDER META -->
+            <div class="order-meta-col">
+
+
+              <!-- DELIVERY ADDRESS
+                   order.address is a ForeignKey to customer.Address model -->
+              {% if order.address %}
+              <div class="ometa-card">
+                <h4 class="ometa-title">Delivery <em>Address</em></h4>
+                <p class="ometa-body">
+                  <!-- Address fields from customer/models.py Address model -->
+                  <strong>{{ order.address.full_name }}</strong><br/>
+                  {{ order.address.address }}<br/>
+                  {{ order.address.city }}, {{ order.address.state }}<br/>
+                  {{ order.address.zip_code }}<br/>
+                  {{ order.address.mobile }}
+                </p>
+              </div>
+              {% endif %}
+
+
+              <!-- COST BREAKDOWN -->
+              <div class="ometa-card">
+                <h4 class="ometa-title">Cost <em>Breakdown</em></h4>
+
+                <div class="cost-row">
+                  <span>Subtotal</span>
+                  <!-- order.sub_total — sum of item prices before shipping/tax -->
+                  <span>&#8377;{{ order.sub_total }}</span>
+                </div>
+
+                <div class="cost-row">
+                  <span>Shipping</span>
+                  <!-- order.shipping — total shipping charge -->
+                  <span>&#8377;{{ order.shipping }}</span>
+                </div>
+
+                <div class="cost-row">
+                  <span>Tax</span>
+                  <!-- order.tax — tax amount -->
+                  <span>&#8377;{{ order.tax }}</span>
+                </div>
+
+                {% if order.saved > 0 %}
+                <div class="cost-row cost-saved">
+                  <span>Discount</span>
+                  <!-- order.saved — total amount saved via coupons -->
+                  <span>&#8211; &#8377;{{ order.saved }}</span>
+                </div>
+                {% endif %}
+
+                <!-- Divider before total -->
+                <div class="cost-total-row">
+                  <span>Total</span>
+                  <!-- order.total — final amount charged -->
+                  <span>&#8377;{{ order.total }}</span>
+                </div>
+
+              </div>
+              <!-- END COST BREAKDOWN -->
+
+
+              <!-- COUPONS APPLIED
+                   order.coupons is ManyToManyField to Coupon model -->
+              {% if order.coupons.exists %}
+              <div class="ometa-card">
+                <h4 class="ometa-title">Coupons <em>Applied</em></h4>
+                {% for coupon in order.coupons.all %}
+                <div class="coupon-tag">
+                  <!-- coupon.code e.g. "SAVE10" -->
+                  {{ coupon.code }}
+                  <!-- coupon.discount is an integer percentage -->
+                  <span class="coupon-pct">{{ coupon.discount }}% off</span>
+                </div>
+                {% endfor %}
+              </div>
+              {% endif %}
+
+
+            </div>
+            <!-- END RIGHT COL -->
+
+
+          </div>
+          <!-- END order-detail-grid -->
+
+
+        </div>
+        <!-- END DASH CONTENT -->
+
+      </div>
+      <!-- END DASH GRID -->
+    </div>
+    <!-- END CONTAINER -->
+  </div>
+  <!-- END DASH BODY -->
+
+</div>
+<!-- END DASH PAGE -->
+
+
+{% endblock content %}

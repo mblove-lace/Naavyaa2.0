@@ -342,14 +342,14 @@ def login_view(request):
         form = userauth_forms.LoginForm() # If the request method is not POST, it means the user is accessing the login page for the first time (GET request).
     # In this case, we create an empty instance of the LoginForm to display the login form to the user.
     # context is a dictionary that contains the form instance, which will be passed to the template for rendering.
-        context = {
-            # "form": The key used in the template to access the form object (e.g., {{ form.as_p }}).
-            # form: The LoginForm instance that will be rendered in the login.html template.
-            "form": form,
+    context = {
+        # "form": The key used in the template to access the form object (e.g., {{ form.as_p }}).
+        # form: The LoginForm instance that will be rendered in the login.html template.
+        "form": form,
         }
         # render() is a Django function that combines a template with a context dictionary to produce an HttpResponse object with the rendered text.
         # request: The HTTP request object that contains information about the user's request.
-        return render(request, "userauths/sign-up.html", context)
+    return render(request, "userauths/sign-up.html", context)
 
 
 
@@ -369,4 +369,4 @@ def logout_view(request):
     # After logging out, we restore the 'cart_id' in the session to ensure that the user's shopping cart is preserved. This allows the user to continue shopping without losing their cart contents, even after they log out.
     messages.success(request, "You have been logged out successfully.")
     # messages.success() is used to display a success message to the user after they have logged out successfully. It takes the request object and the message text as arguments. This message will be displayed on the next page the user visits after logging out.
-    return redirect("userauths:login")
+    return redirect("userauths:login")  

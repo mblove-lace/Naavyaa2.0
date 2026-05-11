@@ -1,0 +1,36 @@
+
+
+{% load static %}
+
+<!-- =====================================================
+     SIDEBAR NAVIGATION
+     =====================================================
+     Each <a> with data-panel="xyz" maps to id="panel-xyz"
+     in dashboard.html. JS reads data-panel to show/hide panels.
+     "is-active" highlights the current tab visually.
+====================================================== -->
+<nav class="dash-nav">
+
+  <!-- Orders tab — active by default on page load -->
+  <a href="#" class="is-active" data-panel="orders">Orders</a>
+
+  <!-- Wishlist tab -->
+  <a href="#" data-panel="wishlist">Wishlist</a>
+
+  <!-- Addresses tab -->
+  <a href="#" data-panel="addresses">Addresses</a>
+
+  <!-- Reviews tab -->
+  <a href="#" data-panel="reviews">Reviews</a>
+
+  <!-- Divider between main tabs and account actions -->
+  <div class="nav-divider"></div>
+
+  <!-- Profile tab -->
+  <a href="#" data-panel="profile">Profile</a>
+
+  <!-- Log Out — navigates away, not a panel tab -->
+  <a href="{% url 'userauths:logout' %}">Log Out</a>
+
+</nav>
+<!-- END SIDEBAR NAV -->

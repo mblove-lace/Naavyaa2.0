@@ -289,8 +289,8 @@ class Order(models.Model):
     
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    order_status = models.CharField(max_length=100, choices=SHIPPING_SERVICE, default="Pending")
-    shipping_service = models.CharField(max_length=100, choices=SHIPPING_SERVICE, default="none", null=True, blank=True)
+    order_status = models.CharField(max_length=100, choices=ORDER_STATUS_TUPLES, default="Pending")
+    shipping_service = models.CharField(max_length=100, choices=SHIPPING_SERVICE, null=True, blank=True, default=None)
     tracking_id = models.CharField(max_length=100, default=None, null=True, blank=True)
     tax = models.DecimalField(default=10, max_digits=12, decimal_places=2)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)

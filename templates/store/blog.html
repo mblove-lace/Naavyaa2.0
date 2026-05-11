@@ -1,0 +1,206 @@
+{% extends 'partials/base.html' %}
+{% load humanize %}
+{% load static %}
+{% block content %}
+
+
+<section class="blog-hero mt-5">
+  <div class="container position-relative" style="z-index:1">
+    <span class="post-category">Heritage &amp; Craft &nbsp;&middot;&nbsp; Cotton</span>
+    <h1>Threads of the Earth &mdash; The Living Heritage of Indian Cotton</h1>
+    <p class="meta mt-2">By Naavyaa &nbsp;&middot;&nbsp; 2025 &nbsp;&middot;&nbsp; 8 min read</p>
+    <nav class="breadcrumb justify-content-center mt-3">
+      <a class="breadcrumb-item" href="/">Home</a>
+      <a class="breadcrumb-item" href="#">Stories</a>
+      <span class="breadcrumb-item active">Cotton Heritage</span>
+    </nav>
+  </div>
+</section>
+
+<div class="blog-intro">
+  <p class="lead-para">
+    Long before fashion became fast, India dressed herself in cotton &mdash; breathable, honest, and alive with the stories of the hands that wove it. Each fold of fabric carried a geography, a season, a prayer.
+  </p>
+  <p>
+    Cotton is not merely a fibre in India. It is a philosophy. It speaks of the Ganges plains in summer, of artisan communities whose fingers hold centuries of muscle memory, of natural dyes ground from pomegranate rind and indigo leaf. To wear Indian cotton is to wear something that has always belonged to the land.
+  </p>
+  <p>
+    At Naavyaa, we believe clothing should tell a story worth passing down. Here, we walk you through six extraordinary cotton craft traditions &mdash; each one a universe of pattern, purpose, and place.
+  </p>
+</div>
+
+<div class="ornament">&middot; &middot; &middot;</div>
+
+<!-- 01 AJRAKH -->
+<section class="craft-section">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6 img-stack">
+        <img src="{% static 'blog/aj.jpg' %}" alt="Ajrakh fabric close-up showing deep indigo and madder red geometric block print" class="img-main">
+        <img src="{% static 'blog/aj2.jpg' %}" alt="Woman wearing Ajrakh blouse with Ajrakh saree" class="img-inset">
+      </div>
+      <div class="col-lg-6 ps-lg-5">
+        <div class="craft-num">01</div>
+        <h2 class="craft-name">Ajrakh</h2>
+        <span class="craft-origin">Kutch, Gujarat &amp; Barmer, Rajasthan</span>
+        <p class="craft-body">Ajrakh is one of India&apos;s oldest block-printed textiles &mdash; the word derives from the Arabic <em>azrak</em>, meaning blue. Originating with the Khatri community of Kutch, this craft is an act of nature worship as much as textile-making. Fabric is pre-treated with camel dung and castor oil, printed in layers using carved wooden blocks, and washed in the river between each stage.</p>
+        <p class="craft-body">The characteristic deep indigo and madder red geometric motifs &mdash; stars, medallions, interlocking squares &mdash; are not merely decorative. They map the cosmos. Artisans say an Ajrakh piece must be complete on both sides, because the sky looks the same from both directions.</p>
+        <p class="craft-body">After the 2001 Gujarat earthquake devastated Kutch, Ajrakh artisans relocated to Ajrakhpur &mdash; a village built specifically to preserve the craft. Today it holds a GI tag and stands as one of India&apos;s most globally recognised textile traditions.</p>
+        <div class="mt-3">
+          <span class="craft-tag">Block Print</span>
+          <span class="craft-tag">Natural Dye</span>
+          <span class="craft-tag">Geometric</span>
+          <span class="craft-tag">GI Tagged</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 02 BAGRU -->
+<section class="craft-section bg-warm">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6 img-stack">
+        <img src="{% static 'blog/bagru3.jpg' %}" alt="Bagru dark cotton with white floral block print motifs" class="img-main">
+        <img src="{% static 'blog/bagru2.jpg' %}" alt="Artisan loading wooden printing block with natural dye" class="img-inset">
+      </div>
+      <div class="col-lg-6 ps-lg-5">
+        <div class="craft-num">02</div>
+        <h2 class="craft-name">Bagru</h2>
+        <span class="craft-origin">Bagru Village, Rajasthan</span>
+        <p class="craft-body">Thirty kilometres from Jaipur lies the village of Bagru, where the Chhipa community has practised hand block printing for over 500 years. What makes Bagru distinct is its palette &mdash; earthy, warm, grounded. Artisans use natural dyes derived from harda (myrobalan), indigo, and alizarin on cotton pre-treated with a traditional mud-resist called <em>dabu</em>.</p>
+        <p class="craft-body">Dabu printing is Bagru&apos;s signature: a mixture of clay, lime, and gum arabic applied to the fabric before dyeing resists colour in those areas, creating soft muted patterns. The effect is like the texture of weathered walls &mdash; deeply human, imperfect, alive.</p>
+        <p class="craft-body">In Bagru homes, printing is not seasonal work &mdash; it is the rhythm of daily life. Fabric is washed in the Sanjaria river that runs through the village, and the courtyard floors double as drying grounds. The whole village breathes with it.</p>
+        <div class="mt-3">
+          <span class="craft-tag">Dabu Resist</span>
+          <span class="craft-tag">Hand Block</span>
+          <span class="craft-tag">Natural Dye</span>
+          <span class="craft-tag">Rajasthan</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 KALAMKARI -->
+<section class="craft-section">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6 img-stack">
+        <img src="{% static 'blog/kalamkari.jpg' %}" alt="Kalamkari narrative painting on cotton depicting Krishna and Arjuna" class="img-main">
+        <img src="{% static 'blog/kalamkari2.jpg' %}" alt="Kalamkari artisan drawing fine details with bamboo pen" class="img-inset">
+      </div>
+      <div class="col-lg-6 ps-lg-5">
+        <div class="craft-num">03</div>
+        <h2 class="craft-name">Kalamkari</h2>
+        <span class="craft-origin">Srikalahasti &amp; Machilipatnam, Andhra Pradesh</span>
+        <p class="craft-body"><em>Kalam</em> means pen. <em>Kari</em> means work. Kalamkari is literally the art of the pen &mdash; hand-drawn or block-printed cotton textiles that tell stories from Hindu mythology, the Ramayana, the Mahabharata. Temple priests once commissioned these enormous narrative cloths to educate worshippers who could not read.</p>
+        <p class="craft-body">The Srikalahasti style is entirely hand-drawn using a bamboo pen dipped in fermented iron and jaggery solution. Both styles require fabric to pass through up to seventeen treatment stages &mdash; myrobalan soaking, cow dung washing, beeswax resist &mdash; before a single motif appears.</p>
+        <p class="craft-body">Every peacock feather, every lotus petal, every royal procession is placed with intention. To wear Kalamkari is to wear a story &mdash; one that was told long before books existed.</p>
+        <div class="mt-3">
+          <span class="craft-tag">Hand Drawn</span>
+          <span class="craft-tag">Mythological</span>
+          <span class="craft-tag">GI Tagged</span>
+          <span class="craft-tag">Andhra Pradesh</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="pullquote-wrap">
+  <blockquote>
+    Every pattern is a sentence. Every fabric is a paragraph.<br>
+    Indian cotton textiles are literature written on thread.
+  </blockquote>
+</div>
+
+<!-- 04 SANGANERI -->
+<section class="craft-section bg-warm">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6 img-stack">
+        <img src="{% static 'blog/bagru4.jpg' %}" alt="Sanganeri block printing on cream cotton with floral motifs and wooden block" class="img-main">
+        <img src="{% static 'blog/sang2.jpg' %}" alt="Collection of antique carved wooden printing blocks" class="img-inset">
+      </div>
+      <div class="col-lg-6 ps-lg-5">
+        <div class="craft-num">04</div>
+        <h2 class="craft-name">Sanganeri</h2>
+        <span class="craft-origin">Sanganer Town, Rajasthan</span>
+        <p class="craft-body">Named after the town of Sanganer near Jaipur, this style of hand block printing is characterised by delicate floral motifs &mdash; butis, creepers, paisleys &mdash; in soft fresh tones printed on white or off-white cotton. If Bagru is earthy, Sanganeri is blooming.</p>
+        <p class="craft-body">Sanganeri printing was historically patronised by the Mughal court, which prized its elegance for garments and furnishings. The white ground of Sanganeri fabric reflects Rajasthani light beautifully, making even simple patterns feel luminous and celebratory.</p>
+        <p class="craft-body">The wooden blocks &mdash; some over a century old &mdash; are heirlooms passed father to son. The Chhipa printers wash their fabric in the Saraswati river, whose mineral deposits fix colour naturally. A craft ecosystem in perfect balance with its environment.</p>
+        <div class="mt-3">
+          <span class="craft-tag">Floral Motifs</span>
+          <span class="craft-tag">Mughal Heritage</span>
+          <span class="craft-tag">White Ground</span>
+          <span class="craft-tag">GI Tagged</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 05 HAKOBA -->
+<section class="craft-section">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6 img-stack">
+        <img src="{% static 'blog/hakoba.jpg' %}" alt="Model wearing white Hakoba eyelet cotton sleeveless shirt" class="img-main">
+        <img src="{% static 'blog/hakoba2.jpg' %}" alt="Hakoba eyelet cotton fabric close-up showing openwork weave pattern" class="img-inset">
+      </div>
+      <div class="col-lg-6 ps-lg-5">
+        <div class="craft-num">05</div>
+        <h2 class="craft-name">Hakoba</h2>
+        <span class="craft-origin">Maharashtra &amp; Gujarat</span>
+        <p class="craft-body">Hakoba &mdash; also known as eyelet cotton &mdash; is a woven fabric defined by its small, evenly spaced holes. The word comes from the Japanese <em>hako</em> (box), describing the square grid of the openwork weave. In India, it became deeply associated with children&apos;s clothing and summer wear for its unmatched breathability.</p>
+        <p class="craft-body">What makes Hakoba remarkable is its simplicity. There is no dye, no print, no embellishment &mdash; only the geometry of absence. The holes themselves are the design. Light passes through Hakoba fabric like it passes through a latticed window, creating shadow play on skin.</p>
+        <p class="craft-body">In recent years, Hakoba has experienced a quiet revival in Indian fashion, worn by those who understand that restraint is its own kind of luxury. A Hakoba blouse in summer is the closest thing to wearing a breeze.</p>
+        <div class="mt-3">
+          <span class="craft-tag">Eyelet Weave</span>
+          <span class="craft-tag">Breathable</span>
+          <span class="craft-tag">Summer Fabric</span>
+          <span class="craft-tag">Minimalist</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 CHIKANKARI -->
+<section class="craft-section bg-warm">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6 img-stack">
+        <img src="{% static 'blog/kalamkari3.jpg' %}" alt="Intricately embroidered Indian cotton fabric with detailed figures" class="img-main">
+        <img src="{% static 'blog/sang.jpg' %}" alt="Close detail of hand embroidery technique on cotton" class="img-inset">
+      </div>
+      <div class="col-lg-6 ps-lg-5">
+        <div class="craft-num">06</div>
+        <h2 class="craft-name">Chikankari</h2>
+        <span class="craft-origin">Lucknow, Uttar Pradesh</span>
+        <p class="craft-body">Chikankari is embroidery as meditation. Originating in the royal city of Lucknow under Mughal patronage &mdash; legend credits Nur Jahan herself with introducing the craft &mdash; it involves hand-stitching intricate white-on-white floral patterns onto muslin or cotton using over thirty-two distinct stitch types.</p>
+        <p class="craft-body">The work is done entirely by hand, almost entirely by women in the mohallas of Lucknow. A single Chikankari kurta may take several weeks to complete. The stitches &mdash; <em>shadow work, phanda, bakhia, jali</em> &mdash; each create different textures, some raised, some sunken, some lacy.</p>
+        <p class="craft-body">Chikankari on cotton is particularly beloved. The soft white thread against cream fabric has a quality photographs cannot capture &mdash; it must be held in hand, tilted toward the light, to fully appreciate. It is perhaps the most intimate of India&apos;s textile crafts.</p>
+        <div class="mt-3">
+          <span class="craft-tag">Hand Embroidery</span>
+          <span class="craft-tag">Mughal Heritage</span>
+          <span class="craft-tag">Lucknow</span>
+          <span class="craft-tag">GI Tagged</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="blog-closing">
+  <div class="ornament" style="padding-top:0; margin-bottom:2rem;">&middot; &middot; &middot;</div>
+  <div class="container">
+    <h3>Cotton is not a compromise.<br>It is a choice.</h3>
+    <p>To choose Indian handcrafted cotton is to choose comfort, conscience, and culture. It is to say that the hands that made this matter, that the traditions they carry forward matter, that slow beauty is worth waiting for.</p>
+    <a href="/" class="btn-outline-dark-custom">Explore Our Collection</a>
+  </div>
+</div>
+
+{% endblock content %}

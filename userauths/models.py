@@ -144,7 +144,7 @@ class Profile(models.Model):
     # on_delete=models.CASCADE: If the User is deleted, delete this Profile too
     # Example: If User(id=5) is deleted, Profile(user_id=5) is automatically deleted
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    
+
     # image: ImageField for storing the user's profile picture
     # upload_to='images': Uploaded files will be saved in MEDIA_ROOT/images/
     # default='default-user.jpg': If no image is uploaded, use this default image
@@ -212,6 +212,10 @@ class Profile(models.Model):
         # .save(*args, **kwargs): Runs the original save logic
         # This actually saves the Profile to the database
         super(Profile, self).save(*args, **kwargs)
+    
+    @property
+    def first_name(self):
+        return self.full_name.split()[0] if self.full_name else ""
 
 
 # ====================================

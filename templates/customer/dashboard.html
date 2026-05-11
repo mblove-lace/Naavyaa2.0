@@ -1,0 +1,622 @@
+{% extends "partials/base.html" %}
+{% load humanize %}
+{% load static %}
+{% block content %}
+
+<div class="dash-page">
+
+  <!-- =====================================================
+       HERO SECTION
+       =====================================================
+       Displays animated mandala motif + user greeting.
+       Sits at the top of the dashboard page.
+  ====================================================== -->
+  <div class="dash-hero">
+
+    <!-- Bootstrap container: centers content, adds horizontal padding -->
+    <div class="container">
+
+      <!-- Inner flex row: motif on left, greeting text on right -->
+      <div class="dash-hero-inner">
+
+        <!-- Decorative animated SVG mandala motif
+             Two rings of petals spin in opposite directions via CSS animation.
+             Defined in style.css under .motif-petal and .motif-inner -->
+        <div class="motif-wrap">
+          <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+            <!-- OUTER PETALS GROUP
+                 8 ellipses each rotated 45° apart around center (40,40)
+                 Creates a full 360° flower pattern
+                 Animated via CSS class .motif-petal (slow clockwise spin) -->
+            <g class="motif-petal" stroke="#9b5e3c" stroke-width="0.8" opacity="0.5">
+              <ellipse cx="40" cy="18" rx="4" ry="9"/>
+              <ellipse cx="40" cy="18" rx="4" ry="9" transform="rotate(45 40 40)"/>
+              <ellipse cx="40" cy="18" rx="4" ry="9" transform="rotate(90 40 40)"/>
+              <ellipse cx="40" cy="18" rx="4" ry="9" transform="rotate(135 40 40)"/>
+              <ellipse cx="40" cy="18" rx="4" ry="9" transform="rotate(180 40 40)"/>
+              <ellipse cx="40" cy="18" rx="4" ry="9" transform="rotate(225 40 40)"/>
+              <ellipse cx="40" cy="18" rx="4" ry="9" transform="rotate(270 40 40)"/>
+              <ellipse cx="40" cy="18" rx="4" ry="9" transform="rotate(315 40 40)"/>
+            </g>
+
+            <!-- INNER PETALS GROUP
+                 6 smaller ellipses rotated 60° apart
+                 Animated via CSS class .motif-inner (faster anti-clockwise spin) -->
+            <g class="motif-inner" stroke="#c0622f" stroke-width="0.8" opacity="0.7">
+              <ellipse cx="40" cy="27" rx="2.5" ry="5.5"/>
+              <ellipse cx="40" cy="27" rx="2.5" ry="5.5" transform="rotate(60 40 40)"/>
+              <ellipse cx="40" cy="27" rx="2.5" ry="5.5" transform="rotate(120 40 40)"/>
+              <ellipse cx="40" cy="27" rx="2.5" ry="5.5" transform="rotate(180 40 40)"/>
+              <ellipse cx="40" cy="27" rx="2.5" ry="5.5" transform="rotate(240 40 40)"/>
+              <ellipse cx="40" cy="27" rx="2.5" ry="5.5" transform="rotate(300 40 40)"/>
+            </g>
+
+            <!-- CENTRE DOT — small filled circle completes the mandala -->
+            <circle cx="40" cy="40" r="3.5" fill="#9b5e3c" opacity="0.6"/>
+
+          </svg>
+        </div>
+        <!-- END motif-wrap -->
+
+        <!-- Hero text: personalised greeting + email + join date -->
+        <div class="dash-hero-text">
+
+          <!-- request.user.profile.first_name calls the @property
+               defined in userauths/models.py on the Profile model
+               Returns the first word of full_name -->
+          <h1>Hello, <em>{{ request.user.profile.first_name }}</em></h1>
+
+          <!-- request.user.email — the user's login email
+               request.user.date_joined — Django auto-field, datetime of signup
+               |date:"M Y" filter formats it as e.g. "Jan 2025" -->
+          <p>{{ request.user.email }} &nbsp;·&nbsp; Since {{ request.user.date_joined|date:"M Y" }}</p>
+
+        </div>
+        <!-- END dash-hero-text -->
+
+      </div>
+      <!-- END dash-hero-inner -->
+
+    </div>
+    <!-- END container -->
+
+  </div>
+  <!-- END HERO SECTION -->
+
+
+
+
+  <!-- =====================================================
+       DASHBOARD BODY
+       =====================================================
+       Two-column grid layout:
+       LEFT  — sticky sidebar navigation
+       RIGHT — switchable content panels
+  ====================================================== -->
+  <div class="dash-body">
+    <div class="container">
+
+        <!-- =====================================================
+      STATS BAR
+      =====================================================
+      Summary strip between hero and dashboard body.
+      Gives the user a quick overview at a glance.
+  ====================================================== -->
+    <div class="stats-bar">
+      <div class="container">
+        <div class="stats-grid">
+
+          <!-- Total orders placed by this user -->
+          <div class="stat-item">
+            <span class="stat-number">{{ orders.count }}</span>
+            <span class="stat-label">Orders</span>
+          </div>
+
+          <div class="stat-divider"></div>
+
+          <!-- Sum of all order totals
+              |default:"0" handles None when no orders exist
+              |floatformat:2 formats to 2 decimal places -->
+          <div class="stat-item">
+            <span class="stat-number">&#8377;{{ total_spent|default:"0"|floatformat:2 }}</span>
+            <span class="stat-label">Total Spent</span>
+          </div>
+
+          <div class="stat-divider"></div>
+
+
+
+          <div class="stat-divider"></div>
+
+          <!-- Unread notifications count -->
+          <div class="stat-item">
+            <span class="stat-number">{{ notis.count }}</span>
+            <span class="stat-label">Notifications</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <!-- END STATS BAR -->
+     
+      <div class="dash-grid">
+        <!-- Include the sidebar navigation from sidebar.html -->
+        {% include "customer/sidebar.html" %}
+
+
+  
+
+
+        <!-- =====================================================
+             PANELS CONTAINER
+             =====================================================
+             All panels live here. CSS hides them by default:
+               .dash-panel           { display: none; }
+               .dash-panel.is-active { display: block; }
+             JavaScript adds/removes "is-active" on tab click.
+        ====================================================== -->
+        <div class="dash-content">
+
+
+          <!-- =================================================
+               ORDERS PANEL
+               =================================================
+               Visible by default (has is-active class).
+               Shows a table of all orders placed by the user.
+               Each order may contain multiple items (inner loop).
+          ================================================== -->
+          <div class="dash-panel is-active" id="panel-orders">
+
+            <h2 class="panel-heading">My <em>Orders</em></h2>
+
+            <!-- Only render the table if orders exist in context.
+                 "orders" is passed from customer/views.py dashboard view -->
+            {% if orders %}
+
+            <!-- Overflow wrapper enables horizontal scroll on mobile
+                 so the table doesn't overflow the viewport -->
+            <div class="orders-wrap">
+              <table class="nt">
+
+                <thead>
+                  <tr>
+                    <th>Product</th>   <!-- Thumbnail + product name -->
+                    <th>Order ID</th>  <!-- ShortUUID e.g. O-12345 -->
+                    <th>Date</th>      <!-- Formatted order date -->
+                    <th>Total</th>     <!-- Order total in rupees -->
+                    <th>Status</th>    <!-- Pending / Shipped / Delivered etc -->
+                    <th></th>          <!-- View button column (no label) -->
+                  </tr>
+                </thead>
+
+                <tbody>
+
+                  <!-- OUTER LOOP — each Order for this customer -->
+                  {% for order in orders %}
+
+                    <!-- INNER LOOP — each OrderItem within this order
+                         order.order_items() is a method on the Order model
+                         in store/models.py that returns related OrderItems -->
+                    {% for item in order.order_items %}
+                    <tr>
+
+                      <!-- Product cell: thumbnail + name side by side -->
+                      <td>
+                        <div style="display:flex;align-items:center;gap:0.75rem;">
+                          {% if item.product.image %}
+                          <!-- item.product.image.url — full path to uploaded image -->
+                          <img src="{{ item.product.image.url }}"
+                               alt="{{ item.product.name }}"
+                               class="thumb"/>
+                          {% endif %}
+                          <span>{{ item.product.name }}</span>
+                        </div>
+                      </td>
+
+                      <!-- Order ID — ShortUUID field e.g. "O-12345" -->
+                      <td style="color:var(--muted);">{{ order.order_id }}</td>
+
+                      <!-- Date — |date:"d M Y" formats as "09 May 2026" -->
+                      <td style="color:var(--muted);">{{ order.date|date:"d M Y" }}</td>
+
+                      <!-- Total amount with Rupee symbol -->
+                      <td>&#8377;{{ order.total }}</td>
+
+                      <!-- Status badge
+                           |lower converts "Shipped" to "shipped"
+                           so CSS class becomes e.g. "s-shipped"
+                           CSS classes: s-pending, s-processing,
+                           s-shipped, s-delivered, s-cancelled -->
+                      <td>
+                        <span class="badge-status s-{{ order.order_status|lower }}">
+                          {{ order.order_status }}
+                        </span>
+                      </td>
+
+                      <!-- View button — placeholder href="#"
+                           TODO: once customer:order_detail view exists, change to:
+                           href with order detail URL passing order.order_id -->
+                      <td><a href="{% url 'customer:order_detail' order.order_id %}" class="btn-bare">View</a></td>
+
+                    </tr>
+                    {% endfor %} <!-- end inner loop: order items -->
+                  {% endfor %}   <!-- end outer loop: orders -->
+
+                </tbody>
+              </table>
+            </div>
+            <!-- END orders-wrap -->
+
+            {% else %}
+            <!-- EMPTY STATE — no orders placed yet -->
+            <div class="empty">
+              <!-- Shopping bag SVG icon -->
+              <svg class="empty-motif" viewBox="0 0 52 52" fill="none"
+                   xmlns="http://www.w3.org/2000/svg">
+                <rect x="10" y="14" width="32" height="28" rx="1"
+                      stroke="#9b5e3c" stroke-width="1.2"/>
+                <path d="M19 14v-3a7 7 0 0114 0v3" stroke="#9b5e3c" stroke-width="1.2"/>
+                <line x1="18" y1="26" x2="34" y2="26" stroke="#9b5e3c" stroke-width="1"/>
+                <line x1="18" y1="32" x2="28" y2="32" stroke="#9b5e3c" stroke-width="1"/>
+              </svg>
+              <p>No orders yet.</p>
+            </div>
+            {% endif %}
+            <!-- END orders conditional -->
+
+          </div>
+          <!-- END ORDERS PANEL -->
+
+
+          <!-- =================================================
+               WISHLIST PANEL
+               =================================================
+               Hidden by default. Shown when "Wishlist" is clicked.
+               Displays product cards saved to the wishlist.
+          ================================================== -->
+          <div class="dash-panel" id="panel-wishlist">
+
+            <h2 class="panel-heading">My <em>Wishlist</em></h2>
+
+            <!-- "wishlist" passed from customer/views.py dashboard view -->
+            {% if wishlist %}
+
+            <!-- Auto-fill grid: each card min 170px wide -->
+            <div class="wishlist-grid">
+
+              {% for item in wishlist %}
+              <!-- Single product card
+                   item.product is a ForeignKey to the Product model -->
+              <div class="wcard">
+
+                {% if item.product.image %}
+                <img src="{{ item.product.image.url }}"
+                     alt="{{ item.product.name }}"/>
+                {% endif %}
+
+                <div class="wcard-body">
+                  <h6>{{ item.product.name }}</h6>
+                  <!-- Product.price is the sale price (DecimalField) -->
+                  <p class="wprice">&#8377;{{ item.product.price }}</p>
+                  <div class="wcard-actions">
+                    <!-- TODO: wire up to cart add view -->
+                    <button class="btn-dark-sm" style="flex:1;">Add to Cart</button>
+                    <!-- TODO: wire up to wishlist remove view -->
+                    <button class="btn-bare">&#10005;</button>
+                  </div>
+                </div>
+              </div>
+              {% endfor %} <!-- end wishlist loop -->
+
+            </div>
+
+            {% else %}
+            <!-- EMPTY STATE — wishlist is empty -->
+            <div class="empty">
+              <svg class="empty-motif" viewBox="0 0 52 52" fill="none">
+                <path d="M26 40s-16-9.5-16-20a9 9 0 0118 0 9 9 0 0118 0c0 10.5-20 20-20 20z"
+                      stroke="#9b5e3c" stroke-width="1.2"/>
+              </svg>
+              <p>Your wishlist is empty.</p>
+            </div>
+            {% endif %}
+            <!-- END wishlist conditional -->
+
+          </div>
+          <!-- END WISHLIST PANEL -->
+
+
+          <!-- =================================================
+               ADDRESSES PANEL
+               =================================================
+               Hidden by default. Shown when "Addresses" is clicked.
+               Displays saved delivery addresses as cards.
+
+               All action URLs are "#" placeholders for now.
+               TODO once these views exist in customer/views.py:
+               Edit   — customer:edit_address   (takes address.id)
+               Remove — customer:delete_address (takes address.id)
+               Add    — customer:add_address    (no args)
+          ================================================== -->
+          <div class="dash-panel" id="panel-addresses">
+
+            <h2 class="panel-heading">My <em>Addresses</em></h2>
+
+            <!-- Auto-fill grid: each card min 240px wide -->
+            <div class="addr-grid">
+
+              <!-- "addresses" passed from customer/views.py dashboard view
+                   Each address is an Address model instance from customer app -->
+              {% for address in addresses %}
+
+              <!-- Address card
+                   "default-addr" class adds sienna border for default address -->
+              <div class="acard {% if address.default %}default-addr{% endif %}">
+
+                <!-- "Default" label badge — only for the default address -->
+                {% if address.default %}
+                  <span class="def-tag">Default</span>
+                {% endif %}
+
+                <!-- Address owner name (may differ from account name) -->
+                <h6>{{ address.full_name }}</h6>
+
+                <!-- Full address details, one per line -->
+                <p>
+                  {{ address.address }}<br/>
+                  {{ address.city }}, {{ address.state }} &ndash; {{ address.pincode }}<br/>
+                  {{ address.mobile }}
+                </p>
+
+                <!-- Edit / Remove buttons — placeholder hrefs for now -->
+                <div class="acard-actions">
+                  <a href="#" class="btn-bare">Edit</a>
+                  <a href="#" class="btn-bare">Remove</a>
+                </div>
+
+              </div>
+              {% endfor %} <!-- end addresses loop -->
+
+              <!-- Add new address card — dashed border acts as a button
+                   TODO: replace '#' with real add_address URL when view is ready -->
+              <div class="addr-add" onclick="window.location='#'">
+                <span class="plus">+</span>
+                Add Address
+              </div>
+
+            </div>
+            <!-- END addr-grid -->
+
+          </div>
+          <!-- END ADDRESSES PANEL -->
+
+
+          <!-- =================================================
+               REVIEWS PANEL
+               =================================================
+               Hidden by default. Shown when "Reviews" is clicked.
+               Shows reviews the user has written for products.
+          ================================================== -->
+          <div class="dash-panel" id="panel-reviews">
+
+            <h2 class="panel-heading">My <em>Reviews</em></h2>
+
+            <!-- "reviews" passed from customer/views.py dashboard view -->
+            {% if reviews %}
+
+              {% for review in reviews %}
+              <!-- Review card: two-column grid (image | text) -->
+              <div class="rcard">
+
+                <!-- Product thumbnail -->
+                {% if review.product.image %}
+                <img src="{{ review.product.image.url }}"
+                     alt="{{ review.product.name }}"/>
+                {% endif %}
+
+                <div>
+
+                  <!-- STAR RATING
+                       Iterates over "12345" — forloop.counter gives 1,2,3,4,5
+                       Compares counter to review.rating (integer 1-5)
+                       Filled star if counter <= rating, empty star otherwise
+                       Example: rating=3 renders 3 filled + 2 empty stars -->
+                  <div class="rstars">
+                    {% for i in "12345" %}
+                      {% if forloop.counter <= review.rating %}&#9733;{% else %}&#9734;{% endif %}
+                    {% endfor %}
+                  </div>
+
+                  <!-- Product name linked to the review -->
+                  <div class="rproduct">{{ review.product.name }}</div>
+
+                  <!-- The user's written review text -->
+                  <div class="rtext">{{ review.review }}</div>
+
+                  <!-- Date review was submitted
+                       auto_now_add=True on Review.date means it's set on creation -->
+                  <div class="rdate">{{ review.date|date:"d M Y" }}</div>
+
+                </div>
+              </div>
+              {% endfor %} <!-- end reviews loop -->
+
+            {% else %}
+            <!-- EMPTY STATE — user has not reviewed anything yet -->
+            <div class="empty">
+              <svg class="empty-motif" viewBox="0 0 52 52" fill="none">
+                <path d="M8 10h36v26H8z" stroke="#9b5e3c" stroke-width="1.2"/>
+                <path d="M16 42l10-6 10 6" stroke="#9b5e3c" stroke-width="1.2"/>
+                <line x1="16" y1="20" x2="36" y2="20" stroke="#9b5e3c" stroke-width="1"/>
+                <line x1="16" y1="26" x2="28" y2="26" stroke="#9b5e3c" stroke-width="1"/>
+              </svg>
+              <p>No reviews yet.</p>
+            </div>
+            {% endif %}
+            <!-- END reviews conditional -->
+
+          </div>
+          <!-- END REVIEWS PANEL -->
+
+
+          <!-- =================================================
+               PROFILE PANEL
+               =================================================
+               Hidden by default. Shown when "Profile" is clicked.
+               Form lets user update name, mobile, and password.
+
+               action="#" is a placeholder.
+               TODO: change to action with update_profile URL
+               once customer:update_profile view is built
+          ================================================== -->
+          <div class="dash-panel" id="panel-profile">
+
+            <h2 class="panel-heading">My <em>Profile</em></h2>
+
+            <!-- method="POST" — required for data-changing forms
+                 enctype="multipart/form-data" — required if form
+                 will ever include file uploads (e.g. profile image) -->
+            <form method="POST" action="#"
+                  enctype="multipart/form-data" class="pform">
+
+              <!-- CSRF token — Django security requirement for all POST forms
+                   Prevents Cross-Site Request Forgery attacks
+                   Django will reject the submission without this -->
+              {% csrf_token %}
+
+              <!-- Two-column row: full name + mobile side by side -->
+              <div class="form-row-2">
+
+                <!-- Full name field
+                     Pre-filled with current value from Profile.full_name -->
+                <div class="fg">
+                  <label>Full Name</label>
+                  <input type="text" name="full_name"
+                         value="{{ request.user.profile.full_name }}"/>
+                </div>
+
+                <!-- Mobile field
+                     Pre-filled with current value from Profile.mobile -->
+                <div class="fg">
+                  <label>Mobile</label>
+                  <input type="tel" name="mobile"
+                         value="{{ request.user.profile.mobile }}"/>
+                </div>
+
+              </div>
+
+              <!-- Email — read only, cannot be changed here
+                   disabled prevents editing AND excludes it from POST data -->
+              <div class="fg">
+                <label>Email Address</label>
+                <input type="email" value="{{ request.user.email }}" disabled/>
+              </div>
+
+              <!-- Current password — used to verify identity before
+                   allowing a password change. Blank = no password change -->
+              <div class="fg">
+                <label>Current Password</label>
+                <input type="password" name="old_password"
+                       placeholder="Leave blank to keep unchanged"/>
+              </div>
+
+              <!-- Two-column row: new password + confirmation -->
+              <div class="form-row-2">
+
+                <!-- New password input -->
+                <div class="fg">
+                  <label>New Password</label>
+                  <input type="password" name="new_password1"/>
+                </div>
+
+                <!-- Confirm new password — must match new_password1
+                     Validated in the view before saving -->
+                <div class="fg">
+                  <label>Confirm Password</label>
+                  <input type="password" name="new_password2"/>
+                </div>
+
+              </div>
+
+              <!-- Submit button — triggers POST to form action -->
+              <button type="submit" class="btn-submit">Save Changes</button>
+
+            </form>
+          </div>
+          <!-- END PROFILE PANEL -->
+
+
+        </div>
+        <!-- END DASH CONTENT -->
+
+      </div>
+      <!-- END DASH GRID -->
+
+    </div>
+    <!-- END CONTAINER -->
+
+  </div>
+  <!-- END DASH BODY -->
+
+</div>
+<!-- END DASH PAGE -->
+
+
+<!-- =====================================================
+     PANEL SWITCHING JAVASCRIPT
+     =====================================================
+     Handles sidebar tab clicks to show/hide panels.
+
+     Flow when user clicks a tab e.g. "Wishlist":
+     1. e.preventDefault() stops page jumping to top
+     2. All nav links lose "is-active" (deactivates all tabs)
+     3. All panels lose "is-active" (hides all panels)
+     4. Clicked link gains "is-active" (highlights active tab)
+     5. Matching panel gains "is-active" (makes it visible)
+
+     CSS in style.css handles the actual show/hide:
+       .dash-panel           { display: none; }
+       .dash-panel.is-active { display: block; }
+====================================================== -->
+<script>
+
+  /* Select all sidebar links that have a data-panel attribute.
+     This excludes Log Out which has no data-panel.
+     This basically says to look inside .dash-nav, find all <a> tags with a data-panel attribute */
+  const navLinks = document.querySelectorAll('.dash-nav a[data-panel]');
+
+  /* This Selects all content sections/panels
+  Example : <div id="panel-wishlist" class="dash-panel">Wishlist Content</div>
+<div id="panel-orders" class="dash-panel">Orders Content</div>....
+so the panels = [wishlist panel, orders panel]
+   */
+  const panels = document.querySelectorAll('.dash-panel');
+
+  /* Attaching click handler to every tab link - meaning when any of these links are clicked, the following function will be executed */
+  navLinks.forEach(link => {
+    link.addEventListener('click', e => {
+
+      /* Normal <a> does is reload the page or jump to URL hash, but e.preventDefault() stops this */
+      e.preventDefault();
+
+      /* Removes  all sidebar tabs or panels  */
+      navLinks.forEach(l => l.classList.remove('is-active'));
+
+      /* Hide all content panels */
+      panels.forEach(p => p.classList.remove('is-active'));
+
+      /* Activate the clicked tab */
+      link.classList.add('is-active');
+
+      /* Show the matching panel.
+         link.dataset.panel reads the data-panel attribute.
+         e.g. data-panel="wishlist" → getElementById("panel-wishlist") */
+      document.getElementById('panel-' + link.dataset.panel).classList.add('is-active');
+
+    });
+  });
+
+</script>
+
+{% endblock content %}
