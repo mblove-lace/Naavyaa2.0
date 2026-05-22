@@ -14,9 +14,9 @@ db.sqlite3
 .env
 
 # Static and media files
-static/assets/images/Products/
-staticfiles/
-media/
+
+
+
 
 .vscode/
 

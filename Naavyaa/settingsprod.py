@@ -194,8 +194,8 @@ AUTH_USER_MODEL = 'userauths.User'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField' 
 
-PAYPAL_CLIENT_ID = env("PAYPAL_CLIENT_ID")
-PAYPAL_SECRET_ID = env("PAYPAL_SECRET_ID")
+PAYPAL_CLIENT_ID = os.environ.get("PAYPAL_CLIENT_ID", "")
+PAYPAL_SECRET_ID = os.environ.get("PAYPAL_SECRET_ID", "")
 
 
 
