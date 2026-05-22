@@ -67,7 +67,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    'django_ckeditor_5',
+    'ckeditor',
+    'ckeditor_uploader',
     # 'django_recaptcha',
     'import_export',
 
@@ -378,12 +379,4 @@ JAZZMIN_UI_TWEAKS = {
     }
 }
 
-CKEDITOR_5_CONFIGS = {
-    'default': {
-        'toolbar': [
-            'heading', '|', 'bold', 'italic', 'link', 'bulletedList',
-            'numberedList', 'blockQuote', '|', 'undo', 'redo'
-        ],
-    },
-}
-SILENCED_SYSTEM_CHECKS = ['django_recaptcha.recaptcha_test_key_error']
+CKEDITOR_UPLOAD_PATH = 'uploads/'
