@@ -26,4 +26,16 @@ urlpatterns = [
 
     path ("order/<str:order_id>/", views.order_detail, name='order_detail'),
 
+    # Wishlist URLs
+    path ("wishlist/", views.wishlist_list, name='wishlist_list'),
+    path ("wishlist/add/<int:product_id>/", views.add_to_wishlist, name='add_to_wishlist'),
+    path ("wishlist/remove/<int:product_id>/", views.remove_from_wishlist, name='remove_from_wishlist'),
+    path("wishlist/toggle/<int:product_id>/", views.toggle_wishlist, name='toggle_wishlist'),
+    path("notis/", views.notis, name='notis'),
+    path("notis/<int:noti_id>/seen/", views.mark_notis_seen, name='mark_notis_seen'),
+    path("addresses/", views.addresses, name="addresses"),
+    path("addresses/create/", views.address_create, name="address_create"),
+    path("addresses/<int:address_id>/", views.address_detail, name="address_detail"),
+    path("addresses/<int:address_id>/delete/", views.delete_address, name="delete_address"),
+    # path("profile/", views.profile, name="profile"),
 ]

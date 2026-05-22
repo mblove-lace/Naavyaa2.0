@@ -1,0 +1,135 @@
+{% extends "partials/base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="dash-page">
+
+  <!-- HERO -->
+  <div class="dash-hero">
+    <div class="container">
+      <div class="dash-hero-inner">
+
+        <div class="order-back">
+          <a href="{% url 'customer:dashboard' %}" class="back-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.5">
+              <path d="M19 12H5M12 5l-7 7 7 7"/>
+            </svg>
+            Back to Dashboard
+          </a>
+        </div>
+
+        <div class="dash-hero-text">
+          <h1>My <em>Addresses</em></h1>
+          <p>{{ addresses.count }} saved address{{ addresses.count|pluralize }}</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!-- END HERO -->
+
+  <div class="dash-body">
+    <div class="container">
+      <div class="dash-grid">
+
+        {% include "customer/sidebar.html" %}
+
+        <div class="dash-content">
+
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem;">
+            <h2 class="panel-heading" style="margin-bottom:0;">My <em>Addresses</em></h2>
+            <a href="{% url 'customer:address_create' %}" class="btn-bare"
+               style="border:1px solid currentColor; padding:0.4rem 1rem; font-size:0.82rem; letter-spacing:0.06em; text-transform:uppercase;">
+              + Add Address
+            </a>
+          </div>
+
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags }} mb-3"
+                   style="padding:0.75rem 1rem; border-left:3px solid; font-size:0.88rem;">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+
+          {% if addresses %}
+
+          <div class="addr-grid">
+
+            {% for address in addresses %}
+            <div class="acard {% if address.default %}default-addr{% endif %}">
+
+              {% if address.default %}
+                <span class="def-tag">Default</span>
+              {% endif %}
+
+              <h6>{{ address.full_name }}</h6>
+
+              <p style="font-size:0.88rem; color:var(--muted, #888); line-height:1.6; margin-bottom:1rem;">
+                {{ address.address }}<br/>
+                {{ address.city }}, {{ address.state }}
+                {% if address.zip_code %}&ndash; {{ address.zip_code }}{% endif %}<br/>
+                {{ address.country }}<br/>
+                <span style="margin-top:4px; display:inline-block;">&#128222; {{ address.mobile }}</span><br/>
+                {% if address.email %}
+                  <span>&#9993; {{ address.email }}</span>
+                {% endif %}
+              </p>
+
+              <div class="acard-actions">
+                <a href="{% url 'customer:address_detail' address.id %}" class="btn-bare">Edit</a>
+                <form method="POST" action="{% url 'customer:delete_address' address.id %}"
+                      style="display:inline;"
+                      onsubmit="return confirm('Remove this address?');">
+                  {% csrf_token %}
+                  <button type="submit" class="btn-bare"
+                          style="background:none; border:none; cursor:pointer; color:inherit; font:inherit; padding:0;">
+                    Remove
+                  </button>
+                </form>
+              </div>
+
+            </div>
+            {% endfor %}
+
+            <!-- Add new address card -->
+            <div class="addr-add"
+                 onclick="window.location='{% url 'customer:address_create' %}'">
+              <span class="plus">+</span>
+              Add Address
+            </div>
+
+          </div>
+          <!-- END addr-grid -->
+
+          {% else %}
+
+          <!-- Empty state -->
+          <div class="empty">
+            <svg class="empty-motif" viewBox="0 0 52 52" fill="none"
+                 xmlns="http://www.w3.org/2000/svg">
+              <path d="M26 8C19.4 8 14 13.4 14 20c0 10.5 12 24 12 24s12-13.5 12-24c0-6.6-5.4-12-12-12z"
+                    stroke="#9b5e3c" stroke-width="1.2"/>
+              <circle cx="26" cy="20" r="4" stroke="#9b5e3c" stroke-width="1.2"/>
+            </svg>
+            <p>No addresses saved yet.</p>
+            <a href="{% url 'customer:address_create' %}" class="btn-bare"
+               style="margin-top:1rem; display:inline-block;">
+              Add Your First Address
+            </a>
+          </div>
+
+          {% endif %}
+
+        </div>
+        <!-- END DASH CONTENT -->
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% endblock content %}

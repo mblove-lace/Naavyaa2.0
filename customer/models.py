@@ -1,3 +1,4 @@
+# From the Django framework, importing the 
 from django.db import models
 
 # Importing the Product model from the store app.
@@ -28,6 +29,7 @@ class Wishlist(models.Model):
 
     class Meta:
         verbose_name_plural = "Wishlist"
+        unique_together = ('user', 'product')  
        
 
     def __str__(self):
@@ -52,10 +54,10 @@ class Address(models.Model):
 
 
     def __str__(self):
-        return self.full_name
+        return self.full_name or "Address"
     
 class Notification(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE,related_name="customer_notifications", null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="customer_notifications", null=True)
     type = models.CharField(max_length=100, choices=TYPE, default="New Order")
     seen = models.BooleanField(default=False)
     date = models.DateTimeField(auto_now_add=True)

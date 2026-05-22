@@ -1,0 +1,129 @@
+{% extends "partials/base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="dash-page">
+
+  <!-- HERO -->
+  <div class="dash-hero">
+    <div class="container">
+      <div class="dash-hero-inner">
+
+        <div class="order-back">
+          <a href="{% url 'customer:addresses' %}" class="back-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.5">
+              <path d="M19 12H5M12 5l-7 7 7 7"/>
+            </svg>
+            Back to Addresses
+          </a>
+        </div>
+
+        <div class="dash-hero-text">
+          <h1>Add <em>Address</em></h1>
+          <p>Save a new delivery address</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!-- END HERO -->
+
+  <div class="dash-body">
+    <div class="container">
+      <div class="dash-grid">
+
+        {% include "customer/sidebar.html" %}
+
+        <div class="dash-content">
+
+          <h2 class="panel-heading">New <em>Address</em></h2>
+
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags }} mb-3"
+                   style="padding:0.75rem 1rem; border-left:3px solid; font-size:0.88rem;">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+
+          <!--
+            action → posts to address_create view (same URL, same view)
+            method="POST" → view checks if request.method == "POST"
+            {% csrf_token %} → required by Django for all POST forms
+          -->
+          <form method="POST" action="{% url 'customer:address_create' %}" class="pform">
+            {% csrf_token %}
+
+            <div class="form-row-2">
+              <div class="fg">
+                <label>Full Name</label>
+                <!--
+                  name="full_name" → view reads this via request.POST.get("full_name")
+                -->
+                <input type="text" name="full_name" placeholder="e.g. Priya Roy" required />
+              </div>
+              <div class="fg">
+                <label>Mobile</label>
+                <input type="tel" name="mobile" placeholder="e.g. 9876543210" required />
+              </div>
+            </div>
+
+            <div class="fg">
+              <label>Email</label>
+              <input type="email" name="email" placeholder="e.g. priya@example.com" />
+            </div>
+
+            <div class="fg">
+              <label>Address</label>
+              <!--
+                name="address_location" → view reads request.POST.get("address_location")
+                and saves it to address.address field
+              -->
+              <input type="text" name="address_location" placeholder="House no., street, area" required />
+            </div>
+
+            <div class="form-row-2">
+              <div class="fg">
+                <label>City</label>
+                <input type="text" name="city" placeholder="e.g. Mumbai" required />
+              </div>
+              <div class="fg">
+                <label>State</label>
+                <input type="text" name="state" placeholder="e.g. Maharashtra" required />
+              </div>
+            </div>
+
+            <div class="form-row-2">
+              <div class="fg">
+                <label>Country</label>
+                <input type="text" name="country" placeholder="e.g. India" required />
+              </div>
+              <div class="fg">
+                <label>ZIP / PIN Code</label>
+                <input type="text" name="zip_code" placeholder="e.g. 400001" />
+              </div>
+            </div>
+
+            <div style="display:flex; gap:1rem; margin-top:1.5rem;">
+              <button type="submit" class="btn-submit">Save Address</button>
+              <a href="{% url 'customer:addresses' %}"
+                 style="display:inline-flex; align-items:center; font-size:0.88rem;
+                        color:var(--muted,#888); text-decoration:none;">
+                Cancel
+              </a>
+            </div>
+
+          </form>
+
+        </div>
+        <!-- END DASH CONTENT -->
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% endblock content %}

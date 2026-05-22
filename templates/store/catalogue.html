@@ -164,30 +164,24 @@
                   <svg width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#heart"></use></svg>
                 </a>
                 <div class="product-content">
-                  <h3 class="fs-5 mt-3 text-uppercase">
+                  <h3 class="fs-5 mt-3 mb-0 text-uppercase">
                     <a href="{% url 'store:product_detail' product.slug %}">{{ product.name }}</a>
                   </h3>
-                  <a href="{% url 'store:product_detail' product.slug %}" class="text-decoration-none" data-after="Click to View">
-                    <span>{% if product.price %}₹ {{ product.price|floatformat:2 }}{% endif %}</span>
-                  </a>
 
                   <!-- Add to Cart / Out of Stock -->
-                  <div class="mt-2">
+                  <div class="mt-1">
                     {% if product.stock > 0 %}
-                      <button
-                        type="button"
-                        class="btn btn-dark product-cart-submit add_to_cart btn-sm text-uppercase w-100"
-                        data-id="{{ product.id }}"
-                        data-max="{{ product.stock }}">
-                        Add to Cart
-                      </button>
+                      <span class="text-success small fw-semibold">In Stock</span>
+                      <a href="{% url 'store:product_detail' product.slug %}" class="text-decoration-none d-block" data-after="Click to View">
+                        <span>{% if product.price %}₹ {{ product.price }}{% endif %}</span>
+                      </a>
                     {% else %}
-                      <button type="button" class="btn btn-secondary btn-sm text-uppercase w-100" disabled>
-                        Out of Stock
-                      </button>
+                      <span class="text-danger small fw-semibold">Out of Stock</span>
+                      <a href="{% url 'store:product_detail' product.slug %}" class="text-decoration-none d-block" data-after="Click to View">
+                        <span class="text-muted">{% if product.price %}₹ {{ product.price }}{% endif %}</span>
+                      </a>
                     {% endif %}
                   </div>
-
                 </div>
               </div>
             </div>

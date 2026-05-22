@@ -1,0 +1,89 @@
+
+{% load static %}
+
+
+       <!-- =================================================
+               PROFILE PANEL
+               =================================================
+               Hidden by default. Shown when "Profile" is clicked.
+               Form lets user update name, mobile, and password.
+
+               action="#" is a placeholder.
+               TODO: change to action with update_profile URL
+               once customer:update_profile view is built
+          ================================================== -->
+          <div class="dash-panel" id="panel-profile">
+
+            <h2 class="panel-heading">My <em>Profile</em></h2>
+
+            <!-- method="POST" — required for data-changing forms
+                 enctype="multipart/form-data" — required if form
+                 will ever include file uploads (e.g. profile image) -->
+            <form method="POST" action="{% url 'customer:dashboard' %}"
+                  enctype="multipart/form-data" class="pform">
+
+              <!-- CSRF token — Django security requirement for all POST forms
+                   Prevents Cross-Site Request Forgery attacks
+                   Django will reject the submission without this -->
+              {% csrf_token %}
+
+              <!-- Two-column row: full name + mobile side by side -->
+              <div class="form-row-2">
+
+                <!-- Full name field
+                     Pre-filled with current value from Profile.full_name -->
+                <div class="fg">
+                  <label>Full Name</label>
+                  <input type="text" name="full_name"
+                         value="{{ request.user.profile.full_name }}"/>
+                </div>
+
+                <!-- Mobile field
+                     Pre-filled with current value from Profile.mobile -->
+                <div class="fg">
+                  <label>Mobile</label>
+                  <input type="tel" name="mobile"
+                         value="{{ request.user.profile.mobile }}"/>
+                </div>
+
+              </div>
+
+              <!-- Email — read only, cannot be changed here
+                   disabled prevents editing AND excludes it from POST data -->
+              <div class="fg">
+                <label>Email Address</label>
+                <input type="email" value="{{ request.user.email }}" disabled/>
+              </div>
+
+              <!-- Current password — used to verify identity before
+                   allowing a password change. Blank = no password change -->
+              <div class="fg">
+                <label>Current Password</label>
+                <input type="password" name="old_password"
+                       placeholder="Leave blank to keep unchanged"/>
+              </div>
+
+              <!-- Two-column row: new password + confirmation -->
+              <div class="form-row-2">
+
+                <!-- New password input -->
+                <div class="fg">
+                  <label>New Password</label>
+                  <input type="password" name="new_password1"/>
+                </div>
+
+                <!-- Confirm new password — must match new_password1
+                     Validated in the view before saving -->
+                <div class="fg">
+                  <label>Confirm Password</label>
+                  <input type="password" name="new_password2"/>
+                </div>
+
+              </div>
+
+              <!-- Submit button — triggers POST to form action -->
+              <button type="submit" class="btn-submit">Save Changes</button>
+
+            </form>
+          </div>
+          <!-- END PROFILE PANEL -->

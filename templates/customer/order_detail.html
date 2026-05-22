@@ -2,6 +2,13 @@
 {% load static %}
 {% block content %}
 
+<!-- =====================================================
+   PAGE WRAPPER
+   =====================================================
+   .dash-page — cream background, min-height 80vh
+   Defined in style.css, shared with dashboard.html
+   Acts as the root container for the entire page
+-->
 <div class="dash-page">
 
   <!-- =====================================================
@@ -9,6 +16,20 @@
        =====================================================
        Reuses the same dash-hero style as dashboard.html.
        Shows order ID in place of the greeting.
+
+        STRUCTURE:
+     .dash-hero
+       └── .container (Bootstrap centering)
+             └── .dash-hero-inner (flex row)
+                   ├── .order-back  (← back link)
+                   └── .dash-hero-text (order ID + status)
+
+     DATA USED:
+     order.order_id    — ShortUUID e.g. "O-16463"
+     order.date        — DateTimeField, filtered with |date
+     order.order_status — e.g. "Shipped", "Pending"
+                          |lower turns it to "shipped" for
+                          CSS class s-shipped (style.css)
   ====================================================== -->
   <div class="dash-hero">
     <div class="container">
@@ -27,9 +48,11 @@
         </div>
 
         <div class="dash-hero-text">
-          <!-- order.order_id is the ShortUUID e.g. "O-69739" -->
+          <!-- order.order_id is the ShortUUID e.g. "O-69739" 
+           em tag - emphasizes the order ID -->
           <h1>Order <em>{{ order.order_id }}</em></h1>
-          <!-- order.date formatted as "09 May 2026" -->
+          <!-- order.date formatted as "09 May 2026"
+           &nbsp = non-breaking space so that the next element is on the same line -->
           <p>Placed on {{ order.date|date:"d M Y" }} &nbsp;·&nbsp;
             <!-- Dynamic status badge inline -->
             <span class="badge-status s-{{ order.order_status|lower }}">
@@ -147,6 +170,7 @@
                   <h5 class="oic-name">{{ item.product.name }}</h5>
 
                   <!-- Variant details — only shown if set -->
+                   {% comment %} What  {% endcomment %}
                   <div class="oic-meta">
                     {% if item.color %}
                     <!-- item.color — CharField on OrderItem -->

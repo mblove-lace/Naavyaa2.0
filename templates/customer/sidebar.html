@@ -2,6 +2,7 @@
 
 {% load static %}
 
+
 <!-- =====================================================
      SIDEBAR NAVIGATION
      =====================================================
@@ -12,10 +13,21 @@
 <nav class="dash-nav">
 
   <!-- Orders tab — active by default on page load -->
-  <a href="#" class="is-active" data-panel="orders">Orders</a>
+  {% comment %} {% if active_nav %}
+    <a href="{% url 'customer:dashboard' %}" class="is-active">Orders</a>
+  {% else %}
+    <a href="{% url 'customer:dashboard' %}" data-panel="orders" class="is-active">Orders</a>
+  {% endif %} {% endcomment %}
+  <a href="#" data-panel="orders" class="is-active">Orders</a>
 
-  <!-- Wishlist tab -->
-  <a href="#" data-panel="wishlist">Wishlist</a>
+   <!-- Wishlist tab -->
+   
+
+  {% comment %} <!-- Wishlist tab -->
+  <a href="{% url 'customer:order_detail' %}" data-panel="order">Orders</a> {% endcomment %}
+
+  <!-- Notifications tab -->
+  <a href="#" data-panel="notis">Notifications</a>
 
   <!-- Addresses tab -->
   <a href="#" data-panel="addresses">Addresses</a>

@@ -1,0 +1,187 @@
+{% extends "partials/base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="dash-page">
+
+  <!-- HERO -->
+  <div class="dash-hero">
+    <div class="container">
+      <div class="dash-hero-inner">
+        <div class="order-back">
+          {% comment %} <a href="{% url 'customer:dashboard' %}" class="back-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.5">
+              <path d="M19 12H5M12 5l-7 7 7 7"/>
+            </svg>
+            {% comment %} Back to Dashboard 
+          </a> {% endcomment %}
+        </div>
+        <div class="dash-hero-text">
+          <h1>My <em>Wishlist</em></h1>
+          <p>{{ wishlist_list.count }} item{{ wishlist_list.count|pluralize }} saved</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- END HERO -->
+
+  <div class="dash-body">
+    <div class="container">
+      <div class="dash-grid">
+
+        {% include "customer/sidebar.html" %} 
+
+        <div class="dash-content">
+          {% comment %} <h2 class="panel-heading">My <em>Wishlist</em></h2> {% endcomment %}
+
+          {% if wishlist_list %}
+          <div class="row">
+            {% for item in wishlist_list %}
+            {% with product=item.product %}
+
+            <div class="col-md-4">
+              <div class="product-item image-zoom-effect link-effect mb-5">
+                <div class="image-holder position-relative">
+
+                  <!-- Product image -->
+                  <a href="{% url 'store:product_detail' product.slug %}">
+                    {% if product.image %}
+                      <img src="{{ product.image.url }}"
+                           alt="{{ product.name }}"
+                           class="product-image img-fluid">
+                    {% else %}
+                      <img src="{% static 'assets/images/cat-item3.jpg' %}"
+                           alt="{{ product.name }}"
+                           class="product-image img-fluid">
+                    {% endif %}
+                  </a>
+
+                  <!-- Remove from wishlist — heart icon top-right -->
+                  <a href="{% url 'customer:remove_from_wishlist' product.id %}"
+                     class="btn-icon btn-wishlist"
+                     style="opacity:1;color:#c62828;"
+                     title="Remove from wishlist"
+                     onclick="return confirm('Remove from wishlist?');">
+                    <svg width="20" height="20" viewBox="0 0 24 24">
+                      <use xlink:href="#heart"></use>
+                    </svg>
+                  </a>
+
+                  <!-- Stock badge top-left -->
+                  {% if product.stock > 0 %}
+                    <span class="position-absolute top-0 start-0 m-1"
+                          style="background:#388e3c;color:#fff;font-size:0.58rem;
+                                 letter-spacing:0.08em;text-transform:uppercase;
+                                 padding:2px 7px;display:inline-block;">
+                      In Stock
+                    </span>
+                  {% else %}
+                    <span class="position-absolute top-0 start-0 m-1"
+                          style="background:#c62828;color:#fff;font-size:0.58rem;
+                                 letter-spacing:0.08em;text-transform:uppercase;
+                                 padding:2px 7px;display:inline-block;">
+                      Out of Stock
+                    </span>
+                  {% endif %}
+
+                  <div class="product-content">
+
+                    <!-- Product name -->
+                    <h3 class="fs-5 mt-3 text-uppercase">
+                      <a href="{% url 'store:product_detail' product.slug %}">
+                        {{ product.name }}
+                      </a>
+                    </h3>
+
+                    <!-- Rating -->
+                    <div class="rating-wrapper">
+                      {% with product.average_rating|floatformat:"0"|add:"0" as avg_round %}
+                      <div class="star-rating d-flex align-items-center mb-2 mt-1"
+                           style="font-size:0.82rem;">
+                        {% if product.average_rating %}
+                          <span style="margin-right:4px;">
+                            {{ product.average_rating|floatformat:1 }}
+                          </span>
+                          <div class="avg-stars d-flex" style="gap:2px;">
+                            {% for _ in "12345" %}
+                              {% if forloop.counter <= avg_round %}
+                                <span style="color:#f9a825;">★</span>
+                              {% else %}
+                                <span style="color:#ccc;">☆</span>
+                              {% endif %}
+                            {% endfor %}
+                          </div>
+                          <span style="font-size:0.72rem;color:#8a7565;margin-left:4px;">
+                            ({{ product.reviews.count }})
+                          </span>
+                        {% else %}
+                          <span style="font-size:0.72rem;color:#8a7565;">No ratings yet</span>
+                        {% endif %}
+                      </div>
+                      {% endwith %}
+                    </div>
+
+                    <!-- Price -->
+                    <a href="{% url 'store:product_detail' product.slug %}"
+                       class="text-decoration-none" data-after="Click to View">
+                      <span>
+                        {% if product.price %}&#8377; {{ product.price|floatformat:2 }}{% endif %}
+                      </span>
+                    </a>
+
+                    <!-- Add to Cart / Out of Stock -->
+                    <div class="mt-2">
+                      {% if product.stock > 0 %}
+                        <button type="button"
+                                class="btn btn-dark product-cart-submit add_to_cart btn-sm text-uppercase w-100"
+                                data-id="{{ product.id }}"
+                                data-max="{{ product.stock }}">
+                          Add to Cart
+                        </button>
+                      {% else %}
+                        <button type="button"
+                                class="btn btn-secondary btn-sm text-uppercase w-100"
+                                disabled>
+                          Out of Stock
+                        </button>
+                      {% endif %}
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {% endwith %}
+            {% endfor %}
+          </div>
+          <!-- END ROW -->
+
+          {% else %}
+
+          <!-- Empty state -->
+          <div class="empty">
+            <svg class="empty-motif" viewBox="0 0 52 52" fill="none">
+              <path d="M26 40s-16-9.5-16-20a9 9 0 0118 0 9 9 0 0118 0c0 10.5-20 20-20 20z"
+                    stroke="#9b5e3c" stroke-width="1.2"/>
+            </svg>
+            <p>Your wishlist is empty.</p>
+            <a href="{% url 'store:index' %}" class="btn-bare"
+               style="margin-top:1rem;display:inline-block;">
+              Browse Products
+            </a>
+          </div>
+
+          {% endif %}
+
+        </div>
+        <!-- END DASH CONTENT -->
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% endblock content %}

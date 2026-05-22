@@ -128,6 +128,9 @@ def product_detail(request, slug):
     avg = product.average_rating()
     # print("DEBUG: entered average rating of the product in product_detail method")
 
+    size_variant =product.variants.filter(name="Size").first()
+    sizes = size_variant.variant_items.all() if size_variant else []
+
     if avg is None:
         avg_rating = 0.0
         avg_round = 0
@@ -136,15 +139,23 @@ def product_detail(request, slug):
         avg_rating = float(avg) 
         avg_round = int(round(avg_rating))
         print("DEBUG: entered conditional when rating is done in product_detail method")
+    wishlisted = False
+    if request.user.is_authenticated:
+        wishlisted = customer_models.Wishlist.objects.filter(
+            user=request.user, 
+            product=product).exists()
+        print(f"DEBUG: checked if product is wishlisted for user in product_detail method - wishlisted={wishlisted}")
 
 
 
     context = {
         'product': product,
+        'sizes': sizes,
         'related_products': related_products,
         "product_stock_range" : product_stock_range,
         "avg_rating": avg_rating,
         "avg_round": avg_round,
+        "wishlisted": wishlisted,
     }
     # print("DEBUG: When every attribute is being run in product_detail method")
     # Render the 'product_detail.html' template with the product context

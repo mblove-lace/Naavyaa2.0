@@ -1,6 +1,7 @@
 # store/context_processors.py
 from django.db.models import Q, Sum
 from store import models as store_models
+from customer.models import Wishlist
 
 def cart_context(request):
     cart_id = request.session.get('cart_id', None)
@@ -20,3 +21,8 @@ def cart_context(request):
         'order_total': order_total,
         'total_cart_items': total_cart_items,
     }
+def wishlist_count(request):
+    count = 0
+    if request.user.is_authenticated:
+        count = Wishlist.objects.filter(user=request.user).count()
+    return {'wishlist_count': count}

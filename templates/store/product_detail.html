@@ -1,560 +1,524 @@
 {% extends 'partials/base.html' %}
 {% load static %}
-{% block title %}Product Detail - Naavyaa{% endblock title %}
+{% block title %}{{ product.name }} - Naavyaa{% endblock title %}
 
 {% block content %}
-  <form id="csrf-form" style="display:none;">
-    {% csrf_token %}
-  </form> 
-  {% comment %} <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}"> {% endcomment %}
+<form id="csrf-form" style="display:none;">{% csrf_token %}</form>
 
 
-  <main class="main-content mt-5">
+
+<main class="main-content mt-5">
+  <div class="container">
+    <nav class="breadcrumb">
+      <a class="breadcrumb-item" href="/">Home</a>
+      <a class="breadcrumb-item" href="#">Shop</a>
+      <span class="breadcrumb-item active" aria-current="page">{{ product.name }}</span>
+    </nav>
+  </div>
+
+  <!-- ═══════════════════ PRODUCT DETAIL ═══════════════════ -->
+  <section id="product-detail" class="single-product py-5 no-padding-top">
     <div class="container">
-      <nav class="breadcrumb">
-        <a class="breadcrumb-item" href="#">Home</a>
-        <a class="breadcrumb-item" href="#"> {{ product.slug}}</a>
-        {% comment %} <span class="breadcrumb-item active" aria-current="page"> Type of Kurti</span> {% endcomment %}
-      </nav>
-    </div>
+      <div class="row g-5">
 
-    <section id="product-detail" class="single-product py-5 no-padding-top">
-      <div class="container">
-        <div class="row g-5">
-          <div class="col-md-7">
-            <div class="row flex-column-reverse flex-lg-row">
-              <div class="col-md-12 col-lg-3">
-               
+        <!-- ── LEFT: Gallery (exact Kaira structure) ── -->
+        <div class="col-md-7">
+          <div class="row flex-column-reverse flex-lg-row">
 
-
- {% comment %}  ===============================   How can I load pictures in my single-product page?   ===================================  
-          ================================ >>>>>>>  Connected to my Django framework by : models.py > Gallery class  ================================
-              ===============================   How is Loading pictures connected to my Django framework?   ===============================  
-                 
-                 >>>>>>>    {% endcomment %}
-                      <!-- product-thumbnail-slider -->
-                       {% comment %} It is responsible for the sliding animation, touch swiping, and carousel behavior on the client side (browser). {% endcomment %}
-
-                  <div class="swiper product-thumbnail-slider">
-                    <div class="swiper-wrapper">
-
-                            {% for image in product.gallery.all%}
-
-                              
-                              
-                              <div class="swiper-slide">
-                                  <a href="{{image.image.url}}"><img src="{{image.image.url}}" alt="" class="thumb-image img-fluid"> </a>
-                              </div>
-
-                             
-                            {%endfor%}
-                      </div>
-                  </div>
-                  </div>
-
-
-                
-                <!-- / product-thumbnail-slider -->
-              
-              <div class="col-md-12 col-lg-9">
-                
-                <!-- product-large-slider -->
-                <div class="swiper product-large-slider">
-
-                  <div class="swiper-wrapper">
-                    {% for image in product.gallery.all%}
-                      <div class="swiper-slide">
-                        <div class="image-zoom" data-scale="2.5" data-image="{{image.image.url}}"><img
-                            src="{{image.image.url}}" alt="product-large" class="img-fluid"></div>
-                      </div>
-
-                    {%endfor%}
-                    
-                  </div>
-                  <div class="swiper-pagination"></div>
+            <!-- Thumbnail slider -->
+            <div class="col-md-12 col-lg-3">
+              <div class="swiper product-thumbnail-slider">
+                <div class="swiper-wrapper">
+                  {% for image in product.gallery.all %}
+                    <div class="swiper-slide">
+                      <img src="{{ image.image.url }}" alt="" class="thumb-image img-fluid">
+                    </div>
+                  {% endfor %}
                 </div>
-
-
-
-                <!-- / product-large-slider -->
               </div>
             </div>
+
+            <!-- Large image slider -->
+            <div class="col-md-12 col-lg-9">
+              <div class="swiper product-large-slider">
+                <div class="swiper-wrapper">
+                  {% for image in product.gallery.all %}
+                    <div class="swiper-slide">
+                      <div class="image-zoom" data-scale="2.5" data-image="{{ image.image.url }}">
+                        <img src="{{ image.image.url }}" alt="product-large" class="img-fluid">
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+                <div class="swiper-pagination"></div>
+              </div>
+            </div>
+
           </div>
-           <div class="col-md-5">
-            <div class="product-info">
-               <div class="element-header">
-                <h3 itemprop="name" class="product-title text-uppercase">{{ product.name }}</h3>
+        </div>
 
-                 <!-- / rating demarcations-->
-                  
-  
-                    <!-- ================= Average Rating Block ================= -->
-             
-                <div class="star-rating align-items-center d-flex justify-content-start mb-2 p-0 mt-3">
-                    {% if product.average_rating %}
-                        {{ product.average_rating|floatformat:1 }} 
-                          <div class="avg-stars flex gap-1 items-center" aria-label="Average rating: {{ avg_rating|floatformat:1 }} of 5">
-                            {% for _ in "12345"|slice:":5" %}
-                              {% if forloop.counter <= avg_round %}
-                                <span class="star filled text-yellow-500 text-xl"> ★ </span>
-                              {% else %}
-                              <span class="star empty text-gray-300 text-xl"> ☆ </span>
-                              {% endif %}
-                            {% endfor %}
-                            <span class="small ms-2">({{ product.reviews.all.count|default:"0" }} Reviews)</span>
-                          </div>
-                      {% else %}
-                        <p>No ratings yet</p>
-                      {% endif %}                          
-                  </div>   
-                
+        <!-- ── RIGHT: Product Info (exact Kaira structure) ── -->
+        <div class="col-md-5">
+          <div class="product-info">
+            <div class="element-header">
 
+              <h2 itemprop="name" class="product-title text-uppercase">{{ product.name }}</h2>
 
-
-                      {# product.html #}
-
- <!-- ================= Average Rating Block ================= -->
-                     
-
-                      {% comment %} <div class="product-average-rating bg-white p-1 shadow-sm mb-">
-                        {% if avg_rating and avg_rating > 0 %}
-                          <p class="text-gray-700 mb-2">{{ avg_rating|floatformat:1 }} / 5</p>
-
-                          <!-- Stars from avg_round (1..5) -->
-                          <div class="avg-stars flex gap-1 items-center" aria-label="Average rating: {{ avg_rating|floatformat:1 }} of 5">
-                            {% for _ in "12345"|slice:":5" %}
-                              {% if forloop.counter <= avg_round %}
-                                <span class="star filled text-yellow-500 text-xl">★</span>
-                              {% else %}
-                                <span class="star empty text-gray-300 text-xl">☆</span>
-                              {% endif %}
-                            {% endfor %}
-                            <span class="small ms-2">({{ product.reviews.all.count|default:"0" }} Reviews)</span>
-                          </div>
+              <!-- Rating -->
+              {% if product.average_rating %}
+                <div class="rating-container d-flex align-items-center">
+                  {% for i in "12345" %}
+                    <div class="rating" data-rating="{{ forloop.counter }}">
+                      <svg width="24" height="24">
+                        {% if forloop.counter <= avg_round %}
+                          <use xlink:href="#star-solid"></use>
                         {% else %}
-                          <p class="text-gray-500">No ratings yet</p>
+                          <use xlink:href="#star-outline"></use>
                         {% endif %}
-                    </div>  {% endcomment %}
-
-  
- <!-- ================= Product Price ================= -->
-
-                  
-              <div class="product-price">
-                <span class="fs-2"> ₹ {{product.price}}</span>
-                <del> ₹ {{product.regular_price}} </del>
-              </div>
-
-
-
- <!-- ================= Color Option ================= -->
-
-              <div class="color-product-options mt-4">
-                <div class="color-toggle" data-option-index="0">
-                  <div class="item-title">Color: <span>Green</span>
-                  </div>
-                  <div class="color-item" data-val="YellowGreen" title="YellowGreen">
-                    <span class="color-inner" style="background-color: #A5BC73"></span>
-                  </div>
-                  <div class="color-item" data-val="Beige" title="Beige">
-                    <span class="color-inner" style="background-color: #D4BB96"></span>
-                  </div>
-                  <div class="color-item" data-val="Red" title="Red">
-                    <span class="color-inner" style="background-color: #CA7A7A"></span>
-                  </div>
+                      </svg>
+                    </div>
+                  {% endfor %}
+                  <span class="rating-count">
+                    ({{ product.average_rating|floatformat:1 }} · {{ product.reviews.all.count }} review{{ product.reviews.all.count|pluralize }})
+                  </span>
                 </div>
-              </div>
+              {% else %}
+                <div class="rating-container d-flex align-items-center">
+                  {% for i in "12345" %}
+                    <div class="rating" data-rating="{{ forloop.counter }}">
+                      <svg width="24" height="24"><use xlink:href="#star-outline"></use></svg>
+                    </div>
+                  {% endfor %}
+                  <span class="rating-count">(No reviews yet)</span>
+                </div>
+              {% endif %}
 
+            </div>
 
-  <!--- ================= Size Options ================= -->
+            <!-- Price -->
+            <div class="product-price">
+              <span class="fs-2">₹{{ product.price }}</span>
+              {% if product.regular_price %}
+                <del>₹{{ product.regular_price }}</del>
+              {% endif %}
+            </div>
 
-    {% for variant in product.variants.all %}
-        {% if variant.name == "Size" %}
-              
-              {% for s in variant.items.all %}
-                "<div class="form-check size-option form-option form-check-inline mb-2> <input class="form-check-input" value="{{s.title}}" type="radio" name="size" id="{{s.content}}">/ <label class="form-option-label" for="{{s.content}}">{{s.content}}"></label>"
+            <!-- ── SIZE SWATCHES (Kaira swatch structure) ── -->
+            <div class="swatch d-flex flex-wrap option-1 mt-4" data-option-index="1" id="pd-size-grid">
+              <div class="item-title">Size:</div>
+              {% for s in sizes %}
+                <div data-value="{{ s.content }}" class="swatch-element">
+                  <input class="swatch-input hide"
+                         id="size-{{ s.content|lower }}"
+                         data-var="{{ s.content|lower }}"
+                         type="radio"
+                         name="option-1"
+                         value="{{ s.content }}">
+                  <label class="swatch-label square-only" for="size-{{ s.content|lower }}">{{ s.content }}</label>
+                </div>
+              {% empty %}
+                <small class="text-muted ms-2">No sizes available.</small>
               {% endfor %}
-        {% endif %}
-    {% endfor %}
-            <div class="swatch d-flex flex-wrap option-1 mt-4" data-option-index="1">
-                <div class="item-title">Size:</div>
+            </div>
 
-                <div data-value="XS" class="swatch-element">
-                  <input class="swatch-input hide" id="size-xs" data-var="Xs" type="radio" name="option-1" value="XS">
-                  <label class="swatch-label square-only" for="size-xs">XS</label>
-                </div>
-                <div data-value="S" class="swatch-element">
-                  <input class="swatch-input hide" id="size-s" data-var="s" type="radio" name="option-1" value="S">
-                  <label class="swatch-label square-only" for="size-s">S</label>
-                </div>
-                <div data-value="M" class="swatch-element">
-                  <input class="swatch-input hide" id="size-m" data-var="m" type="radio" name="option-1" value="M">
-                  <label class="swatch-label square-only" for="size-m">M</label>
-                </div>
-                <div data-value="L" class="swatch-element">
-                  <input class="swatch-input hide" id="size-l" data-var="l" type="radio" name="option-1" value="L">
-                  <label class="swatch-label square-only" for="size-l">L</label>
-                </div>
-                <div data-value="XL" class="swatch-element">
-                  <input class="swatch-input hide" id="size-xl" data-var="xl" type="radio" name="option-1" value="XL">
-                  <label class="swatch-label square-only" for="size-xl">XL</label>
-                </div>
-                <div data-value="2XL" class="swatch-element">
-                  <input class="swatch-input hide" id="size-2xl" data-var="xxl" type="radio" name="option-1" value="2XL">
-                  <label class="swatch-label square-only" for="size-2xl">2XL</label>
-                </div>
-              
-              <div data-value="3XL" class="swatch-element">
-                  <input class="swatch-input hide" id="size-3xl" data-var="xxxl" type="radio" name="option-1" value="3XL">
-                  <label class="swatch-label square-only" for="size-3xl">3XL</label>
-                </div>
-             
-              <div data-value="4XL" class="swatch-element">
-                  <input class="swatch-input hide" id="size-4xl" data-var="xxxxl" type="radio" name="option-1" value="4XL">
-                  <label class="swatch-label square-only" for="size-4xl">4XL</label>
-              </div>
-              <div data-value="5XL" class="swatch-element">
-                  <input class="swatch-input hide" id="size-5xl" data-var="xxxxxl" type="radio" name="option-1" value="5XL">
-                  <label class="swatch-label square-only" for="size-5xl">5XL</label>
-              </div>
-              <div data-value="6XL" class="swatch-element">
-                  <input class="swatch-input hide" id="size-6xl" data-var="xxxxxxl" type="radio" name="option-1" value="6XL">
-                  <label class="swatch-label square-only" for="size-6xl">6XL</label>
-              </div>
-              </div>
-              
+            <!-- Size warning -->
+            <div class="pd-size-warning" id="pd-size-warning" role="alert">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+              Please select a size before adding to cart
+            </div>
 
-{% comment %} // ============================== Stock Quantity ==============================  // {% endcomment %}
-
-{% comment %} Stock display and quantity selector (only when in stock) {% endcomment %}
-{% comment %} if product.stock > 0 — checks if there is any stock/product available the content inside will only render if this is true {% endcomment %}
+            <!-- ── PRODUCT ACTION (Kaira product-action structure) ── -->
+            <div class="product-action mt-4">
 
               {% if product.stock > 0 %}
-              {% comment %} {% for qty in product_stock_range %} {% endcomment %}
-                <div class="product mt-4"> {% comment %} Wrapper for the product information. mt-4 is a Bootstrap class adding top margin. {% endcomment %}
-                 {% comment %} Making another container to show the current stock in the inventory under the class stock{% endcomment %}
-                  <div class="stock"> Current Stock:
-                    {% comment %} data-qty → holds the product’s stock quantity 
-                    The data-qty attribute is used to store the product’s available stock inside the HTML element so that JavaScript can access it later. 
-                    Why put it in <span> --> <span> is an inline HTML element used mainly for grouping or styling small pieces of text or inline elements without breaking the flow of content.{% endcomment %}
-                    <span data-qty="{{ product.stock }}">{{ product.stock }}</span>
+                <!-- Stock -->
+                {% if product.stock <= 5 %}
+                  <div class="item-title mb-2">
+                    <span class="stock-badge stock-low">Only {{ product.stock }} left</span>
                   </div>
-                  
-                  {% comment %} Making another container with class : with Bootstrap utility class 
-                   d- means “display”
-                   flex means you’re setting the CSS property display: flex;
-                    flex-wrap means that the flex items will wrap onto multiple lines if necessary.
-                    align-items-center means that the flex items will be vertically centered within the container.
-                    gap-3 means there will be a gap of size 3 (based on Bootstrap’s spacing scale) between the flex items.
-                    mt-3 means there will be a top margin of size 3 (based on Bootstrap’s spacing scale) above this container.  {% endcomment %}
-                  <div class="d-flex flex-wrap align-items-center gap-3 mt-3">
-                    <!-- Quantity selector -->
-                  
-                    <div>
-                  {% comment %} 
-                    <label> — improves accessibility; hidden visually but readable by screen readers.
-                    
+                {% else %}
+                  <div class="item-title">{{ product.stock }} in stock</div>
+                {% endif %}
 
-                    {% endcomment %}
-                      <label for="quantity-{{ product.id }}" class="visually-hidden">Quantity</label>
-                      <select
-                        id="quantity-{{ product.id }}"
-                        name="quantity"
-                        class="form-select quantity-select"
-                        aria-label="Select quantity">
-                        {% for i in product_stock_range %}
-                          <option value="{{ i }}">{{ i }}</option>
-                        {% endfor %}
-                      </select>
-                    </div>
+                <div class="product-quantity d-flex flex-wrap align-items-center gap-2 mt-2">
 
-                    <!-- Add to Cart and Wishlist side by side -->
-                    <div class="d-flex align-items-center gap-2">
-                      <!-- Add to cart button -->
-                      <button
-                        type="button"
-                        class="btn btn-dark product-cart-submit add_to_cart btn-lg text-uppercase me-2"
-                        data-id="{{ product.id }}"
-                        data-max="{{ product.stock }}"> Add to cart
+                  <!-- Qty input — Kaira style -->
+                  <div class="input-group product-qty" style="max-width: 130px;">
+                    <span class="input-group-btn">
+                      <button type="button"
+                              class="quantity-left-minus btn btn-light btn-number"
+                              id="pd-qty-minus">
+                        <svg width="16" height="16"><use xlink:href="#minus"></use></svg>
                       </button>
-
-                         {% else %}
-                          <div class="product mt-4">
-                            <div class="stock out-of-stock">Out of Stock</div>
-                            <div class="d-flex align-items-center gap-3 mt-3">
-                              <button type="button" class="btn btn-dark btn-lg text-uppercase" disabled>
-                                Add to cart
-                              </button>                     
-                       {% endif %}
-
-                      <!-- Wishlist button -->
-                      <button type="button" class="btn btn-dark btn-outline-danger wishlist-btn btn-lg "  data-id="{{ product.id }}">
-                        <svg width="28" height="28" fill="currentColor" class="bi bi-heart">
-                          <use xlink:href="#heart"></use>
-                        </svg>
+                    </span>
+                    <input type="text"
+                           id="pd-qty-input"
+                           name="quantity"
+                           class="form-control input-number text-center"
+                           value="1" min="1" max="{{ product.stock }}">
+                    <span class="input-group-btn">
+                      <button type="button"
+                              class="quantity-right-plus btn btn-light btn-number"
+                              id="pd-qty-plus">
+                        <svg width="16" height="16"><use xlink:href="#plus"></use></svg>
                       </button>
-                    </div>
+                    </span>
                   </div>
+
+                  <!-- Add to Cart -->
+                  <button type="button"
+                          id="pd-atc-btn"
+                          class="btn btn-dark product-cart-submit btn-lg text-uppercase"
+                          data-id="{{ product.id }}"
+                          data-max="{{ product.stock }}">
+                    <span class="btn-text">Add to cart</span>
+                    <span class="btn-spinner" aria-hidden="true">
+                      <span class="btn-spinner-ring"></span>
+                    </span>
+                  </button>
+
+                  <!-- Wishlist -->
+                  <button type="button"
+                          id="pd-wish-btn"
+                          class="btn btn-dark wish-list-button bg-dark {% if wishlisted %}wishlisted{% endif %}"
+                          data-id="{{ product.id }}"
+                          aria-label="{% if wishlisted %}Remove from wishlist{% else %}Add to wishlist{% endif %}">
+                    <svg width="24" height="24" viewBox="0 0 24 24">
+                      <use xlink:href="#heart"></use>
+                    </svg>
+                  </button>
+
                 </div>
 
-           
+              {% else %}
+                <span class="stock-badge stock-out d-block mb-3">Out of Stock</span>
+                <div class="d-flex gap-2">
+                  <button type="button" class="btn btn-dark btn-lg text-uppercase" disabled>
+                    Out of Stock
+                  </button>
+                  <button type="button"
+                          id="pd-wish-btn"
+                          class="btn btn-dark wish-list-button bg-dark {% if wishlisted %}wishlisted{% endif %}"
+                          data-id="{{ product.id }}">
+                    <svg width="24" height="24" viewBox="0 0 24 24">
+                      <use xlink:href="#heart"></use>
+                    </svg>
+                  </button>
+                </div>
+              {% endif %}
 
-
-
-                  <div class="cate-links d-flex flex-column mt-4">
-                    <div class="cate-tag d-flex mb-3">
-                      <div>Category:</div>
-                      <div class="tag-item d-flex">
-                        <a href="#"> Women</a>, <a href="#"> Kurti</a>, <a href="#"> Cotton </a>
-                      </div>
-                    </div>
-                    <div class="social-links d-flex align-items-center gap-2 mb-3">
-                      <div> Share:</div>
-                      <ul class="list-unstyled d-flex gap-2 m-0 lh-1">
-                        <li>
-                          <a href="#" class="text-secondary p-0">
-                            <svg width="18" height="18">
-                              <use xlink:href="#facebook"></use>
-                            </svg>
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#" class="text-secondary p-0">
-                            <svg width="18" height="18">
-                              <use xlink:href="#twitter"></use>
-                            </svg>
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#" class="text-secondary p-0">
-                            <svg width="18" height="18">
-                              <use xlink:href="#youtube"></use>
-                            </svg>
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#" class="text-secondary p-0">
-                            <svg width="18" height="18">
-                              <use xlink:href="#pinterest"></use>
-                            </svg>
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#" class="text-secondary p-0">
-                            <svg width="18" height="18">
-                              <use xlink:href="#instagram"></use>
-                            </svg>
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
+              <!-- Category + Share -->
+              <div class="cate-links d-flex flex-column mt-4">
+                <div class="cate-tag d-flex mb-3">
+                  <div>Category:</div>
+                  <div class="tag-item d-flex ms-1">
+                    {% if product.category %}
+                      <a href="#">{{ product.category.title }}</a>
+                    {% endif %}
                   </div>
+                </div>
+                <div class="social-links d-flex align-items-center gap-2 mb-3">
+                  <div>Share:</div>
+                  <ul class="list-unstyled d-flex gap-2 m-0 lh-1">
+                    <li><a href="#" class="text-secondary p-0"><svg width="18" height="18"><use xlink:href="#facebook"></use></svg></a></li>
+                    <li><a href="#" class="text-secondary p-0"><svg width="18" height="18"><use xlink:href="#twitter"></use></svg></a></li>
+                    <li><a href="#" class="text-secondary p-0"><svg width="18" height="18"><use xlink:href="#youtube"></use></svg></a></li>
+                    <li><a href="#" class="text-secondary p-0"><svg width="18" height="18"><use xlink:href="#pinterest"></use></svg></a></li>
+                    <li><a href="#" class="text-secondary p-0"><svg width="18" height="18"><use xlink:href="#instagram"></use></svg></a></li>
+                  </ul>
                 </div>
               </div>
+
             </div>
           </div>
         </div>
+        <!-- /col-md-5 -->
+
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="product-tabs mt-5">
-      <div class="container">
-        <div class="row">
-          <div class="tabs-listing">
-            <nav>
-              <div class="nav nav-tabs d-flex justify-content-center" id="nav-tab" role="tablist">
-                <button class="nav-link active text-uppercase px-5 py-3" id="nav-home-tab" data-bs-toggle="tab"
-                  data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home"
-                  aria-selected="true">Description</button>
-               
-                <button class="nav-link text-uppercase px-5 py-3" id="nav-shipping-tab" data-bs-toggle="tab"
-                  data-bs-target="#nav-shipping" type="button" role="tab" aria-controls="nav-shipping"
-                  aria-selected="false">Shipping & Return</button>
-
-                <button class="nav-link text-uppercase px-5 py-3" id="nav-review-tab" data-bs-toggle="tab"
-                  data-bs-target="#nav-review" type="button" role="tab" aria-controls="nav-review"
-                  aria-selected="false">Reviews</button>
-              </div>
-            </nav>
-            <div class="tab-content py-5" id="nav-tabContent">
-              <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                <h5>Product Description</h5>
-                <p>{{product.description|safe|truncatechars:150}}</p>
-                  </div>
-              
-              <div class="tab-pane fade" id="nav-shipping" role="tabpanel" aria-labelledby="nav-shipping-tab">
-                <h4>Returns Policy</h4>
-                <p>We are currently not returning any shipment </p>
-                {% comment %} <p>Interdum et malesuada fames ac ante ipsum primis in faucibus. In blandit nunc enim, sit amet pharetra
-                  erat aliquet ac.</p> {% endcomment %}
-
-                <h4>Shipping</h4>
-                <p>
-                  <ul>Takes 7-10 days on pre-made items </ul>
-                  <ul>Takes 10-12 days on customised items </ul>
-                  </p>
-              </div>
-              {%for r in product.reviews.all %}
-              
-                  <div class="tab-pane fade" id="nav-review" role="tabpanel" aria-labelledby="nav-review-tab">
-                    <div class="review-box review-style1 d-flex">
-                      <div class="review-item d-flex">
-                        <div class="row g-4">
-                          <div class="col-md-3">
-                            {% comment %} <div class="image-holder">
-                              <img src="{% static 'assets/images/cat-item2.jpg' %}" alt="review" class="rounded-circle img-fluid">
-                            </div> {% endcomment %}
-                          </div>
-                          <div class="col-md-7">
-                            <div class="review-content">
-                              <div class="rating-container d-flex align-items-center">
-                                <div class="rating" data-rating="1" onclick="rate(1)">
-                                  <svg width="32" height="32">
-                                    <use xlink:href="#star-solid"></use>
-                                  </svg>
-                                </div>
-                                <div class="rating" data-rating="2" onclick="rate(1)">
-                                  <svg width="32" height="32">
-                                    <use xlink:href="#star-solid"></use>
-                                  </svg>
-                                </div>
-                                <div class="rating" data-rating="3" onclick="rate(1)">
-                                  <svg width="32" height="32">
-                                    <use xlink:href="#star-solid"></use>
-                                  </svg>
-                                </div>
-                                <div class="rating" data-rating="4" onclick="rate(1)">
-                                  <svg width="32" height="32">
-                                    <use xlink:href="#star-outline"></use>
-                                  </svg>
-                                </div>
-                                <div class="rating" data-rating="5" onclick="rate(1)">
-                                  <svg width="32" height="32">
-                                    <use xlink:href="#star-outline"></use>
-                                  </svg>
-                                </div>
-                                <span class="rating-count">(3.5)</span>
-                              </div>
-                              <div class="review-header">
-                                <span class="author-name">{{r.user.username|title}}</span>
-                                <span class="review-date">– {{r.date|date:"d M, Y"}}</span>
-                              </div>
-                              <p>Vitae tortor condimentum lacinia quis vel eros donec ac. Nam at lectus urna duis convallis
-                                convallis</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="review-item d-flex">
-                        {% comment %} <div class="row g-4">
-                          <div class="col-md-3">
-                            {% comment %} <div class="image-holder">
-                              <img src="{% static 'assets/images/cat-item2.jpg' %}" alt="review" class="rounded-circle img-fluid">
-                            </div> 
-                          </div> {% endcomment %}
-                          <div class="col-md-7">
-                            <div class="review-content">
-                              <div class="rating-container d-flex align-items-center">
-                              
-                                <div class="avg-stars flex gap-1 items-center" aria-label="Average rating: {{ avg_rating|floatformat:1 }} of 5">
-                                  {% for _ in "12345"|slice:":5" %}
-                                    {% if forloop.counter <= avg_round %}
-                                      <span class="star filled text-yellow-500 text-xl">★</span>
-                                    {% else %}
-                                      <span class="star empty text-gray-300 text-xl">☆</span>
-                                    {% endif %}
-                                  {% endfor %}
-                                <span class="small ms-2">({{ product.reviews.all.count|default:"0" }} Reviews)</span>
-                              </div>
-                              {% comment %} <div> <p class="review-header"> 
-                                <span class="author-name">{{r.user.profile.username}}</span>
-                                <span class="review-date">– {{r.date|date:"d M, Y"}}</span>
-                              </p>
-                              </div> {% endcomment %}
-                              {% comment %} <p>Vitae tortor condimentum lacinia quis vel eros donec ac. Nam at lectus urna duis convallis
-                                convallis</p> {% endcomment %}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div> 
-               {% endfor %}
+  <!-- ═══════════════════ TABS (Kaira Bootstrap nav-tabs) ═══════════════════ -->
+  <section class="product-tabs mt-5">
+    <div class="container">
+      <div class="row">
+        <div class="tabs-listing">
+          <nav>
+            <div class="nav nav-tabs d-flex justify-content-center" id="nav-tab" role="tablist">
+              <button class="nav-link active text-uppercase px-5 py-3"
+                      id="nav-home-tab" data-bs-toggle="tab"
+                      data-bs-target="#nav-home" type="button" role="tab"
+                      aria-controls="nav-home" aria-selected="true">Description</button>
+              <button class="nav-link text-uppercase px-5 py-3"
+                      id="nav-shipping-tab" data-bs-toggle="tab"
+                      data-bs-target="#nav-shipping" type="button" role="tab"
+                      aria-controls="nav-shipping" aria-selected="false">Shipping & Return</button>
+              <button class="nav-link text-uppercase px-5 py-3"
+                      id="nav-review-tab" data-bs-toggle="tab"
+                      data-bs-target="#nav-review" type="button" role="tab"
+                      aria-controls="nav-review" aria-selected="false">
+                Reviews{% if product.reviews.all.count > 0 %} ({{ product.reviews.all.count }}){% endif %}
+              </button>
             </div>
-          </div>
-        </div>
-      </div>
-    </section>
-{% comment %} Here, using more product recommendations {% endcomment %}
-{% comment %} id "related-products": Used for linking or JS targeting
-class "related-products": For styling and JS targeting
-class "product-carousel": Indicates this section is a carousel of products
-class "py-5": Bootstrap class for vertical padding
-class "position-relative": Allows for absolute positioning of child elements (like navigation arrows)
- {% endcomment %}
-    <section id="related-products" class="related-products product-carousel py-5 position-relative open-up"
-      data-aos="zoom-out">
-      <div class="container">
-        <div class="d-flex flex-wrap justify-content-between align-items-center mt-5 mb-3">
-          <h4 class="text-uppercase">You May Also Like</h4>
-          <a href="shop-sidebar.html" class="btn-link">View All Products</a>
-        </div>
-        {% comment %} swiper js is the main container  {% endcomment %}
-        <div class="swiper product-swiper overflow-hidden">
-          <div class="swiper-wrapper d-flex">
-            {% comment %} django loop for related product is iterated  {% endcomment %}
-              {% for related in related_products %}
-              {% comment %} each product is put through one slide {% endcomment %}
-                <div class="swiper-slide">
-                  <div class="product-item image-zoom-effect link-effect">
-                    <div class="image-holder">
-                      {% comment %} Builds a clickable link to the related product's detail page. related.slug is the unique URL-friendly name of the product (e.g. /product/blue-cotton-kurti/). {% endcomment %}
-                      <a href="{% url 'store:product_detail' related.slug %}">
-                        {% comment %} Checks if the product has any images in its Gallery model. .first returns the first gallery image or None if there are no images. This is the preferred image source since gallery images are high quality uploaded images. {% endcomment %}
-                        {% if related.gallery.first %}
-                        {% comment %}If a gallery image exists, use it. .image is the ImageField on the Gallery model, and .url converts it to a full file path like /media/images/kurti.jpg.{% endcomment %}
-                          <img src="{{ related.gallery.first.image.url }}" alt="{{ related.name }}" class="product-image img-fluid">
-                          {% comment %} If there are NO gallery images, fall back to checking if the product has a direct image field on the Product model itself. This is a backup in case gallery wasn't populated. {% endcomment %}
-                        {% elif related.image %}
-                        {% comment %} Uses the product's own image field as the fallback. {% endcomment %}
-                          <img src="{{ related.image.url }}" alt="{{ related.name }}" class="product-image img-fluid">
-                        {% endif %}
-                      </a>
-                      <a href="wishlist.html" class="btn-icon btn-wishlist">
-                        <svg width="24" height="24" viewBox="0 0 24 24">
-                          <use xlink:href="#heart"></use>
-                        </svg>
-                      </a>
-                      <div class="product-content">
-                        <h5 class="text-uppercase fs-5 mt-3">
-                          <a href="{% url 'store:product_detail' related.slug %}">{{ related.name }}</a>
-                        </h5>
-                        <span>₹{{ related.price }}</span>
-                      </div>
+          </nav>
 
+          <div class="tab-content py-5" id="nav-tabContent">
+
+            <!-- Description -->
+            <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+              <h5>Product Description</h5>
+              {{ product.description|safe }}
+            </div>
+
+            <!-- Shipping -->
+            <div class="tab-pane fade" id="nav-shipping" role="tabpanel" aria-labelledby="nav-shipping-tab">
+              <h5>Returns Policy</h5>
+              <p>We are currently not accepting returns. If your item arrives damaged, please contact us within 48 hours.</p>
+              <h5>Shipping</h5>
+              <p>Pre-made items dispatch within <strong>7–10 business days</strong>.<br>
+                 Customised items are ready in <strong>10–12 business days</strong>.</p>
+            </div>
+
+            <!-- Reviews -->
+            <div class="tab-pane fade" id="nav-review" role="tabpanel" aria-labelledby="nav-review-tab">
+              <div class="review-box review-style1">
+                {% for r in product.reviews.all %}
+                  <div class="review-item d-flex mb-4">
+                    <div class="row g-4 w-100">
+                      <div class="col-md-9">
+                        <div class="review-content">
+                          <div class="rating-container d-flex align-items-center">
+                            {% for i in "12345" %}
+                              <div class="rating" data-rating="{{ forloop.counter }}">
+                                <svg width="24" height="24">
+                                  {% if forloop.counter <= r.rating %}
+                                    <use xlink:href="#star-solid"></use>
+                                  {% else %}
+                                    <use xlink:href="#star-outline"></use>
+                                  {% endif %}
+                                </svg>
+                              </div>
+                            {% endfor %}
+                            <span class="rating-count">({{ r.rating }}.0)</span>
+                          </div>
+                          <div class="review-header">
+                            <span class="author-name">{{ r.user.username|title }}</span>
+                            <span class="review-date">– {{ r.date|date:"d M, Y" }}</span>
+                          </div>
+                          <p>{{ r.review }}</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
                 {% empty %}
-                  <p class="text-muted ps-3">No related products found.</p>
+                  <p class="text-muted">No reviews yet. Be the first to review this product.</p>
                 {% endfor %}
+              </div>
+            </div>
+
           </div>
-          <div class="swiper-pagination"></div>
         </div>
-        <div class="icon-arrow icon-arrow-left"><svg width="50" height="50" viewBox="0 0 24 24">
-            <use xlink:href="#angle-left"></use>
-          </svg></div>
-        <div class="icon-arrow icon-arrow-right"><svg width="50" height="50" viewBox="0 0 24 24">
-            <use xlink:href="#angle-right"></use>
-          </svg></div>
       </div>
-    </section>
+    </div>
+  </section>
 
-  </main>
+  <!-- ═══════════════════ RELATED PRODUCTS (exact Kaira structure) ═══════════════════ -->
+  {% if related_products %}
+  <section id="related-products" class="related-products product-carousel py-5 position-relative open-up"
+           data-aos="zoom-out">
+    <div class="container">
+      <div class="d-flex flex-wrap justify-content-between align-items-center mt-5 mb-3">
+        <h4 class="text-uppercase">You May Also Like</h4>
+        <a href="#" class="btn-link">View All Products</a>
+      </div>
+      <div class="swiper product-swiper overflow-hidden">
+        <div class="swiper-wrapper d-flex">
+          {% for related in related_products %}
+            <div class="swiper-slide">
+              <div class="product-item image-zoom-effect link-effect">
+                <div class="image-holder">
+                  <a href="{% url 'store:product_detail' related.slug %}">
+                    {% if related.gallery.first %}
+                      <img src="{{ related.gallery.first.image.url }}" alt="{{ related.name }}" class="product-image img-fluid">
+                    {% elif related.image %}
+                      <img src="{{ related.image.url }}" alt="{{ related.name }}" class="product-image img-fluid">
+                    {% endif %}
+                  </a>
+                  <a href="#" class="btn-icon btn-wishlist">
+                    <svg width="24" height="24" viewBox="0 0 24 24">
+                      <use xlink:href="#heart"></use>
+                    </svg>
+                  </a>
+                  <div class="product-content">
+                    <h5 class="text-uppercase fs-5 mt-3">
+                      <a href="{% url 'store:product_detail' related.slug %}">{{ related.name }}</a>
+                    </h5>
+                    <span>₹{{ related.price }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% empty %}
+            <p class="text-muted ps-3">No related products found.</p>
+          {% endfor %}
+        </div>
+        <div class="swiper-pagination"></div>
+      </div>
+      <div class="icon-arrow icon-arrow-left">
+        <svg width="50" height="50" viewBox="0 0 24 24"><use xlink:href="#angle-left"></use></svg>
+      </div>
+      <div class="icon-arrow icon-arrow-right">
+        <svg width="50" height="50" viewBox="0 0 24 24"><use xlink:href="#angle-right"></use></svg>
+      </div>
+    </div>
+  </section>
+  {% endif %}
 
+</main>
 
+<!-- Toast -->
+<div class="pd-toast" id="pd-toast" role="status" aria-live="polite">
+  <span id="pd-toast-icon">✓</span>
+  <span id="pd-toast-msg">Added to cart</span>
+</div>
 
+<script>
+(function () {
 
+  /* ─── getCookie ─── */
+  function getCookie(name) {
+    return document.cookie.split(';')
+      .map(c => c.trim())
+      .find(c => c.startsWith(name + '='))
+      ?.split('=')[1];
+  }
 
+  /* ─── Toast ─── */
+  function showToast(msg, isError = false) {
+    const toast = document.getElementById('pd-toast');
+    document.getElementById('pd-toast-icon').textContent = isError ? '!' : '✓';
+    document.getElementById('pd-toast-msg').textContent  = msg;
+    toast.style.background = isError ? '#dc3545' : '#212529';
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+  }
+
+  /* ─── Quantity stepper (Kaira-style input) ─── */
+  const qtyInput = document.getElementById('pd-qty-input');
+  const atcBtn   = document.getElementById('pd-atc-btn');
+  const maxStock = atcBtn ? parseInt(atcBtn.dataset.max) : 1;
+
+  function getQty() {
+    return parseInt(qtyInput?.value) || 1;
+  }
+  function setQty(n) {
+    if (!qtyInput) return;
+    qtyInput.value = Math.max(1, Math.min(n, maxStock));
+  }
+
+  document.getElementById('pd-qty-minus')?.addEventListener('click', () => setQty(getQty() - 1));
+  document.getElementById('pd-qty-plus')?.addEventListener('click',  () => setQty(getQty() + 1));
+
+  /* ─── Size selection — clear warning on pick ─── */
+  const sizeWarning = document.getElementById('pd-size-warning');
+  const sizeGrid    = document.getElementById('pd-size-grid');
+
+  document.querySelectorAll('input[name="option-1"]').forEach(input => {
+    input.addEventListener('change', () => {
+      sizeWarning.classList.remove('show');
+    });
+  });
+
+  /* ─── Add to Cart ─── */
+  if (atcBtn) {
+    atcBtn.addEventListener('click', function () {
+      const selectedSize = document.querySelector('input[name="option-1"]:checked');
+
+      // Guard: no size selected
+      if (!selectedSize) {
+        sizeWarning.classList.add('show');
+        sizeGrid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        sizeGrid.style.outline = '2px solid #dc3545';
+        sizeGrid.style.outlineOffset = '4px';
+        setTimeout(() => { sizeGrid.style.outline = 'none'; }, 1200);
+        return;
+      }
+
+      const productId = this.dataset.id;
+      const size      = selectedSize.value;
+      const qty       = getQty();
+
+      // Loading state
+      atcBtn.classList.add('loading');
+      atcBtn.disabled = true;
+
+      fetch('/cart/add/', {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': getCookie('csrftoken'),
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ product_id: productId, quantity: qty, size: size }),
+      })
+      .then(res => {
+        if (!res.ok) throw new Error('Server error');
+        return res.json();
+      })
+      .then(data => {
+        atcBtn.classList.remove('loading');
+        atcBtn.classList.add('success');
+        atcBtn.querySelector('.btn-text').textContent = '✓ Added';
+        showToast(`${size} · Qty ${qty} added to cart`);
+
+        // Update navbar cart count if element has data-cart-count attribute
+        const cartCount = document.querySelector('[data-cart-count]');
+        if (cartCount && data.cart_count) cartCount.textContent = data.cart_count;
+
+        setTimeout(() => {
+          atcBtn.classList.remove('success');
+          atcBtn.querySelector('.btn-text').textContent = 'Add to cart';
+          atcBtn.disabled = false;
+        }, 2500);
+      })
+      .catch(() => {
+        atcBtn.classList.remove('loading');
+        atcBtn.disabled = false;
+        showToast('Something went wrong. Please try again.', true);
+      });
+    });
+  }
+
+  /* ─── Wishlist ─── */
+  const wishBtn = document.getElementById('pd-wish-btn');
+  if (wishBtn) {
+    wishBtn.addEventListener('click', function () {
+      const productId = this.dataset.id;
+      fetch(`/customer/wishlist/toggle/${productId}/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': getCookie('csrftoken'),
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === 'added') {
+          wishBtn.classList.add('wishlisted');
+          showToast('Added to wishlist');
+        } else {
+          wishBtn.classList.remove('wishlisted');
+          showToast('Removed from wishlist');
+        }
+      })
+      .catch(() => showToast('Wishlist update failed', true));
+    });
+  }
+
+})();
+</script>
 
 {% endblock content %}

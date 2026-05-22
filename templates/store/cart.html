@@ -105,7 +105,7 @@ and then in views.py,  {% endcomment %}
                                     <h5 class="card-title">
                                         {% comment %} Similarly item product name is taken from the same QuerySet under views.py - cart  and thus- Product under models.py. item.product accesses the related Product (via ForeignKey) and .name accesses the name field of that Product. So, it will return the name of the product in the cart page. and .price will similarly, fetch the price field from product.model  {% endcomment %}
                                          
-                                    <a href="#" class="text-decoration-none">{{item.product.name}}</a>
+                                    <a href="{% url 'store:product_detail' item.product.slug %}" class="text-decoration-none">{{item.product.name}}</a>
                                     </h5>
                                     <div class="card-price">
                                     <span class="money text-dark" data-currency-usd="₹ 1000"> ₹{{item.price}}</span>

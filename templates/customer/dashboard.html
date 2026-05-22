@@ -118,14 +118,12 @@
           <!-- Sum of all order totals
               |default:"0" handles None when no orders exist
               |floatformat:2 formats to 2 decimal places -->
-          <div class="stat-item">
+          {% comment %} <div class="stat-item">
             <span class="stat-number">&#8377;{{ total_spent|default:"0"|floatformat:2 }}</span>
             <span class="stat-label">Total Spent</span>
           </div>
 
-          <div class="stat-divider"></div>
-
-
+          <div class="stat-divider"></div> {% endcomment %}
 
           <div class="stat-divider"></div>
 
@@ -268,6 +266,33 @@
           </div>
           <!-- END ORDERS PANEL -->
 
+          <!-- Notifications  Panel-->
+           <div class="dash-panel" id="panel-notis">
+              <h2 class="panel-heading">My <em>Notifications</em></h2>
+
+              {% if notis %}
+                <div class="noti-list">
+                  {% for noti in notis %}
+                  <div class="noti-item {% if not noti.seen %}noti-unread{% endif %}">
+                    <div class="noti-body">
+                      <div class="noti-type">{{ noti.type }}</div>
+                      <div class="noti-date">{{ noti.date|date:"d M Y, g:i A" }}</div>
+                    </div>
+                    {% if not noti.seen %}
+                      <a href="{% url 'customer:mark_notis_seen' noti.id %}" class="noti-mark-btn">Mark Read</a>
+                    {% else %}
+                      <span class="noti-seen-badge">Read</span>
+                    {% endif %}
+                  </div>
+                  {% endfor %}
+                </div>
+              {% else %}
+                <div class="empty">
+                  <p>No notifications yet.</p>
+                </div>
+              {% endif %}
+            </div>
+        
 
           <!-- =================================================
                WISHLIST PANEL
@@ -365,14 +390,23 @@
                 <!-- Full address details, one per line -->
                 <p>
                   {{ address.address }}<br/>
-                  {{ address.city }}, {{ address.state }} &ndash; {{ address.pincode }}<br/>
+                  {{ address.city }}, {{ address.state }} &ndash; {{ address.zip_code }}<br/>
                   {{ address.mobile }}
                 </p>
 
                 <!-- Edit / Remove buttons — placeholder hrefs for now -->
                 <div class="acard-actions">
-                  <a href="#" class="btn-bare">Edit</a>
-                  <a href="#" class="btn-bare">Remove</a>
+                  <a href="{% url 'customer:address_detail' address.id %}" class="btn-bare">Edit</a>
+                  <form method="POST" action="{% url 'customer:delete_address' address.id %}"
+      
+                        style="display:inline;"
+                        onsubmit="return confirm('Remove this address?');">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-bare"
+                            style="background:none; border:none; cursor:pointer; color:inherit; font:inherit; padding:0;">
+                      Remove
+                    </button>
+                  </form>
                 </div>
 
               </div>
@@ -380,7 +414,7 @@
 
               <!-- Add new address card — dashed border acts as a button
                    TODO: replace '#' with real add_address URL when view is ready -->
-              <div class="addr-add" onclick="window.location='#'">
+              <div class="addr-add" onclick="window.location='{% url 'customer:address_create' %}'">
                 <span class="plus">+</span>
                 Add Address
               </div>
@@ -460,91 +494,7 @@
           <!-- END REVIEWS PANEL -->
 
 
-          <!-- =================================================
-               PROFILE PANEL
-               =================================================
-               Hidden by default. Shown when "Profile" is clicked.
-               Form lets user update name, mobile, and password.
-
-               action="#" is a placeholder.
-               TODO: change to action with update_profile URL
-               once customer:update_profile view is built
-          ================================================== -->
-          <div class="dash-panel" id="panel-profile">
-
-            <h2 class="panel-heading">My <em>Profile</em></h2>
-
-            <!-- method="POST" — required for data-changing forms
-                 enctype="multipart/form-data" — required if form
-                 will ever include file uploads (e.g. profile image) -->
-            <form method="POST" action="#"
-                  enctype="multipart/form-data" class="pform">
-
-              <!-- CSRF token — Django security requirement for all POST forms
-                   Prevents Cross-Site Request Forgery attacks
-                   Django will reject the submission without this -->
-              {% csrf_token %}
-
-              <!-- Two-column row: full name + mobile side by side -->
-              <div class="form-row-2">
-
-                <!-- Full name field
-                     Pre-filled with current value from Profile.full_name -->
-                <div class="fg">
-                  <label>Full Name</label>
-                  <input type="text" name="full_name"
-                         value="{{ request.user.profile.full_name }}"/>
-                </div>
-
-                <!-- Mobile field
-                     Pre-filled with current value from Profile.mobile -->
-                <div class="fg">
-                  <label>Mobile</label>
-                  <input type="tel" name="mobile"
-                         value="{{ request.user.profile.mobile }}"/>
-                </div>
-
-              </div>
-
-              <!-- Email — read only, cannot be changed here
-                   disabled prevents editing AND excludes it from POST data -->
-              <div class="fg">
-                <label>Email Address</label>
-                <input type="email" value="{{ request.user.email }}" disabled/>
-              </div>
-
-              <!-- Current password — used to verify identity before
-                   allowing a password change. Blank = no password change -->
-              <div class="fg">
-                <label>Current Password</label>
-                <input type="password" name="old_password"
-                       placeholder="Leave blank to keep unchanged"/>
-              </div>
-
-              <!-- Two-column row: new password + confirmation -->
-              <div class="form-row-2">
-
-                <!-- New password input -->
-                <div class="fg">
-                  <label>New Password</label>
-                  <input type="password" name="new_password1"/>
-                </div>
-
-                <!-- Confirm new password — must match new_password1
-                     Validated in the view before saving -->
-                <div class="fg">
-                  <label>Confirm Password</label>
-                  <input type="password" name="new_password2"/>
-                </div>
-
-              </div>
-
-              <!-- Submit button — triggers POST to form action -->
-              <button type="submit" class="btn-submit">Save Changes</button>
-
-            </form>
-          </div>
-          <!-- END PROFILE PANEL -->
+         {% include "customer/profile.html" %}
 
 
         </div>

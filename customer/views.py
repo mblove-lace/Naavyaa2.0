@@ -20,10 +20,16 @@ from django.contrib.auth.decorators import login_required
 # check_password - This function is used to verify a plain-text password against a hashed password stored in the database. It returns True if the passwords match, and False otherwise.
 from django.contrib.auth.hashers import check_password
 
+from django.views.decorators.http import require_POST
+
 # Importing models from the store and customer apps to access the Order and Notification models, respectively.
 from store import models as store_models
 # Importing models from the customer app to access the Notification model, which is used to fetch unread notifications for the user.
 from customer import models as customer_models
+
+from userauths.models import Profile
+
+from django.contrib.auth import update_session_auth_hash
 
 # Create your views here.
 # Django checks if the user is authenticated before allowing access to the dashboard view. 
@@ -31,6 +37,42 @@ from customer import models as customer_models
 # This is powered by Django's built-in authentication system, which manages user sessions and authentication status.
 @login_required
 def dashboard(request):
+    # putting profile in dashboard view because I want the profile edit form to be on the dashboard page itself. 
+    # So when user clicks on "Edit Profile" in the sidebar, they are taken to the dashboard page where they can edit their profile details. This way, I can reuse the same dashboard template for both displaying the dashboard and editing the profile, instead of creating a separate profile.html template.
+    profile, created = Profile.objects.get_or_create(user=request.user)
+
+    if request.method == "POST" and "full_name" in request.POST:
+        profile.full_name = request.POST.get("full_name")
+        profile.mobile = request.POST.get("mobile")
+        profile.save()
+
+        old_password = request.POST.get("old_password")
+        new_password1 = request.POST.get("new_password1")
+        new_password2 = request.POST.get("new_password2")
+
+        if old_password:
+            if not check_password(old_password, request.user.password):
+                messages.error(request, "Current password is incorrect.")
+                return redirect("customer:dashboard")
+
+            if new_password1 != new_password2:
+                messages.error(request, "New passwords do not match.")
+                return redirect("customer:dashboard")
+
+            if len(new_password1) < 6:
+                messages.error(request, "Password must be at least 6 characters.")
+                return redirect("customer:dashboard")
+
+            request.user.set_password(new_password1)
+            request.user.save()
+            update_session_auth_hash(request, request.user)  # keeps user logged in
+            messages.success(request, "Password changed successfully.")
+            return redirect("customer:dashboard")
+
+
+        messages.success(request, "Profile updated successfully.")
+        return redirect("customer:dashboard")
+
     # store_models.Order → My database table (model), objects → The manager that allows you to query the database for instances of the Order model, filter() → A method that filters the queryset based on the given criteria (in this case, orders belonging to the logged-in user).
     # What SQL this roughly becomes: SELECT * FROM store_order WHERE customer_id = request.user.id;
     # Output comes: A queryset of Order objects that belong to the currently logged-in user (request.user).
@@ -46,7 +88,8 @@ def dashboard(request):
     # user = current logged-in user (request.user), seen=False → Filter notifications that have not been marked as seen.
     # SQL equivalent: SELECT * FROM customer_notification WHERE user_id = request.user.id AND seen = False;
     # output: A queryset of Notification objects that belong to the currently logged-in user and have not been marked as seen.
-    notis = customer_models.Notification.objects.filter(user=request.user,seen=False)
+    notis = customer_models.Notification.objects.filter(user=request.user).order_by("-date")
+    unread_count = notis.filter(seen=False).count()
 
     # Fetch all wishlist items for this user
     # Each Wishlist object has a .product ForeignKey to the Product model
@@ -60,9 +103,11 @@ def dashboard(request):
 # Creating a context dictionary to pass the retrieved data (orders, total spending, and unread notifications) to the template for rendering.
     context = {
         # In my template, I can access the orders using {{ orders }}, total spending using {{ total_spent }}, and unread notifications using {{ notis }}.
+        "profile": profile,
         "orders": orders,
         "total_spent": total_spent,
         "notis": notis,
+        "unread_count": unread_count,
         "addresses": addresses,
         "reviews": reviews,
         "wishlist": wishlist if hasattr(customer_models, 'Wishlist') else [],
@@ -96,6 +141,7 @@ def order_detail(request, order_id):
     context = {
         "order": order,
         "order_items": order_items,
+        "active_nav": "orders",
     }
     return render(request, "customer/order_detail.html", context)
 # This view displays the details of a specific order item for the logged-in user. 
@@ -113,3 +159,182 @@ def order_detail(request, order_id):
 #         "order_item": order_item,
 #     }
 #     return render(request, "customer/order_item_detail.html", context)
+
+
+# ------------ Wishlist Views ------------
+@login_required
+def wishlist_list(request):
+    wishlist_list = customer_models.Wishlist.objects.filter(user=request.user)
+    context = {
+        "wishlist_list": wishlist_list,
+    }
+    return render(request, "customer/wishlist_list.html", context)
+
+@login_required
+def remove_from_wishlist(request, product_id):
+    wishlist = customer_models.Wishlist.objects.filter(user=request.user, product_id=product_id).first()
+    wishlist.delete()
+    messages.success(request, "Item removed from wishlist.")
+   
+    return redirect('customer:wishlist_list')
+
+@login_required
+@require_POST
+def toggle_wishlist(request, product_id):
+    item = customer_models.Wishlist.objects.filter(
+        user=request.user, product_id=product_id
+    ).first()
+
+    if item:
+        item.delete()
+        return JsonResponse({'status': 'removed'})
+    else:
+        customer_models.Wishlist.objects.create(
+            user=request.user, product_id=product_id
+        )
+        return JsonResponse({'status': 'added'})
+
+def add_to_wishlist(request, product_id):
+    if request.user.is_authenticated:
+        product = store_models.Product.objects.get(id=product_id)
+
+        wishlist_item, created = customer_models.Wishlist.objects.get_or_create(
+            user=request.user, product=product
+        )
+        
+        if created:
+            message = "Item added to wishlist."
+        else:
+            message = "Already in your wishlist."
+            
+        wishlist = customer_models.Wishlist.objects.filter(user=request.user)
+        return JsonResponse({"message": message, "wishlist_count": wishlist.count()})
+    else:
+        return JsonResponse({"message": "Please log in to add to wishlist.", "wishlist_count": 0})
+    
+
+
+
+
+# notification views
+# login is required to view notifications, as they are specific to each user. If a user is not logged in, they will be redirected to the login page.
+@login_required
+
+def notis(request):
+    # Fetch unread notifications for the logged-in user. 
+    # The filter() method is used to retrieve notifications that belong to the current user (request.user) and have not been marked as seen (seen=False). This allows the user to view only their unread notifications.
+    notis = customer_models.Notification.objects.filter(user=request.user).order_by("-date")
+    # Calculate the count of unread notifications by filtering the notifications queryset to include only those that have not been marked as seen (seen=False) and then counting the resulting queryset using the count() method. This gives the user an indication of how many unread notifications they have.
+    unread_count = notis.filter(seen=False).count()
+    # Creating a context dictionary to pass the retrieved notifications and the count of unread notifications to the template for rendering. In the template, you can access the notifications using {{ notis }} and the unread count using {{ unread_count }}.
+    context = {
+        "notis": notis,
+        "unread_count": unread_count,
+    }
+    # Returning the rendered template with the context data. The "customer/notis.html" template will display the user's notifications and the count of unread notifications.
+    return render(request, "customer/notis.html", context)
+
+
+
+# This view allows the user to mark a specific notification as seen. It retrieves the notification based on the provided noti_id and ensures that the notification belongs to the current user. Once the notification is marked as seen, a success message is displayed, and the user is redirected back to the notifications page.
+@login_required
+# noti_id is a parameter that is passed to the view, typically from the URL. It represents the unique identifier of the notification that the user wants to mark as seen.
+def mark_notis_seen(request, noti_id):
+    # Fetch the specific notification for the logged-in user. Here, we are using the get() method to retrieve a single Notification object that matches the given noti_id and belongs to the current user (request.user). If no such notification exists, it will raise a DoesNotExist exception.
+    noti = customer_models.Notification.objects.get(user=request.user, id=noti_id)
+    # Mark the notification as seen by setting the seen attribute to True and saving the changes to the database. This allows the user to keep track of which notifications they have already viewed.
+    noti.seen = True
+    # save() method is called to persist the changes to the database. This updates the notification record to reflect that it has been marked as seen.
+    noti.save()
+# A success message is added to the messages framework using messages.success(). This message will be displayed to the user on the next page they visit, indicating that the notification has been marked as seen.
+    messages.success(request, "Notification marked as seen.")
+    # Redirect the user back to the notifications page.
+    return redirect('customer:notis')
+
+
+
+# Making CRUD views for the Address model. This allows users to manage their delivery addresses, including adding new addresses, editing existing ones, and deleting addresses they no longer need. Each view will ensure that only authenticated users can access these functionalities, and that users can only modify their own addresses.
+
+@login_required
+def addresses(request):
+    addresses = customer_models.Address.objects.filter(user=request.user)
+    context = {
+        "addresses": addresses,
+    }
+
+    return render(request, "customer/addresses.html", context)
+
+
+@login_required
+
+def address_detail(request, address_id):
+    address = customer_models.Address.objects.get(id=address_id, user=request.user)
+    if request.method == "POST":
+        full_name = request.POST.get("full_name")
+        mobile = request.POST.get("mobile")
+        email = request.POST.get("email")
+        country = request.POST.get("country")
+        state = request.POST.get("state")
+        city = request.POST.get("city")
+        address_location = request.POST.get("address_location")
+        zip_code = request.POST.get("zip_code")
+
+
+        address.full_name = full_name
+        address.mobile = mobile
+        address.email = email   
+        address.country = country
+        address.state = state
+        address.city = city
+        address.address = address_location
+        address.zip_code = zip_code
+        address.save()
+        messages.success(request, "Address updated successfully.")
+    context = {
+        "address": address,
+    }
+    return render(request, "customer/address_detail.html", context)
+
+
+@login_required
+def address_create(request): 
+    if request.method == "POST":
+        full_name = request.POST.get("full_name")
+        mobile = request.POST.get("mobile")
+        email = request.POST.get("email")
+        country = request.POST.get("country")
+        state = request.POST.get("state")
+        city = request.POST.get("city")
+        address_location = request.POST.get("address_location")
+        zip_code = request.POST.get("zip_code")
+
+        customer_models.Address.objects.create(
+            user=request.user,
+            full_name=full_name,
+            mobile=mobile,
+            email=email,
+            country=country,
+            state=state,
+            city=city,
+            address=address_location,
+            zip_code=zip_code
+        )
+        messages.success(request, "Address created successfully.")
+        return redirect("customer:addresses")
+    return render(request, "customer/address_create.html")
+
+@login_required
+def delete_address(request, address_id):
+    address = customer_models.Address.objects.get(id=address_id, user=request.user)
+    address.delete()
+    messages.success(request, "Address deleted successfully.")
+    return redirect("customer:addresses")
+
+
+
+
+
+
+
+
+
