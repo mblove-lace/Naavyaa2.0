@@ -67,8 +67,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    'ckeditor',
-    'ckeditor_uploader',
+    'django_ckeditor_5',
     # 'django_recaptcha',
     'import_export',
 
