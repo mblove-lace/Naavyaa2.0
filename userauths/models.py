@@ -166,7 +166,7 @@ class Profile(models.Model):
     # null=True: Database can store NULL
     # blank=True: Forms can submit empty
     # Note: Consider max_length=15 for international numbers
-    mobile = models.CharField(max_length=10, null=True, blank=True)
+    mobile = models.CharField(max_length=15, null=True, blank=True)
     
     # user_Type: CharField for storing whether user is Vendor or Customer
     # max_length=150: Maximum 150 characters (overly generous for 'Vendor'/'Customer')
