@@ -130,8 +130,6 @@ DATABASES = {
     }
 }
 
-
-
 ANYMAIL = {
     # ANYMAIL is a configuration dictionary used by Anymail
     "MAILGUN_API_KEY": os.environ.get("MAILGUN_API_KEY"),
