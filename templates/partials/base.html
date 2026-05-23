@@ -19,7 +19,7 @@
    {% comment %} Ensures compatibility with older Internet Explorer {% endcomment %}
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
    {% comment %} Makes it mobile responsive.  {% endcomment %}
-  <meta name="viewport" content="width=device-width, initial-scale=1.0", maximum-scale=5.0>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   
   <meta name="format-detection" content="telephone=no">
   <meta name="mobile-web-app-capable" content="yes">
@@ -283,12 +283,12 @@
                     <li>
                       <a href="{% url 'store:catalogue' 'blouse' %}" class="dropdown-item item-anchor">All Blouses</a>
                     </li>
-                    <li>
+                    {% comment %} <li>
                       <a href="home2.html" class="dropdown-item item-anchor">BestSellers </a>
-                    </li>
-                    <li>
+                    </li> {% endcomment %}
+                    {% comment %} <li>
                       <a href="home3.html" class="dropdown-item item-anchor">New Arrivals </a>
-                    </li>
+                    </li> {% endcomment %}
                     {% comment %} <li>
                       <a href="home4.html" class="dropdown-item item-anchor">Home Layout 4  </a>
                     </li> {% endcomment %}
@@ -302,12 +302,12 @@
                     <li>
                       <a href="{% url 'store:catalogue' 'saree' %}" class="dropdown-item item-anchor">All Sarees</a>
                     </li>
-                    <li>
+                    {% comment %} <li>
                       <a href="shop-three-column.html" class="dropdown-item item-anchor"> Bestsellers </a>
-                    </li>
-                    <li>
+                    </li> {% endcomment %}
+                    {% comment %} <li>
                       <a href="shop-three-column-wide.html" class="dropdown-item item-anchor"> New arrivals </a>
-                    </li>
+                    </li> {% endcomment %}
                      
                   </ul>
                 </li>
@@ -318,12 +318,12 @@
                     <li>
                       <a href="{% url 'store:catalogue' 'kurti' %}" class="dropdown-item item-anchor">All Kurtis</a>
                     </li>
-                    <li>
+                    {% comment %} <li>
                       <a href="shop-three-column.html" class="dropdown-item item-anchor"> Bestsellers </a>
                     </li>
                     <li>
                       <a href="shop-three-column-wide.html" class="dropdown-item item-anchor"> New arrivals </a>
-                    </li>
+                    </li> {% endcomment %}
                      
                   </ul>
                 </li>
