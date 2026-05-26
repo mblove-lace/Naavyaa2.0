@@ -977,8 +977,8 @@ a {
 
 /* large text */
 .title-xlarge {
-  font-size: calc(2rem + 10vw);
-  /* 10.4em; */
+  font-size: calc(2rem + 6vw);
+
   font-family: var(--heading-font);
   color: var(--bs-gray-300);
   position: absolute;
@@ -1542,7 +1542,7 @@ a.btn-link.text-light:after {
 
   /* Title xlarge */
   .title-xlarge {
-    font-size: calc(2rem + 8vw);
+    font-size: calc(2rem + 6vw);
     top: -20px;
   }
 
