@@ -27,4 +27,4 @@ Thumbs.db
 dist/
 build/
 
-#Zrawtemplate/
+#Zrawtemplate/staticfiles/
