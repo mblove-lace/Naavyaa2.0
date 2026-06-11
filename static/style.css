@@ -2216,7 +2216,8 @@ table.nt tr:hover td { background: var(--warm); transition: background 0.15s; }
   align-items: start;
 }
 .order-item-card:last-child { border-bottom: none; }
-.oic-image img { width: 72px; height: 90px; object-fit: cover; display: block; }
+.oic-image img { width: 72px; height: 90px; 
+.cost-row {object-fit: cover; display: block; }
 .oic-no-image {
   width: 72px; height: 90px; background: var(--warm);
   display: flex; align-items: center; justify-content: center;
@@ -2256,7 +2257,6 @@ table.nt tr:hover td { background: var(--warm); transition: background 0.15s; }
 .ometa-title em { font-style: italic; }
 .ometa-body { font-size: 0.82rem; color: var(--muted); line-height: 1.9; }
 
-.cost-row {
   display: flex; justify-content: space-between;
   font-size: 0.8rem; color: var(--muted);
   padding: 0.35rem 0; border-bottom: 1px solid var(--border);

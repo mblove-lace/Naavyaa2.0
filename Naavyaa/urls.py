@@ -33,6 +33,8 @@ urlpatterns = [
     path('user/', include('userauths.urls_userauth')),
 # This line tells Django: “If the URL starts with /customer/, check inside the file customer/urls_customer.py for more URL patterns related to customer-specific views (like the dashboard).”
     path('customer/', include('customer.urls_customer', namespace='customer')),
+
+    path('blog/', include('blog.urls')),
     # This line connects your project with a third-party app called django-ckeditor-5
     # It provides URLs that handle uploading, browsing, and managing images/files for your text editor in the admin panel.
     path("ckeditor5/", include("django_ckeditor_5.urls")),
