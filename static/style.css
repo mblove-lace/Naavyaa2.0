@@ -2509,3 +2509,40 @@ table.nt tr:hover td { background: var(--warm); transition: background 0.15s; }
   .stock-ok  { background: #d1e7dd; color: #0f5132; }
   .stock-low { background: #fff3cd; color: #664d03; }
   .stock-out { background: #f8d7da; color: #842029; }
+/* Prevent nav items from shifting on dropdown open */
+.navbar-nav .nav-item {
+    position: relative;
+}
+
+.navbar-nav .nav-link.dropdown-toggle {
+    display: inline-block;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    line-height: 1.5 !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+}
+
+.navbar-nav .nav-link.dropdown-toggle.show {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    color: inherit !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.navbar-nav .dropdown-menu {
+    position: absolute !important;
+    top: 100% !important;
+    margin-top: 0.5rem !important;
+}
+
+/* Fix the row 2 container height so it never reflows */
+.navbar-nav.flex-row {
+    height: 1.5rem;
+    align-items: center !important;
+}
