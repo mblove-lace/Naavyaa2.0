@@ -245,223 +245,167 @@
 
 {% comment %} ===================================== Nav bar  =================================================================== {% endcomment %}
 
-<nav class="navbar navbar-expand-lg bg-light text-uppercase fs-6 p-3 border-bottom align-items-center">
-    <div class="container-fluid">
-      <div class="row justify-content-between align-items-center w-100">
-
-        <div class="col-12 col-md-auto">
-          <a class="navbar-brand text-white" href="/">
-        
 
 
+     {% comment %} ============ NAVBAR: Row 1 = centered logo, Row 2 = nav links (desktop) ============ 
+  <nav class="navbar navbar-expand-lg bg-light text-uppercase fs-6 p-0 border-bottom">{% endcomment %}
+  <nav class="navbar bg-light text-uppercase fs-6 p-0 border-bottom">
+    <div class="container-fluid d-block p-0">
 
-            <svg width="200" height="30" viewBox="0 0 200 30" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.949219 19.8379L3.04102 19.25V2.31055L0.757812 1.88672L0.662109 1.70898L0.853516 0.601562H5.36523L18.1211 16.2012V2.37891L15.7832 1.88672L15.7012 1.70898L15.8789 0.601562H21.498L21.5664 0.724609L21.4297 1.76367L19.7207 2.35156V21C19.5566 21.3281 19.2878 21.4922 18.9141 21.4922L4.6543 3.88281V19.25L6.51367 19.7148L6.60938 19.9062L6.41797 21H0.880859L0.826172 20.877L0.949219 19.8379ZM34.5684 19.0312C34.7689 19.0312 35.3704 18.9811 36.373 18.8809L36.5234 19.0723L36.209 20.1934L32.4355 21.4922L32.2441 21.2871L31.998 19.4277L31.1777 20.0977C30.0293 21.0273 29.0859 21.4922 28.3477 21.4922C27.6094 21.4922 26.9531 21.36 26.3789 21.0957C25.8138 20.8405 25.3398 20.5033 24.957 20.084C24.2188 19.2637 23.8496 18.2702 23.8496 17.1035C23.8496 16.0918 24.1185 15.349 24.6562 14.875C25.1667 14.4102 26.0872 14.0775 27.418 13.877C28.7578 13.6673 29.8105 13.5124 30.5762 13.4121C31.3509 13.3118 31.7839 13.2526 31.875 13.2344V12.0586C31.875 9.60677 30.9453 8.38086 29.0859 8.38086C28.1654 8.38086 26.944 8.66797 25.4219 9.24219C25.0573 8.97786 24.875 8.58594 24.875 8.06641C26.7708 7.13672 28.4251 6.67188 29.8379 6.67188C32.6543 6.67188 34.0625 8.29427 34.0625 11.5391V18.416C34.0625 18.8262 34.2311 19.0312 34.5684 19.0312ZM26.2832 16.7617C26.2832 17.9466 26.7708 18.7897 27.7461 19.291C28.0469 19.446 28.3522 19.5234 28.6621 19.5234C28.9811 19.5234 29.2819 19.4779 29.5645 19.3867C29.8561 19.2956 30.1387 19.1862 30.4121 19.0586C30.6947 18.931 30.9635 18.7943 31.2188 18.6484L31.875 18.2383V14.8887C30.2799 14.8887 28.9492 14.9889 27.8828 15.1895C26.8164 15.3809 26.2832 15.9049 26.2832 16.7617ZM48.5957 19.0312C48.7962 19.0312 49.3978 18.9811 50.4004 18.8809L50.5508 19.0723L50.2363 20.1934L46.4629 21.4922L46.2715 21.2871L46.0254 19.4277L45.2051 20.0977C44.0566 21.0273 43.1133 21.4922 42.375 21.4922C41.6367 21.4922 40.9805 21.36 40.4062 21.0957C39.8411 20.8405 39.3672 20.5033 38.9844 20.084C38.2461 19.2637 37.877 18.2702 37.877 17.1035C37.877 16.0918 38.1458 15.349 38.6836 14.875C39.194 14.4102 40.1146 14.0775 41.4453 13.877C42.7852 13.6673 43.8379 13.5124 44.6035 13.4121C45.3783 13.3118 45.8112 13.2526 45.9023 13.2344V12.0586C45.9023 9.60677 44.9727 8.38086 43.1133 8.38086C42.1927 8.38086 40.9714 8.66797 39.4492 9.24219C39.0846 8.97786 38.9023 8.58594 38.9023 8.06641C40.7982 7.13672 42.4525 6.67188 43.8652 6.67188C46.6816 6.67188 48.0898 8.29427 48.0898 11.5391V18.416C48.0898 18.8262 48.2585 19.0312 48.5957 19.0312ZM40.3105 16.7617C40.3105 17.9466 40.7982 18.7897 41.7734 19.291C42.0742 19.446 42.3796 19.5234 42.6895 19.5234C43.0085 19.5234 43.3092 19.4779 43.5918 19.3867C43.8835 19.2956 44.166 19.1862 44.4395 19.0586C44.722 18.931 44.9909 18.7943 45.2461 18.6484L45.9023 18.2383V14.8887C44.3073 14.8887 42.9766 14.9889 41.9102 15.1895C40.8438 15.3809 40.3105 15.9049 40.3105 16.7617ZM53.1895 8.80469L51.6172 8.4082L51.5078 8.24414L51.6855 7.15039H57.4414L57.5371 7.28711L57.4004 8.28516L55.8965 8.80469L59.4375 18.3887L63.0332 8.76367L61.1465 8.4082L61.0781 8.24414L61.2422 7.15039H66.3965L66.4922 7.28711L66.2871 8.4082L64.7012 8.80469L59.7246 20.7539C59.5788 21.0456 59.1185 21.2324 58.3438 21.3145L53.1895 8.80469ZM70.8125 27.1523C72.5078 24.5911 73.7565 22.5176 74.5586 20.9316L69.6914 8.80469L68.1191 8.4082L68.0234 8.24414L68.1738 7.15039H73.8613L73.957 7.28711L73.8203 8.28516L72.3027 8.80469L75.7617 18.7852H75.8848C76.459 17.3724 76.9694 16.0599 77.416 14.8477L78.5645 11.6621C78.929 10.6048 79.248 9.63867 79.5215 8.76367L77.5527 8.4082L77.4844 8.24414L77.6484 7.15039H82.8027L82.8984 7.28711L82.707 8.4082L81.2578 8.80469L77.2109 18.9082C76.7279 20.084 76.2266 21.237 75.707 22.3672L74.2988 25.3887L72.8359 28.3555C72.3255 28.3555 71.8333 28.1549 71.3594 27.7539C71.1497 27.5807 70.9674 27.3802 70.8125 27.1523ZM95.2988 19.0312C95.4993 19.0312 96.1009 18.9811 97.1035 18.8809L97.2539 19.0723L96.9395 20.1934L93.166 21.4922L92.9746 21.2871L92.7285 19.4277L91.9082 20.0977C90.7598 21.0273 89.8164 21.4922 89.0781 21.4922C88.3398 21.4922 87.6836 21.36 87.1094 21.0957C86.5443 20.8405 86.0703 20.5033 85.6875 20.084C84.9492 19.2637 84.5801 18.2702 84.5801 17.1035C84.5801 16.0918 84.849 15.349 85.3867 14.875C85.8971 14.4102 86.8177 14.0775 88.1484 13.877C89.4883 13.6673 90.541 13.5124 91.3066 13.4121C92.0814 13.3118 92.5143 13.2526 92.6055 13.2344V12.0586C92.6055 9.60677 91.6758 8.38086 89.8164 8.38086C88.8958 8.38086 87.6745 8.66797 86.1523 9.24219C85.7878 8.97786 85.6055 8.58594 85.6055 8.06641C87.5013 7.13672 89.1556 6.67188 90.5684 6.67188C93.3848 6.67188 94.793 8.29427 94.793 11.5391V18.416C94.793 18.8262 94.9616 19.0312 95.2988 19.0312ZM87.0137 16.7617C87.0137 17.9466 87.5013 18.7897 88.4766 19.291C88.7773 19.446 89.0827 19.5234 89.3926 19.5234C89.7116 19.5234 90.0124 19.4779 90.2949 19.3867C90.5866 19.2956 90.8691 19.1862 91.1426 19.0586C91.4251 18.931 91.694 18.7943 91.9492 18.6484L92.6055 18.2383V14.8887C91.0104 14.8887 89.6797 14.9889 88.6133 15.1895C87.5469 15.3809 87.0137 15.9049 87.0137 16.7617ZM109.326 19.0312C109.527 19.0312 110.128 18.9811 111.131 18.8809L111.281 19.0723L110.967 20.1934L107.193 21.4922L107.002 21.2871L106.756 19.4277L105.936 20.0977C104.787 21.0273 103.844 21.4922 103.105 21.4922C102.367 21.4922 101.711 21.36 101.137 21.0957C100.572 20.8405 100.098 20.5033 99.7148 20.084C98.9766 19.2637 98.6074 18.2702 98.6074 17.1035C98.6074 16.0918 98.8763 15.349 99.4141 14.875C99.9245 14.4102 100.845 14.0775 102.176 13.877C103.516 13.6673 104.568 13.5124 105.334 13.4121C106.109 13.3118 106.542 13.2526 106.633 13.2344V12.0586C106.633 9.60677 105.703 8.38086 103.844 8.38086C102.923 8.38086 101.702 8.66797 100.18 9.24219C99.8151 8.97786 99.6328 8.58594 99.6328 8.06641C101.529 7.13672 103.183 6.67188 104.596 6.67188C107.412 6.67188 108.82 8.29427 108.82 11.5391V18.416C108.82 18.8262 108.989 19.0312 109.326 19.0312ZM101.041 16.7617C101.041 17.9466 101.529 18.7897 102.504 19.291C102.805 19.446 103.11 19.5234 103.42 19.5234C103.739 19.5234 104.04 19.4779 104.322 19.3867C104.614 19.2956 104.896 19.1862 105.17 19.0586C105.452 18.931 105.721 18.7943 105.977 18.6484L106.633 18.2383V14.8887C105.038 14.8887 103.707 14.9889 102.641 15.1895C101.574 15.3809 101.041 15.9049 101.041 16.7617Z" fill="#111111"/>
-        </svg>
-          </a>
-        </div>
+      {% comment %} ---------- ROW 1 ---------- {% endcomment %}
+      <div class="header-row d-flex align-items-center w-100 m-0 px-3 py-2">
 
-        <div class="col-auto">
-          <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
-            aria-controls="offcanvasNavbar">
+        {% comment %} LEFT: hamburger (mobile) / account (desktop) {% endcomment %}
+        <div class="header-side text-start" style="flex: 1 1 0; min-width: 0;">
+          <button class="navbar-toggler border-0 p-0 d-lg-none" type="button" data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Open menu">
             <span class="navbar-toggler-icon"></span>
           </button>
-
-          <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar"
-            aria-labelledby="offcanvasNavbarLabel">
-            <div class="offcanvas-header">
-              <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
-              <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
-                aria-label="Close"></button>
-            </div> 
-
-            <div class="offcanvas-body">
-              <ul class="navbar-nav justify-content-end flex-grow-1 gap-1 gap-md-5 pe-3">
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle active" href="#" id="dropdownHome" data-bs-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">Blouse</a>
-                  <ul class="dropdown-menu list-unstyled" aria-labelledby="dropdownHome">
-                    <li>
-                      <a href="{% url 'store:catalogue' 'blouse' %}" class="dropdown-item item-anchor">All Blouses</a>
-                    </li>
-                    {% comment %} <li>
-                      <a href="home2.html" class="dropdown-item item-anchor">BestSellers </a>
-                    </li> {% endcomment %}
-                    {% comment %} <li>
-                      <a href="home3.html" class="dropdown-item item-anchor">New Arrivals </a>
-                    </li> {% endcomment %}
-                    {% comment %} <li>
-                      <a href="home4.html" class="dropdown-item item-anchor">Home Layout 4  </a>
-                    </li> {% endcomment %}
-                  </ul>
-                </li>
-
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="dropdownShop" data-bs-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">Saree</a>
-                  <ul class="dropdown-menu list-unstyled" aria-labelledby="dropdownShop">
-                    <li>
-                      <a href="{% url 'store:catalogue' 'saree' %}" class="dropdown-item item-anchor">All Sarees</a>
-                    </li>
-                    {% comment %} <li>
-                      <a href="shop-three-column.html" class="dropdown-item item-anchor"> Bestsellers </a>
-                    </li> {% endcomment %}
-                    {% comment %} <li>
-                      <a href="shop-three-column-wide.html" class="dropdown-item item-anchor"> New arrivals </a>
-                    </li> {% endcomment %}
-                     
-                  </ul>
-                </li>
-                  <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="dropdownShop" data-bs-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">Kurti</a>
-                  <ul class="dropdown-menu list-unstyled" aria-labelledby="dropdownShop">
-                    <li>
-                      <a href="{% url 'store:catalogue' 'kurti' %}" class="dropdown-item item-anchor">All Kurtis</a>
-                    </li>
-                    {% comment %} <li>
-                      <a href="shop-three-column.html" class="dropdown-item item-anchor"> Bestsellers </a>
-                    </li>
-                    <li>
-                      <a href="shop-three-column-wide.html" class="dropdown-item item-anchor"> New arrivals </a>
-                    </li> {% endcomment %}
-                     
-                  </ul>
-                </li>
-
-
-                {% comment %} <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="dropdownPages" data-bs-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false"> My Account </a>
-                  <ul class="dropdown-menu list-unstyled" aria-labelledby="dropdownPages">
-                    
-                    {% if request.user.is_authenticated %}
-                      <li>
-                        <span class="dropdown-item text-muted" style="font-size: 0.85rem;">
-                          Hi, {{ request.user.profile.full_name }}
-                        </span>
-                      </li>
-                      <li><hr class="dropdown-divider"></li>
-                      <li>
-                        <a href="{% url 'customer:dashboard' %}" class="dropdown-item item-anchor">My Account</a>
-                      </li>
-                      <li>
-                        <a href="{% url 'store:cart' %}" class="dropdown-item item-anchor">Cart</a>
-                      </li>
-                      <li>
-                        <a href="{% url 'userauths:logout' %}" class="dropdown-item item-anchor">Log Out</a>
-                      </li>
-                    {% else %}
-                      <li>
-                        <a href="{% url 'userauths:sign-up' %}" class="dropdown-item item-anchor">Sign In / Sign Up</a>
-                      </li>
-                    {% endif %}
-
-                  </ul>
-                </li> {% endcomment %}
-
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="dropdownPages" data-bs-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false"> About Naavyaa </a>
-                  <ul class="dropdown-menu list-unstyled" aria-labelledby="dropdownPages">
-                    <li>
-                      <a href="about.html" class="dropdown-item item-anchor">Meet Our Weavers</a>
-                    </li>
-                    <li>
-                      <a href="{% url 'blog:blog' %}" class="dropdown-item item-anchor"> BTS of Naavyaa </a>
-                    </li>
-                    <li>
-                      <a href="checkout.html" class="dropdown-item item-anchor">Care Instructions </a>
-                    </li>
-                    <li>
-                      <a href="coming-soon.html" class="dropdown-item item-anchor"> Contact Naavyaa </a>
-                    </li>
-                  </ul>
-                    <li class="nav-item">
-                  <a class="nav-link" href="#"> FAQ </a>
-                </li>
-                </li>
-                         
+          <div class="dropdown d-none d-lg-block">
+            <a href="#" class="text-uppercase dropdown-toggle" id="dropdownAccountInline"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              {% if request.user.is_authenticated %}
+                Hi, {{ request.user.profile.first_name }}
+              {% else %}
+                My Account
+              {% endif %}
+            </a>
+            <ul class="dropdown-menu list-unstyled" aria-labelledby="dropdownAccountInline">
+              {% if request.user.is_authenticated %}
+                <li><a href="{% url 'customer:dashboard' %}" class="dropdown-item item-anchor">My Account</a></li>
+                <li><a href="{% url 'store:cart' %}" class="dropdown-item item-anchor">Cart</a></li>
+                <li><a href="{% url 'userauths:logout' %}" class="dropdown-item item-anchor">Log Out</a></li>
+              {% else %}
+                <li><a href="{% url 'userauths:sign-up' %}" class="dropdown-item item-anchor">Sign In / Sign Up</a></li>
+              {% endif %}
             </ul>
-            </div>
           </div>
         </div>
 
-        <div class="col-3 col-lg-auto">
-          <ul class="list-unstyled d-flex m-0">
-            <li class="d-none d-lg-block">
-              <div class="dropdown">
-                <a href="#" class="text-uppercase mx-3 dropdown-toggle" id="dropdownAccountInline" 
-                  data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  {% if request.user.is_authenticated %}
-                    Hi, {{ request.user.profile.first_name }}
-                  {% else %}
-                    My Account
-                  {% endif %}
-                </a>
-                <ul class="dropdown-menu list-unstyled" aria-labelledby="dropdownAccountInline">
-                  {% if request.user.is_authenticated %}
-                    <li>
-                      <a href="{% url 'customer:dashboard' %}" class="dropdown-item item-anchor">My Account</a>
-                    </li>
-                    {% comment %} <li>
-                      <a href="{% url 'customer:order_detail' %}" class="dropdown-item item-anchor">My Orders</a>
-                    </li> {% endcomment %}
+        {% comment %} CENTER: logo {% endcomment %}
+        <div class="header-center text-center"  style="flex: 0 0 auto;">
+          <a class="navbar-brand m-0" href="/">
+            <svg class="naavyaa-logo" width="150" height="40" viewBox="0 0 112 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0.949219 19.8379L3.04102 19.25V2.31055L0.757812 1.88672L0.662109 1.70898L0.853516 0.601562H5.36523L18.1211 16.2012V2.37891L15.7832 1.88672L15.7012 1.70898L15.8789 0.601562H21.498L21.5664 0.724609L21.4297 1.76367L19.7207 2.35156V21C19.5566 21.3281 19.2878 21.4922 18.9141 21.4922L4.6543 3.88281V19.25L6.51367 19.7148L6.60938 19.9062L6.41797 21H0.880859L0.826172 20.877L0.949219 19.8379ZM34.5684 19.0312C34.7689 19.0312 35.3704 18.9811 36.373 18.8809L36.5234 19.0723L36.209 20.1934L32.4355 21.4922L32.2441 21.2871L31.998 19.4277L31.1777 20.0977C30.0293 21.0273 29.0859 21.4922 28.3477 21.4922C27.6094 21.4922 26.9531 21.36 26.3789 21.0957C25.8138 20.8405 25.3398 20.5033 24.957 20.084C24.2188 19.2637 23.8496 18.2702 23.8496 17.1035C23.8496 16.0918 24.1185 15.349 24.6562 14.875C25.1667 14.4102 26.0872 14.0775 27.418 13.877C28.7578 13.6673 29.8105 13.5124 30.5762 13.4121C31.3509 13.3118 31.7839 13.2526 31.875 13.2344V12.0586C31.875 9.60677 30.9453 8.38086 29.0859 8.38086C28.1654 8.38086 26.944 8.66797 25.4219 9.24219C25.0573 8.97786 24.875 8.58594 24.875 8.06641C26.7708 7.13672 28.4251 6.67188 29.8379 6.67188C32.6543 6.67188 34.0625 8.29427 34.0625 11.5391V18.416C34.0625 18.8262 34.2311 19.0312 34.5684 19.0312ZM26.2832 16.7617C26.2832 17.9466 26.7708 18.7897 27.7461 19.291C28.0469 19.446 28.3522 19.5234 28.6621 19.5234C28.9811 19.5234 29.2819 19.4779 29.5645 19.3867C29.8561 19.2956 30.1387 19.1862 30.4121 19.0586C30.6947 18.931 30.9635 18.7943 31.2188 18.6484L31.875 18.2383V14.8887C30.2799 14.8887 28.9492 14.9889 27.8828 15.1895C26.8164 15.3809 26.2832 15.9049 26.2832 16.7617ZM48.5957 19.0312C48.7962 19.0312 49.3978 18.9811 50.4004 18.8809L50.5508 19.0723L50.2363 20.1934L46.4629 21.4922L46.2715 21.2871L46.0254 19.4277L45.2051 20.0977C44.0566 21.0273 43.1133 21.4922 42.375 21.4922C41.6367 21.4922 40.9805 21.36 40.4062 21.0957C39.8411 20.8405 39.3672 20.5033 38.9844 20.084C38.2461 19.2637 37.877 18.2702 37.877 17.1035C37.877 16.0918 38.1458 15.349 38.6836 14.875C39.194 14.4102 40.1146 14.0775 41.4453 13.877C42.7852 13.6673 43.8379 13.5124 44.6035 13.4121C45.3783 13.3118 45.8112 13.2526 45.9023 13.2344V12.0586C45.9023 9.60677 44.9727 8.38086 43.1133 8.38086C42.1927 8.38086 40.9714 8.66797 39.4492 9.24219C39.0846 8.97786 38.9023 8.58594 38.9023 8.06641C40.7982 7.13672 42.4525 6.67188 43.8652 6.67188C46.6816 6.67188 48.0898 8.29427 48.0898 11.5391V18.416C48.0898 18.8262 48.2585 19.0312 48.5957 19.0312ZM40.3105 16.7617C40.3105 17.9466 40.7982 18.7897 41.7734 19.291C42.0742 19.446 42.3796 19.5234 42.6895 19.5234C43.0085 19.5234 43.3092 19.4779 43.5918 19.3867C43.8835 19.2956 44.166 19.1862 44.4395 19.0586C44.722 18.931 44.9909 18.7943 45.2461 18.6484L45.9023 18.2383V14.8887C44.3073 14.8887 42.9766 14.9889 41.9102 15.1895C40.8438 15.3809 40.3105 15.9049 40.3105 16.7617ZM53.1895 8.80469L51.6172 8.4082L51.5078 8.24414L51.6855 7.15039H57.4414L57.5371 7.28711L57.4004 8.28516L55.8965 8.80469L59.4375 18.3887L63.0332 8.76367L61.1465 8.4082L61.0781 8.24414L61.2422 7.15039H66.3965L66.4922 7.28711L66.2871 8.4082L64.7012 8.80469L59.7246 20.7539C59.5788 21.0456 59.1185 21.2324 58.3438 21.3145L53.1895 8.80469ZM70.8125 27.1523C72.5078 24.5911 73.7565 22.5176 74.5586 20.9316L69.6914 8.80469L68.1191 8.4082L68.0234 8.24414L68.1738 7.15039H73.8613L73.957 7.28711L73.8203 8.28516L72.3027 8.80469L75.7617 18.7852H75.8848C76.459 17.3724 76.9694 16.0599 77.416 14.8477L78.5645 11.6621C78.929 10.6048 79.248 9.63867 79.5215 8.76367L77.5527 8.4082L77.4844 8.24414L77.6484 7.15039H82.8027L82.8984 7.28711L82.707 8.4082L81.2578 8.80469L77.2109 18.9082C76.7279 20.084 76.2266 21.237 75.707 22.3672L74.2988 25.3887L72.8359 28.3555C72.3255 28.3555 71.8333 28.1549 71.3594 27.7539C71.1497 27.5807 70.9674 27.3802 70.8125 27.1523ZM95.2988 19.0312C95.4993 19.0312 96.1009 18.9811 97.1035 18.8809L97.2539 19.0723L96.9395 20.1934L93.166 21.4922L92.9746 21.2871L92.7285 19.4277L91.9082 20.0977C90.7598 21.0273 89.8164 21.4922 89.0781 21.4922C88.3398 21.4922 87.6836 21.36 87.1094 21.0957C86.5443 20.8405 86.0703 20.5033 85.6875 20.084C84.9492 19.2637 84.5801 18.2702 84.5801 17.1035C84.5801 16.0918 84.849 15.349 85.3867 14.875C85.8971 14.4102 86.8177 14.0775 88.1484 13.877C89.4883 13.6673 90.541 13.5124 91.3066 13.4121C92.0814 13.3118 92.5143 13.2526 92.6055 13.2344V12.0586C92.6055 9.60677 91.6758 8.38086 89.8164 8.38086C88.8958 8.38086 87.6745 8.66797 86.1523 9.24219C85.7878 8.97786 85.6055 8.58594 85.6055 8.06641C87.5013 7.13672 89.1556 6.67188 90.5684 6.67188C93.3848 6.67188 94.793 8.29427 94.793 11.5391V18.416C94.793 18.8262 94.9616 19.0312 95.2988 19.0312ZM87.0137 16.7617C87.0137 17.9466 87.5013 18.7897 88.4766 19.291C88.7773 19.446 89.0827 19.5234 89.3926 19.5234C89.7116 19.5234 90.0124 19.4779 90.2949 19.3867C90.5866 19.2956 90.8691 19.1862 91.1426 19.0586C91.4251 18.931 91.694 18.7943 91.9492 18.6484L92.6055 18.2383V14.8887C91.0104 14.8887 89.6797 14.9889 88.6133 15.1895C87.5469 15.3809 87.0137 15.9049 87.0137 16.7617ZM109.326 19.0312C109.527 19.0312 110.128 18.9811 111.131 18.8809L111.281 19.0723L110.967 20.1934L107.193 21.4922L107.002 21.2871L106.756 19.4277L105.936 20.0977C104.787 21.0273 103.844 21.4922 103.105 21.4922C102.367 21.4922 101.711 21.36 101.137 21.0957C100.572 20.8405 100.098 20.5033 99.7148 20.084C98.9766 19.2637 98.6074 18.2702 98.6074 17.1035C98.6074 16.0918 98.8763 15.349 99.4141 14.875C99.9245 14.4102 100.845 14.0775 102.176 13.877C103.516 13.6673 104.568 13.5124 105.334 13.4121C106.109 13.3118 106.542 13.2526 106.633 13.2344V12.0586C106.633 9.60677 105.703 8.38086 103.844 8.38086C102.923 8.38086 101.702 8.66797 100.18 9.24219C99.8151 8.97786 99.6328 8.58594 99.6328 8.06641C101.529 7.13672 103.183 6.67188 104.596 6.67188C107.412 6.67188 108.82 8.29427 108.82 11.5391V18.416C108.82 18.8262 108.989 19.0312 109.326 19.0312ZM101.041 16.7617C101.041 17.9466 101.529 18.7897 102.504 19.291C102.805 19.446 103.11 19.5234 103.42 19.5234C103.739 19.5234 104.04 19.4779 104.322 19.3867C104.614 19.2956 104.896 19.1862 105.17 19.0586C105.452 18.931 105.721 18.7943 105.977 18.6484L106.633 18.2383V14.8887C105.038 14.8887 103.707 14.9889 102.641 15.1895C101.574 15.3809 101.041 15.9049 101.041 16.7617Z" fill="#111111"/>             </svg>
+          </a>
+        </div>
 
-                    <li>
-                      <a href="{% url 'store:cart' %}" class="dropdown-item item-anchor">Cart</a>
-                    </li>
-                    <li>
-                      <a href="{% url 'userauths:logout' %}" class="dropdown-item item-anchor">Log Out</a>
-                    </li>
-                  {% else %}
-                    <li>
-                      <a href="{% url 'userauths:sign-up' %}" class="dropdown-item item-anchor">Sign In / Sign Up</a>
-                    </li>
-                  {% endif %}
-                </ul>
-              </div>
+        {% comment %} RIGHT: mobile = cart+search; desktop = wishlist+cart+search {% endcomment %}
+        <div class="header-side text-end" style="flex: 1 1 0; min-width: 0;">
+          <ul class="list-unstyled d-flex m-0 justify-content-end align-items-center gap-3">
+            <li class="d-none d-lg-block">
+              <a href="{% url 'customer:wishlist_list' %}" class="text-uppercase">Wishlist</a>
             </li>
             <li class="d-none d-lg-block">
-              <a href="{% url 'customer:wishlist_list' %}" class="text-uppercase mx-3">Wishlist 
-                {% comment %} <span class="wishlist-count"> ({{ wishlist_count }})</span> {% endcomment %}
-              </a>
-            </li>
-            <li class="d-none d-lg-block">
-              <a href="{% url 'store:cart' %}" class="text-uppercase mx-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart"
-                aria-controls="offcanvasCart">Cart <span class="dn-counter total_cart_items">({{total_cart_items}})</span>
+              <a href="{% url 'store:cart' %}" class="text-uppercase" data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
+                Cart <span class="dn-counter total_cart_items">({{ total_cart_items }})</span>
               </a>
             </li>
             <li class="d-lg-none">
-              <a href="#" class="mx-2">
-                <svg width="24" height="24" viewBox="0 0 24 24">
-                  <use xlink:href="#heart"></use>
-                </svg>
+              <a href="{% url 'store:cart' %}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart"
+                aria-controls="offcanvasCart" aria-label="Cart">
+                <svg width="22" height="22" viewBox="0 0 24 24"><use xlink:href="#cart"></use></svg>
               </a>
             </li>
-            <li class="d-lg-none">
-              <a href="#" class="mx-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart"
-                aria-controls="offcanvasCart">
-                <svg width="24" height="24" viewBox="0 0 24 24">
-                  <use xlink:href="#cart"></use>
-                </svg>
-              </a>
-            </li>
-            <li class="search-box mx-2">
-              <a href="#search" class="search-button">
-                <svg width="24" height="24" viewBox="0 0 24 24">
-                  <use xlink:href="#search"></use>
-                </svg>
+            <li class="search-box">
+              <a href="#search" class="search-button" aria-label="Search">
+                <svg width="22" height="22" viewBox="0 0 24 24"><use xlink:href="#search"></use></svg>
               </a>
             </li>
           </ul>
         </div>
 
       </div>
+      {% comment %}  ---------- end Row 1 ---------- {% endcomment %} 
+
+      {% comment %} ---------- ROW 2: centered nav links, desktop only ---------- {% endcomment %}
+      <div class="row w-100 m-0 d-none d-lg-flex justify-content-center py-2 pb-3">
+        <div class="col-auto">
+          <ul class="navbar-nav flex-row align-items-center gap-5">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="dropdownBlouse" data-bs-toggle="dropdown"
+                aria-expanded="false">Blouse</a>
+              <ul class="dropdown-menu list-unstyled" aria-labelledby="dropdownBlouse">
+                <li><a href="{% url 'store:catalogue' 'blouse' %}" class="dropdown-item item-anchor">All Blouses</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="dropdownSaree" data-bs-toggle="dropdown"
+                aria-expanded="false">Saree</a>
+              <ul class="dropdown-menu list-unstyled" aria-labelledby="dropdownSaree">
+                <li><a href="{% url 'store:catalogue' 'saree' %}" class="dropdown-item item-anchor">All Sarees</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="dropdownKurti" data-bs-toggle="dropdown"
+                aria-expanded="false">Kurti</a>
+              <ul class="dropdown-menu list-unstyled" aria-labelledby="dropdownKurti">
+                <li><a href="{% url 'store:catalogue' 'kurti' %}" class="dropdown-item item-anchor">All Kurtis</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="dropdownAbout" data-bs-toggle="dropdown"
+                aria-expanded="false">About Naavyaa</a>
+              <ul class="dropdown-menu list-unstyled" aria-labelledby="dropdownAbout">
+                <li><a href="{% url 'blog:blog' %}" class="dropdown-item item-anchor">BTS of Naavyaa</a></li>
+                <li><a href="#" class="dropdown-item item-anchor">Care Instructions</a></li>
+                <li><a href="#" class="dropdown-item item-anchor">Contact Naavyaa</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      {% comment %} ---------- OFFCANVAS: mobile menu ---------- {% endcomment %}
+      <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
+          <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <ul class="navbar-nav gap-1">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'store:catalogue' 'blouse' %}">Blouse</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'store:catalogue' 'saree' %}">Saree</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'store:catalogue' 'kurti' %}">Kurti</a>
+            </li>
+            <li><hr class="my-2"></li>
+            {% if request.user.is_authenticated %}
+              <li class="nav-item">
+                <span class="nav-link text-muted" style="font-size:.85rem;">Hi, {{ request.user.profile.first_name }}</span>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'customer:dashboard' %}">My Account</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'customer:wishlist_list' %}">Wishlist</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'userauths:logout' %}">Log Out</a>
+              </li>
+            {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'userauths:sign-up' %}">Sign In / Sign Up</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'customer:wishlist_list' %}">Wishlist</a>
+              </li>
+            {% endif %}
+            <li><hr class="my-2"></li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'blog:blog' %}">BTS of Naavyaa</a>
+            </li>
+          </ul>
+        </div>
+      </div>
 
     </div>
-</nav>
-    <!-- Navbar End -->
-     {% comment %} Header ends {% endcomment %}
+  </nav>
 
      {% for message in messages %}
       {% if message %}

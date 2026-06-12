@@ -303,7 +303,20 @@ a {
 }
 
 /* end of Bootstrap Color Theme */
+/* ── Header: perfectly centered logo ── */
+.header-side {
+  flex: 1 1 0;
+  min-width: 0;
+}
+.header-center {
+  flex: 0 0 auto;
+}
 
+
+
+@media (max-width: 576px) {
+  .naavyaa-logo { width: 140px; height: auto; }
+}
 /* preloader */
 .preloader {
   position: fixed;
