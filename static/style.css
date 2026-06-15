@@ -2546,3 +2546,8 @@ table.nt tr:hover td { background: var(--warm); transition: background 0.15s; }
     height: 1.5rem;
     align-items: center !important;
 }
+@media (max-width: 767.98px) {
+  .sidebar-collapse {
+    display: none;
+  }
+}

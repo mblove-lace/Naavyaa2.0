@@ -8,22 +8,32 @@
       <h1 class="text-uppercase fs-3">Shop For {{ category.title }}</h1>
       {% comment %} This is a simple breadcrumb navigation to show the user's current location within the site. 
       Like in this case, it shows "Home > Category Name". You can expand this to include more levels if needed.
-       {% endcomment %}
+       
       <nav class="breadcrumb">
         <a class="breadcrumb-item" href="{% url 'store:index' %}">Home</a>
-        {% comment %} Here we display the current category name by accessing the 'title' attribute of the 'category' object from the context dictionary in the view under def catalogue {% endcomment %}
+        {% comment %} Here we display the current category name by accessing the 'title' attribute of the 'category' object from the context dictionary in the view under def catalogue 
         <span class="breadcrumb-item active">{{ category.title }}</span>
-      </nav>
+      </nav>{% endcomment %}
     </div>
   </div>
 </section>
 
 <section class="py-5">
   <div class="container-fluid">
-    <div class="row">
-{% comment %} Creating a sidebar for filtering products {% endcomment %}
+    <div class="row align-items-start">
+ {% comment %} Creating a sidebar for filtering products {% endcomment %}
+
+      <!-- Mobile Filters Toggle (hidden on md+) -->
+      <div class="col-12 d-md-none mb-3">
+        <button class="btn btn-outline-dark w-100" type="button"
+               onclick="toggleFilters()">
+          ☰ Filters
+        </button>
+      </div>
+
+      
       <!-- ========== SIDEBAR ========== -->
-      <div class="col-md-3">
+     <div class="col-md-3 " id="sidebarFilters">
 
         <div class="mb-4">
           <h6 class="text-uppercase fw-bold mb-3">Filter By Color</h6>
@@ -211,5 +221,9 @@
     }
     window.location.href = url.toString();
   });
+    function toggleFilters() {
+    const sidebar = document.getElementById('sidebarFilters');
+    sidebar.style.display = sidebar.style.display === 'none' ? 'block' : 'none';
+  }
 </script>
 {% endblock content %}
