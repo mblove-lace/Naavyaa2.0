@@ -28,7 +28,7 @@
             <div class="swiper-slide">
               <div class="banner-item image-zoom-effect">
                 <div class="image-holder">
-                  <a href="#">
+                  <a href="{% url 'store:product_detail' 'hakoba-c6-neck' %}">
                     <img src="{% static 'assets/images/4.jpg' %}" alt="product" class="img-fluid">
                   </a>
                 </div>
@@ -38,7 +38,7 @@
             <div class="swiper-slide">
               <div class="banner-item image-zoom-effect">
                 <div class="image-holder">
-                  <a href="#">
+                  <a href="{% url 'store:product_detail' 'hakoba-c6-neck' %}">
                     <img src="{% static 'assets/images/1.jpg' %}" alt="product" class="img-fluid">
                   </a>
                 </div>               
@@ -48,7 +48,7 @@
             <div class="swiper-slide">
               <div class="banner-item image-zoom-effect">
                 <div class="image-holder">
-                  <a href="#">
+                  <a href="{% url 'store:product_detail' 'hakoba-c6-neck' %}">
                     <img src="{% static 'assets/images/7.jpg' %}" alt="product" class="img-fluid">
                   </a>
                 </div>
@@ -57,7 +57,7 @@
             <div class="swiper-slide">
               <div class="banner-item image-zoom-effect">
                 <div class="image-holder">
-                  <a href="#">
+                  <a href="{% url 'store:product_detail' 'hakoba-c6-neck' %}">
                     <img src="{% static 'assets/images/2.jpg' %}" alt="product" class="img-fluid">
                   </a>
                 </div>
@@ -66,7 +66,7 @@
             <div class="swiper-slide">
               <div class="banner-item image-zoom-effect">
                 <div class="image-holder">
-                  <a href="#">
+                  <a href="{% url 'store:product_detail' 'hakoba-c6-neck' %}">
                     <img src="{% static 'assets/images/5.jpg' %}" alt="product" class="img-fluid">
                   </a>
                 </div>
@@ -75,7 +75,7 @@
             <div class="swiper-slide">
               <div class="banner-item image-zoom-effect">
                 <div class="image-holder">
-                  <a href="#">
+                  <a href="{% url 'store:product_detail' 'hakoba-c6-neck' %}">
                     <img src="{% static 'assets/images/9.jpg' %}" alt="product" class="img-fluid">
                   </a>
                 </div>
@@ -237,7 +237,7 @@
             <div class="collection-item d-flex flex-wrap my-5">
               <div class="col-md-6 column-container">
                 <div class="image-holder">
-                  <img src="{% static 'assets/images/single-image-2.jpg' %}" alt="collection" class="product-image img-fluid">
+                  <img src="{% static 'assets/images/single-images-2.jpg' %}" alt="collection" class="product-image img-fluid">
                 </div>
               </div>
               <div class="col-md-6 column-container bg-white">
@@ -246,7 +246,7 @@
                    <h3 class="element-title text-uppercase"> Empowering Women Through Cotton </h3>
                   <p>Embrace elegance that breathes with you! Our exquisite collection of cotton blouses, sarees, and kurtis combines festive sophistication with unmatched comfort. Each piece is lovingly handcrafted to your unique specifications by skilled women artisans who understand what women truly desire. Our designs celebrate femininity, comfort, and individuality—bringing you timeless style that feels as good as it looks.</p>
 
-                  <a href="#" class="btn btn-dark text-uppercase mt-3">ABOUT US</a>
+                  <a href="{% url 'blog:blog' %}" class="btn btn-dark text-uppercase mt-3">ABOUT US</a>
                 </div>
               </div>
             </div>
@@ -396,21 +396,13 @@
 
 
 
-
-    <!-- ============================================ ==========================  ============================================ -->
-  {% comment %} --------------------------    Product Views - Fabric Categories--------------------------     {% endcomment %}
-
-
-
-
-
     <!-- ============================================ ==========================  ============================================ -->
   {% comment %} --------------------------    Blog Post -- To our makers --------------------------     {% endcomment %}
 
    <section class="blog py-5">
     <div class="container">
       <div class="d-flex flex-wrap justify-content-between align-items-center mt-5 mb-3">
-        <h4 class="text-uppercase">Read Blog Posts</h4>
+        <h4 class="text-uppercase"></h4>
         <a href="{% url 'store:index' %}" class="btn-link">View All</a>
       </div>
       <div class="row">
