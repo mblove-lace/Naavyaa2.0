@@ -352,8 +352,9 @@
                 aria-expanded="false">About Naavyaa</a>
               <ul class="dropdown-menu list-unstyled" aria-labelledby="dropdownAbout">
                 <li><a href="{% url 'blog:blog' %}" class="dropdown-item item-anchor">BTS of Naavyaa</a></li>
-                <li><a href="#" class="dropdown-item item-anchor">Care Instructions</a></li>
-                <li><a href="#" class="dropdown-item item-anchor">Contact Naavyaa</a></li>
+                {% comment %} <li><a href="{% url 'blog:care_instructions' %}" class="dropdown-item item-anchor">Care Instructions</a></li> {% endcomment %}
+                {% comment %} <li><a href="{% url 'blog:contact_us' %}" class="dropdown-item item-anchor">Contact Naavyaa</a></li> {% endcomment %}
+                <li><a href="{% url 'blog:faqs' %}" class="dropdown-item item-anchor">FAQs</a></li>
               </ul>
             </li>
           </ul>
@@ -378,6 +379,7 @@
               <a class="nav-link" href="{% url 'store:catalogue' 'kurti' %}">Kurti</a>
             </li>
             <li><hr class="my-2"></li>
+
             {% if request.user.is_authenticated %}
               <li class="nav-item">
                 <span class="nav-link text-muted" style="font-size:.85rem;">Hi, {{ request.user.profile.first_name }}</span>
@@ -402,6 +404,10 @@
             <li><hr class="my-2"></li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'blog:blog' %}">BTS of Naavyaa</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'blog:faqs' %}">Faqs</a>
             </li>
           </ul>
         </div>

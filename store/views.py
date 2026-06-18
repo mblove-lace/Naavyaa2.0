@@ -23,7 +23,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 
-import requests
+import json
 import razorpay
 
 from customer import models as customer_models
@@ -120,7 +120,15 @@ def product_detail(request, slug):
     product = store_models.Product.objects.get(slug= slug, status="Published")
     # Fetch related products from the same category, excluding the current product, and limit to 4 random products. This is done to provide recommendations for similar products to the user. which wont be the same as the product they are currently viewing. The order_by('?') is used to randomize the selection of related products each time the page is loaded.
     related_products = store_models.Product.objects.filter(category=product.category, status="Published").exclude(id=product.id).order_by('?')[:4]
-    product_stock_range = range(1, product.stock +1)
+    size_variant =product.variants.filter(name__iexact="Size").first()
+    sizes = size_variant.variant_items.all() if size_variant else []
+
+    if sizes:
+        total_variant_stock = sum(s.stock for s in sizes)
+    else:
+        total_variant_stock = product.stock
+
+    product_stock_range = range(1, total_variant_stock + 1)
 
     # print("DEBUG: entered attributes of product_detail method")
 
@@ -128,8 +136,7 @@ def product_detail(request, slug):
     avg = product.average_rating()
     # print("DEBUG: entered average rating of the product in product_detail method")
 
-    size_variant =product.variants.filter(name="Size").first()
-    sizes = size_variant.variant_items.all() if size_variant else []
+    
 
     if avg is None:
         avg_rating = 0.0
@@ -153,6 +160,7 @@ def product_detail(request, slug):
         'sizes': sizes,
         'related_products': related_products,
         "product_stock_range" : product_stock_range,
+        "total_variant_stock": total_variant_stock,
         "avg_rating": avg_rating,
         "avg_round": avg_round,
         "wishlisted": wishlisted,
@@ -213,15 +221,16 @@ def add_to_cart(request):
 # request.GET.get("id") : Reads the value of the "id" parameter from the URL.
 # If the URL is:id=10 → this returns "10".
 
-    id = request.POST.get("id")
-    #  qty: Variable storing quantity of the product (1, 2, 3...)
-    qty = request.POST.get("qty") 
-    # color: Variable storing selected color of the product (like "red" or "blue")
-    color = request.POST.get("color") 
-    # size: Variable storing selected size of the product (like "M" or "L")
-    size = request.POST.get("size") 
-        # cart_id: Variable storing unique identifier for the shopping cart.
-    cart_id = request.POST.get("cart_id")
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
+
+    id      = data.get("id")
+    qty     = data.get("qty")
+    color   = data.get("color", "")
+    size    = data.get("size")
+    cart_id = data.get("cart_id")
         # Debug statement to print received parameters (useful for troubleshooting)
         # This is an f-string — allows inserting variables inside { }.
     print(f"DEBUG: Received - id={id}, qty_raw={qty}, color={color}, size={size}, cart_id={cart_id}")
@@ -266,8 +275,18 @@ def add_to_cart(request):
 
     existing_cart_items = store_models.Cart.objects.filter(cart_id=cart_id,product=product).first()
     # Comparing the existing cart items with the current product ID to find if the product is already in the cart.
-    if int(qty) > product.stock:
-        return JsonResponse({"error": "Requested quantity exceeds available stock"}, status=404)
+    if size:
+        variant_item = store_models.VariantItem.objects.filter(
+            variant__product=product,
+            variant__name__iexact="Size",
+            content=size
+        ).first()
+        available_stock = variant_item.stock if variant_item else product.stock
+    else:
+        available_stock = product.stock
+
+    if int(qty) > available_stock:
+        return JsonResponse({"error": "Requested quantity exceeds available stock"}, status=400)
     print("DEBUG: Checked product stock availability")
     
     if not existing_cart_items:

@@ -107,18 +107,23 @@
             <div class="swatch d-flex flex-wrap option-1 mt-4" data-option-index="1" id="pd-size-grid">
               <div class="item-title">Size:</div>
               {% for s in sizes %}
-                <div data-value="{{ s.content }}" class="swatch-element">
+                <div data-value="{{ s.content }}" class="swatch-element {% if s.stock == 0 %}swatch-disabled{% endif %}">
                   <input class="swatch-input hide"
-                         id="size-{{ s.content|lower }}"
-                         data-var="{{ s.content|lower }}"
-                         type="radio"
-                         name="option-1"
-                         value="{{ s.content }}">
-                  <label class="swatch-label square-only" for="size-{{ s.content|lower }}">{{ s.content }}</label>
+                        id="size-{{ s.content|lower }}"
+                        data-var="{{ s.content|lower }}"
+                        type="radio"
+                        name="option-1"
+                        value="{{ s.content }}"
+                        {% if s.stock == 0 %}disabled{% endif %}>
+                  <label class="swatch-label square-only {% if s.stock == 0 %}swatch-label-disabled{% endif %}"
+                        for="size-{{ s.content|lower }}">
+                    {{ s.content }}
+                  </label>
                 </div>
               {% empty %}
                 <small class="text-muted ms-2">No sizes available.</small>
               {% endfor %}
+              
             </div>
 
             <!-- Size warning -->
@@ -134,14 +139,14 @@
             <!-- ── PRODUCT ACTION (Kaira product-action structure) ── -->
             <div class="product-action mt-4">
 
-              {% if product.stock > 0 %}
+              {% if total_variant_stock > 0 %}
                 <!-- Stock -->
-                {% if product.stock <= 5 %}
+                {% if total_variant_stock <= 5 %}
                   <div class="item-title mb-2">
-                    <span class="stock-badge stock-low">Only {{ product.stock }} left</span>
+                    <span class="stock-badge stock-low">Only {{ total_variant_stock }} left</span>
                   </div>
                 {% else %}
-                  <div class="item-title">{{ product.stock }} in stock</div>
+                  <div class="item-title">{{ total_variant_stock }} in stock</div>
                 {% endif %}
 
                 <div class="product-quantity d-flex flex-wrap align-items-center gap-2 mt-2">
@@ -159,7 +164,7 @@
                            id="pd-qty-input"
                            name="quantity"
                            class="form-control input-number text-center"
-                           value="1" min="1" max="{{ product.stock }}">
+                           value="1" min="1" max="{{ total_variant_stock }}">
                     <span class="input-group-btn">
                       <button type="button"
                               class="quantity-right-plus btn btn-light btn-number"
@@ -174,7 +179,7 @@
                           id="pd-atc-btn"
                           class="btn btn-dark product-cart-submit btn-lg text-uppercase"
                           data-id="{{ product.id }}"
-                          data-max="{{ product.stock }}">
+                          data-max="{{ total_variant_stock }}">
                     <span class="btn-text">Add to cart</span>
                     <span class="btn-spinner" aria-hidden="true">
                       <span class="btn-spinner-ring"></span>
@@ -397,6 +402,15 @@
       ?.split('=')[1];
   }
 
+  function getOrCreateCartId() {
+  let cartId = localStorage.getItem('naavyaa_cart_id');
+  if (!cartId) {
+    cartId = 'cart_' + Math.random().toString(36).slice(2, 11);
+    localStorage.setItem('naavyaa_cart_id', cartId);
+  }
+  return cartId;
+}
+
   /* ─── Toast ─── */
   function showToast(msg, isError = false) {
     const toast = document.getElementById('pd-toast');
@@ -456,13 +470,19 @@
       atcBtn.classList.add('loading');
       atcBtn.disabled = true;
 
-      fetch('/cart/add/', {
+      fetch('/add_to_cart/', {
         method: 'POST',
         headers: {
           'X-CSRFToken': getCookie('csrftoken'),
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ product_id: productId, quantity: qty, size: size }),
+        body: JSON.stringify({
+          id: productId,
+          qty: qty,
+          size: size,
+          color: '',
+          cart_id: getOrCreateCartId(),
+        }),
       })
       .then(res => {
         if (!res.ok) throw new Error('Server error');
@@ -476,7 +496,7 @@
 
         // Update navbar cart count if element has data-cart-count attribute
         const cartCount = document.querySelector('[data-cart-count]');
-        if (cartCount && data.cart_count) cartCount.textContent = data.cart_count;
+        if (cartCount && data.total_cart_items) cartCount.textContent = data.total_cart_items;
 
         setTimeout(() => {
           atcBtn.classList.remove('success');

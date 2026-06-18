@@ -2551,3 +2551,16 @@ table.nt tr:hover td { background: var(--warm); transition: background 0.15s; }
     display: none;
   }
 }
+.swatch-label-disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+  text-decoration: line-through;
+  background-color: #f0f0f0 !important;
+  color: #999 !important;
+  border-color: #ddd !important;
+}
+
+.swatch-disabled {
+  pointer-events: none;
+}
