@@ -10,7 +10,7 @@ def care_instructions(request):
     return render(request, 'blog/care_instructions.html')
 
 def faq(request):
-    return render(request, 'blog/faq.html')
+    return render(request, 'blog/faqs.html')
 
 def contact_us(request):
     return render(request, 'blog/contact_us.html')
