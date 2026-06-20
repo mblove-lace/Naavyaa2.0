@@ -937,8 +937,8 @@ def razorpay_payment_verify(request, order_id):
                 'order_items': order.order_items(),
             }
             subject = "New Order Placed"
-            text_body = render_to_string('email/order/customer_new_order_email.txt', customer_merge_data)
-            html_body = render_to_string('email/order/customer_new_order_email.html', customer_merge_data)
+            text_body = render_to_string('email/order/customer/customer_new_order.txt', customer_merge_data)
+            html_body = render_to_string('email/order/customer/customer_new_order.html', customer_merge_data)
             msg = EmailMultiAlternatives(
                 subject=subject, from_email=settings.FROM_EMAIL,
                 to=[order.address.email], body=text_body
@@ -951,11 +951,12 @@ def razorpay_payment_verify(request, order_id):
             for item in order.order_items():
                 vendor_merge_data = {'item': item}
                 subject = f"New Order for {item.product.name}"
-                text_body = render_to_string('email/order/vendor_new_order_email.txt', vendor_merge_data)
-                html_body = render_to_string('email/order/vendor_new_order_email.html', vendor_merge_data)
+                text_body = render_to_string('email/order/vendor/vendor_new_order.txt', vendor_merge_data)
+                html_body = render_to_string('email/order/vendor/vendor_new_order.html', vendor_merge_data)
                 msg = EmailMultiAlternatives(
                     subject=subject, from_email=settings.FROM_EMAIL,
-                    to=[item.vendor.user.email], body=text_body
+                    # change 1 item.vendor.user.email to item.vendor.email
+                    to=[item.vendor.email], body=text_body
                 )
                 msg.attach_alternative(html_body, "text/html")
                 msg.send()
