@@ -44,7 +44,7 @@
                   <tr style="border-bottom:1px solid #f0f0ee;">
                     <td style="padding:14px 16px; font-size:14px; color:#111; font-weight:500;">{{ item.product.name }}</td>
                     <td style="padding:14px 16px; font-size:14px; color:#666;">{{ item.qty }}</td>
-                    <td style="padding:14px 16px; font-size:14px; color:#111; font-weight:500; text-align:right;">${{ item.sub_total }}</td>
+                    <td style="padding:14px 16px; font-size:14px; color:#111; font-weight:500; text-align:right;">₹{{ item.sub_total }}</td>
                   </tr>
                   {% endfor %}
                 </tbody>
@@ -54,19 +54,19 @@
               <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse; margin-bottom:36px; border-top:2px solid #e0e0de;">
                 <tr style="border-bottom:1px solid #f0f0ee;">
                   <td style="padding:10px 16px; font-size:13px; color:#8f8f8f; text-transform:uppercase; letter-spacing:0.08em;">Sub Total</td>
-                  <td style="padding:10px 16px; font-size:14px; color:#111; font-weight:500; text-align:right;">${{ order.sub_total }}</td>
+                  <td style="padding:10px 16px; font-size:14px; color:#111; font-weight:500; text-align:right;">₹{{ order.sub_total }}</td>
                 </tr>
                 <tr style="border-bottom:1px solid #f0f0ee;">
                   <td style="padding:10px 16px; font-size:13px; color:#8f8f8f; text-transform:uppercase; letter-spacing:0.08em;">Shipping Fee</td>
-                  <td style="padding:10px 16px; font-size:14px; color:#111; font-weight:500; text-align:right;">${{ order.shipping }}</td>
+                  <td style="padding:10px 16px; font-size:14px; color:#111; font-weight:500; text-align:right;">₹{{ order.shipping }}</td>
                 </tr>
                 <tr style="border-bottom:1px solid #f0f0ee;">
                   <td style="padding:10px 16px; font-size:13px; color:#8f8f8f; text-transform:uppercase; letter-spacing:0.08em;">Tax Fee</td>
-                  <td style="padding:10px 16px; font-size:14px; color:#111; font-weight:500; text-align:right;">${{ order.tax }}</td>
+                  <td style="padding:10px 16px; font-size:14px; color:#111; font-weight:500; text-align:right;">₹{{ order.tax }}</td>
                 </tr>
                 <tr>
                   <td style="padding:14px 16px; font-family:'Marcellus',serif; font-size:15px; color:#111;">Total</td>
-                  <td style="padding:14px 16px; font-size:1.1rem; font-weight:700; color:#8C907E; text-align:right;">${{ order.total }}</td>
+                  <td style="padding:14px 16px; font-size:1.1rem; font-weight:700; color:#8C907E; text-align:right;">₹{{ order.total }}</td>
                 </tr>
               </table>
 
@@ -76,7 +76,7 @@
               </table>
 
               <!-- Bio Data -->
-              <p style="font-family:'Jost',sans-serif; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.15em; color:#111; margin:0 0 16px 0;">Bio Data</p>
+              <p style="font-family:'Jost',sans-serif; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.15em; color:#111; margin:0 0 16px 0;">Customer's Address</p>
 
               <table width="100%" cellpadding="0" cellspacing="0" border="0">
                 <tr>

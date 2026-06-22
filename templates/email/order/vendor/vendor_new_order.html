@@ -42,7 +42,7 @@
           <tr>
             <td>{{ item.product.name }}</td>
             <td>{{ item.qty }}</td>
-            <td>${{ item.sub_total }}</td>
+            <td>₹{{ item.sub_total }}</td>
           </tr>
         </tbody>
       </table>
@@ -54,19 +54,19 @@
         <tbody>
           <tr>
             <td class="label">Sub Total:</td>
-            <td class="value">${{ order.sub_total }}</td>
+            <td class="value">₹{{ order.sub_total }}</td>
           </tr>
           <tr>
             <td class="label">Shipping Fee:</td>
-            <td class="value">${{ order.shipping }}</td>
+            <td class="value">₹{{ order.shipping }}</td>
           </tr>
           <tr>
             <td class="label">Tax Fee:</td>
-            <td class="value">${{ order.tax }}</td>
+            <td class="value">₹{{ order.tax }}</td>
           </tr>
           <tr>
             <td class="label">Total:</td>
-            <td class="value">${{ order.total }}</td>
+            <td class="value">₹{{ order.total }}</td>
           </tr>
         </tbody>
       </table>
