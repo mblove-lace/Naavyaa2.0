@@ -3,7 +3,7 @@
 {% load static %}
 {% block content %}
 
-  <section>
+  <section> 
     <div class="container py-5">
       <div class="row justify-content-center">
         <div class="col-lg-4">
@@ -93,34 +93,34 @@
                       <!-- FULL NAME -->
                       <div class="col-12">
                         <label class="form-label" style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #6c757d;">Full Name *</label>
-                        {{ form.full_name }}
+                        {{ register_form.full_name }}
                       </div>
 
                       <!-- EMAIL -->
                       <div class="col-12">
                         <label class="form-label" style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #6c757d;">Email address *</label>
-                        {{ form.email }}
+                        {{ register_form.email }}
                       </div>
 
                       <!-- MOBILE -->
                       <div class="col-12">
                         <label class="form-label" style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #6c757d;">Mobile Number *</label>
-                        {{ form.mobile }}
+                        {{ register_form.mobile }}
                       </div>
 
                       <!-- PASSWORD + CONFIRM side by side on larger screens -->
                       <div class="col-12 col-sm-6">
                         <label class="form-label" style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #6c757d;">Password *</label>
-                        {{ form.password1 }}
+                        {{ register_form.password1 }}
                       </div>
                       <div class="col-12 col-sm-6">
                         <label class="form-label" style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #6c757d;">Confirm *</label>
-                        {{ form.password2 }}
+                        {{ register_form.password2 }}
                       </div>
                       <!-- USER TYPE Customer/Vendor name has to be added . it is a required field  -->
                       <div class="col-12">
                         <label class="form-label" style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #6c757d;">Account Type *</label>
-                        {{ form.user_type }}
+                        {{ register_form.user_type }}
                       </div>
 
                       {% comment %} <!-- CAPTCHA -->
@@ -179,10 +179,10 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-  {% if form.errors %}
+  {% if register_form.errors %}
     let errorMessages = [];
 
-    {% for field, errors in form.errors.items %}
+    {% for field, errors in register_form.errors.items %}
       {% for error in errors %}
         errorMessages.push("{{ error|escapejs }}");
       {% endfor %}

@@ -8,7 +8,7 @@
 from django.shortcuts import render, redirect
 
 # Importing Django's messaging framework for showing notifications to users
-# messages: Allows displaying success/error/warning messages that appear once
+# messages: Allows displaying success/error/warning messages that appear once   
 # Example: messages.success(request, "Welcome!") or messages.error(request, "Invalid login")
 from django.contrib import messages
 
@@ -263,9 +263,11 @@ def register_view(request):
     # context: Dictionary containing data to pass to the template
     # This makes the 'form' object available in the HTML template
     context = {
+        
         # "form": The key used in the template (e.g., {{ form.as_p }})
         # form: The UserRegisterForm object (either empty or with errors)
-        "form": form,   
+        "form": userauth_forms.LoginForm(),  # This creates an instance of the LoginForm to be used in the login template, allowing users to log in if they already have an account.
+        "register_form": form,  # This is the registration form that will be displayed on the sign-up page. It can be empty (GET) or contain errors (POST).
     }
     
     # render(): Combines the template with the context data
@@ -346,6 +348,7 @@ def login_view(request):
         # "form": The key used in the template to access the form object (e.g., {{ form.as_p }}).
         # form: The LoginForm instance that will be rendered in the login.html template.
         "form": form,
+        "register_form": userauth_forms.UserRegisterForm(),  # This creates an instance of the UserRegisterForm to be used in the login template, allowing users to register if they don't have an account yet.
         }
         # render() is a Django function that combines a template with a context dictionary to produce an HttpResponse object with the rendered text.
         # request: The HTTP request object that contains information about the user's request.

@@ -3,28 +3,25 @@
 {% load static %}
 {% block content %}
 
-  
   <section class="hero-section mt-5 py-5">
     <div class="hero-content">
       <div class="container">
         <div class="row text-center">
           <div class="post-meta text-uppercase my-3">
-            <span class="post-category">Idhar tak aa gaye ho, to milke bhi jao!!</span> 
-            {% comment %} <span class="meta-date">Estd:12 jan, 2022</span> {% endcomment %}
+            <span class="post-category">Any Questions? All Answers are right  Here !</span>
           </div>
-          <h1 class="post-title text-uppercase">
-            <a href="single-post.html">Behind the Scenes of Naavyaa</a>
-          </h1>
+          <h2 class="post-title text-uppercase">
+            <a href="single-post.html">Frequently Asked Questions</a>
+          </h2>
           <nav class="breadcrumb justify-content-center">
             <a class="breadcrumb-item" href="#">Home</a>
-            {% comment %} <a class="breadcrumb-item" href="#">Pages</a> {% endcomment %}
-            <span class="breadcrumb-item active" aria-current="page">About Us</span>
+            <span class="breadcrumb-item active" aria-current="page">FAQ</span>
           </nav>
         </div>
       </div>
     </div>
   </section>
-  
+
   <div class="post-wrap py-5 no-padding-bottom">
     <div class="container">
       <div class="row g-5">
@@ -35,109 +32,109 @@
                 <img src="{% static 'assets/images/blog_img.png' %}" alt="single-post" class="img-fluid">
               </div>
               <div class="post-content py-5">
-                <div class="post-description">
-                  <p>Hi, My love! </p>
-                  <p>
-                    I hope this little note from me, Krittika, finds you happy, pampered, and perhaps having one of those wonderfully good hair days.
-                    </p>
 
-                    <p>
-                      At Naavyaa, we believe clothing should feel as comforting as it is beautiful. Every fabric we create is chosen thoughtfully and crafted with care, so that when you wear it, it feels like a gentle embrace. </p>
-                    <p>
-                      </p>
-                     
-
-
-                  <h4>The Soul of Naavyaa</h4>
-                  <p></p>
-                  <ul class="inner-list">
-                    <li><h4>Best Cotton</h4></li>
-                    <img src="{% static 'assets/images/cotton.png' %}" alt="post-image" class="align-left">
-                    
-                  <p></p>
-                  <p> Are you wondering where your cotton blouse is coming from?</p>
-                  <p>.</p>
-                  <p>.</p>
-
-                    <li><h4>Indian Patterns</h4></li>
-                    <img src="{% static 'assets/images/kalamkari.png' %}" alt="post-image" class="align-left">
-                   
-                  <p></p>
-                   <p>Indian cotton saree prints are more than just patterns on fabric — they are stories woven through generations. From traditional motifs to contemporary designs, each print tells a unique tale.</p>
-                  <p>Like,Kalamkari brings mythological tales and nature to life through intricate brushwork, while Hand Block Printing celebrates the skill of artisans who carve and stamp each motif by hand. 
-                    Ajrakh, with its rich natural dyes and symmetrical patterns, reflects centuries of craftsmanship and patience. </p>
-                    <p>Together, these timeless arts become something you not only wear but also represents your heritage.</p>
-
-                    <li><h4> Everyday is ethnic day</h4></li>
-                    <img src="{% static 'assets/images/blouse.png' %}" alt="post-image" class="align-left">
-
-                    
-                  <p></p>
-                  <p>Heritage is not just meant to keep in closet, rather it belongs in your everyday wardrobe.</p>
-                  <p>Got a meeting? Pair a subtle cotton saree with delicate Ajrakh prints for a look that's professional with just the right touch of personality. </p>
-                  <p> Running errands on a warm summer day? Slip into a lightweight printed kurti that's breathable, comfortable, yet as vibrant as you are.
-                  </p>
-                  <p>Heading out on a date? A graceful Batik print strikes the perfect balance between effortless and elegant.</p>
-                  <p>Celebrating a festival? Embrace the vibrant colors and intricate patterns of a traditional Kalamkari saree to truly embody the festive spirit.</p>
-
-
-                  
-
-                  </ul>
-                  
-                  <p></p>
-                  
-                  <h5>With love, Naavyaa</h5>
-                  <p></p>
-                  <p>P.S. Don't forget to follow us on social media for more updates and exclusive offers!</p>
-                  <div class="post-bottom-link d-flex justify-content-between">
-                
-                    <div class="block-social-links d-flex align-items-baseline">
-                      
+               <div class="accordion" id="faqAccordion">
+                  <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading1">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1">
+                        1. Do you offer custom stitching or customization??
+                      </button>
+                    </h2>
+                    <div id="collapse1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                      <div class="accordion-body">
+                        Yes. Selected products lik e Blouse and Kurti can be customized based on your requirements. 
+                      </div>
                     </div>
                   </div>
-                </div>
-                
-              </div>
-            </article>
-            <div id="post-author-info" class="border-top border-bottom py-4">
-              <div class="row d-flex align-items-center">
-                <div class="col-md-3">
-                  <div class="image-holder">
-                    <a itemprop="url" href="#">
-                      <img src="{% static 'assets/images/author-image.jpg' %}" class="img-fluid" alt="author">
-                    </a>
-                  </div>
-                </div>
-                <div class="col-md-9">
-                  <div class="post-author-content">
-                    <div class="element-title text-uppercase">
-                      <a itemprop="url" href="">Krittika</a>
+                  <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading2">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2">
+                        2. Which payment methods do you accept?
+                      </button>
+                    </h2>
+                    <div id="collapse2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                      <div class="accordion-body">
+                        Our partner is Razorpay. And we accept all major credit and debit cards, UPI, net banking. But not cash on delivery.
+                      </div>
+                    </div>           
+
+                  <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading3">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3">
+                        3. Is Cash on Delivery (COD) available?
+                      </button>
+                    </h2>
+                    <div id="collapse3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                      <div class="accordion-body">
+                        <b>No, we do not offer Cash on Delivery. </b> We only accept online payments through our partner Razorpay. Thank you for your understanding.
+                      </div>
                     </div>
-                    <span class="author-position">Fashion designer</span>
-                    <p> Awww, you want to know about me!!</p>
-                    <p> I am a part-time fashion enthusiast, who their whole life was looking for something Indian yet contemporary... Attires like our mother but with a modern twist. And finally decided to create it myself, and thus Naavyaa was born. I am a full time dream!</p>
                   </div>
-                </div>
+
+                  <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading4">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4">
+                        4. How long does it take to receive the product after placing the order?
+                      </button>
+                    </h2>
+                    <div id="collapse4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                      <div class="accordion-body">
+                        Our in stock products are made after the order is placed for your best satisfaction. So, it takes <b> 7-8 days for stitching. </b> For  delivery, we use Delhivery, which takes 3-4 days across India. So, in total, it takes <b> 9 - 12 days </b>  to receive the product after placing the order.
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading5">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse5">
+                        5. I had issues with the padded blouse previously. I don't want bulging pads in my blouse. Can you help me with that?
+                      </button>
+                    </h2>
+                    <div id="collapse5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                      <div class="accordion-body">
+                        We use one size bigger pads for out padded blouses. For example, if you order a size 36 padded blouse, we will use size 38 pads for the blouse. This is done to ensure that the pads do not look too tight or bulging in the blouse.
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading6">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse6">
+                        6. What is your return and exchange policy for stitched items like blouses and kurtis?
+                      </button>
+                    </h2>
+                    <div id="collapse6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                      <div class="accordion-body">
+                        <p>
+                        Even though we check our pieces 3 times before dispatch, if you receive a defective product, please contact us through email or phone within 5 days of receiving the product. We will arrange for a replacement or store credit refund as per your preference. Please note that we do not accept returns or exchanges for products that have been used or damaged due to customer negligence. 
+                        But if you have any issues with the product, please contact us and we will do our best to resolve the issue. </p>
+                        <p>
+                        Same policy is for sarees. If you receive a defective saree, please contact us through email or phone within 5 days of receiving the product. We will arrange for a replacement or store credit refund as per your preference. Please note that we do not accept returns or exchanges for products that have been used or damaged due to customer negligence. </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading7">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse7">
+                        7. Do you take bulk orders?
+                      </button>
+                    </h2>
+                    <div id="collapse7" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                      <div class="accordion-body">
+                        Yes, ofcouse. But we will need a little more time to process the order. 10-15 days for stitching and 3-4 days for delivery. So, in total, it takes 13-19 days to receive the product after placing the order. Please contact us through email or phone for bulk orders.
+                      </div>
+                    </div>
+                  </div>
+
               </div>
-            </div>
-          
+
+              </div>
+         
           </div>
         </main>
       </div>
     </div>
   </div>
-  
-  <section class="related-post post-wrap py-4">
-    <div class="container">
-      <div class="section-header d-flex align-items-center justify-content-between">
-        <h3 class="section-title text-uppercase">You are our muse</h3>
-      </div>
-      <div class="row">
-        <div class="hero-image">
-                <img src="{% static 'assets/images/spotted_in.png' %}" alt="single-post" class="img-fluid">        
-      </div>
-    </div>
-  </section>
-  
+
 {% endblock content %}
