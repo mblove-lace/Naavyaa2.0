@@ -21,7 +21,6 @@
         </button>
       </div>
 
-      
       <!-- ========== SIDEBAR ========== -->
      <div class="col-md-3" id="sidebarFilters">
 
@@ -102,7 +101,7 @@
               <a href="?size=XL{% if selected_color %}&color={{ selected_color }}{% endif %}{% if selected_price %}&price={{ selected_price }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}" class="text-decoration-none {% if selected_size == 'XL' %}fw-bold text-dark{% else %}text-secondary{% endif %}">XL</a>
             </li>
             <li class="mb-1">
-              <a href="?size=XXL{% if selected_color %}&color={{ selected_color }}{% endif %}{% if selected_price %}&price={{ selected_price }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}" class="text-decoration-none {% if selected_size == 'XXL' %}fw-bold text-dark{% else %}text-secondary{% endif %}">XXL</a>
+              <a href="?size=2XL{% if selected_color %}&color={{ selected_color }}{% endif %}{% if selected_price %}&price={{ selected_price }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}" class="text-decoration-none {% if selected_size == '2XL' %}fw-bold text-dark{% else %}text-secondary{% endif %}">2XL</a>
             </li>
             <li class="mb-1">
               <a href="?size=3XL{% if selected_color %}&color={{ selected_color }}{% endif %}{% if selected_price %}&price={{ selected_price }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}" class="text-decoration-none {% if selected_size == '3XL' %}fw-bold text-dark{% else %}text-secondary{% endif %}">3XL</a>
@@ -170,47 +169,28 @@
                   <div class="mt-2">
                     {% if product.total_stock > 0 %}
                       <span class="text-success small fw-semibold">In Stock</span>
-                      <a href="{% url 'store:product_detail' product.slug %}" class="text-decoration-none d-block" data-after="Click to View">
+                      <a href="{% url 'store:product_detail' product.slug %}" class="text-decoration-none d-block variant-link" data-after="Click to View">
                         <span>{% if product.price %}₹ {{ product.price }}{% endif %}</span>
+                        {% if product.color_options or product.size_options %}
+                          <span class="variant-text">
+                            {% if product.color_options %}Colors: {{ product.color_options|length }}{% endif %}
+                            {% if product.size_options %} | Sizes: {{ product.size_options|length }}{% endif %}
+                          </span>
+                        {% endif %}
                       </a>
                     {% else %}
                       <span class="text-danger small fw-semibold">Out of Stock</span>
-                      <a href="{% url 'store:product_detail' product.slug %}" class="text-decoration-none d-block" data-after="Click to View">
+                      <a href="{% url 'store:product_detail' product.slug %}" class="text-decoration-none d-block variant-link" data-after="Click to View">
                         <span class="text-muted">{% if product.price %}₹ {{ product.price }}{% endif %}</span>
+                        {% if product.color_options or product.size_options %}
+                          <span class="variant-text text-muted">
+                            {% if product.color_options %}Colors: {{ product.color_options|length }}{% endif %}
+                            {% if product.size_options %} | Sizes: {{ product.size_options|length }}{% endif %}
+                          </span>
+                        {% endif %}
                       </a>
                     {% endif %}
                   </div>
-
-                  <!-- Color & Size Options -->
-                  {% if product.color_options or product.size_options %}
-                    <div class="mt-2 pt-2 border-top">
-                      {% if product.color_options %}
-                        <div class="mb-2">
-                          <small class="text-muted d-block mb-1"><strong>Colors:</strong></small>
-                          <div class="d-flex gap-1 flex-wrap">
-                            {% for color in product.color_options %}
-                              <span class="badge bg-light text-dark border border-secondary small">
-                                {{ color.content }}
-                              </span>
-                            {% endfor %}
-                          </div>
-                        </div>
-                      {% endif %}
-
-                      {% if product.size_options %}
-                        <div class="mb-2">
-                          <small class="text-muted d-block mb-1"><strong>Sizes:</strong></small>
-                          <div class="d-flex gap-1 flex-wrap">
-                            {% for size in product.size_options %}
-                              <span class="badge bg-light text-dark border border-secondary small">
-                                {{ size.content }}
-                              </span>
-                            {% endfor %}
-                          </div>
-                        </div>
-                      {% endif %}
-                    </div>
-                  {% endif %}
                 </div>
               </div>
             </div>
@@ -262,4 +242,33 @@
   window.addEventListener('resize', handleResize);
   handleResize(); // Call on page load
 </script>
+
+<style>
+  .variant-link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .variant-text {
+    font-size: 0.75rem;
+    color: #6c757d;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    font-weight: normal;
+  }
+
+  .image-holder:hover .variant-text {
+    opacity: 1;
+  }
+
+  .variant-text.text-muted {
+    opacity: 0;
+  }
+
+  .image-holder:hover .variant-text.text-muted {
+    opacity: 1;
+  }
+</style>
+
 {% endblock content %}
