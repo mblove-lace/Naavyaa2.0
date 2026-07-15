@@ -58,6 +58,10 @@ def catalogue(request, category_slug):
     category = get_object_or_404(store_models.Category, slug=category_slug)
     # This line retrieves all Product objects from the database that belong to the specified category (using category__slug to filter by the related Category's slug) and have a status of "Published". The resulting queryset is stored in the variable products.
     products = store_models.Product.objects.filter(category__slug=category_slug, status="Published")
+
+    print("\n" + "="*80)
+    print(f"DEBUG CATALOGUE: Category = {category.title}")
+    print("="*80)
     # The following lines retrieve filter parameters (size, color, price) from the GET request. 
     # These parameters are used to further filter the products queryset based on the user's selections in the catalogue page.
     size = request.GET.get('size')
@@ -94,10 +98,29 @@ def catalogue(request, category_slug):
     # This line checks if the sort parameter from the GET request matches any of the keys in the sort_map dictionary. If it does, it applies the corresponding sorting to the products queryset using the order_by() method. For example, if sort is 'price_asc', it will order the products by price in ascending order; if sort is 'price_desc', it will order by price in descending order, and so on.
     if sort in sort_map:
         products = products.order_by(sort_map[sort])
+    
+    products_with_stock = []
+    for product in products:
+        # Get all variants
+        size_variant = product.variants.filter(name__iexact="Size").first()
+        color_variant = product.variants.filter(name__iexact="Color").first()
+        
+        # Calculate total stock
+        if size_variant:
+            total_stock = sum(s.stock for s in size_variant.variant_items.all())
+        else:
+            total_stock = product.stock
+        
+        # Attach variant data to product object
+        product.total_stock = total_stock
+        product.size_options = size_variant.variant_items.all() if size_variant else []
+        product.color_options = color_variant.variant_items.all() if color_variant else []
+        
+        products_with_stock.append(product)
 
     # The context dictionary is created to pass the filtered products, category information, and selected filter values (size, color, price) to the template. This allows the template to display the products based on the applied filters and also indicate which filters are currently active.
     context = {
-        'products': products,
+        'products': products_with_stock,
         'category': category,
         'selected_size': size,
         'selected_color': color,

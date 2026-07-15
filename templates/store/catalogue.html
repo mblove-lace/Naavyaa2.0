@@ -6,14 +6,6 @@
   <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center">
       <h1 class="text-uppercase fs-3">Shop For {{ category.title }}</h1>
-      {% comment %} This is a simple breadcrumb navigation to show the user's current location within the site. 
-      Like in this case, it shows "Home > Category Name". You can expand this to include more levels if needed.
-       
-      <nav class="breadcrumb">
-        <a class="breadcrumb-item" href="{% url 'store:index' %}">Home</a>
-        {% comment %} Here we display the current category name by accessing the 'title' attribute of the 'category' object from the context dictionary in the view under def catalogue 
-        <span class="breadcrumb-item active">{{ category.title }}</span>
-      </nav>{% endcomment %}
     </div>
   </div>
 </section>
@@ -21,76 +13,72 @@
 <section class="py-5">
   <div class="container-fluid">
     <div class="row align-items-start">
- {% comment %} Creating a sidebar for filtering products {% endcomment %}
-
+ 
       <!-- Mobile Filters Toggle (hidden on md+) -->
       <div class="col-12 d-md-none mb-3">
-        <button class="btn btn-outline-dark w-100" type="button"
-               onclick="toggleFilters()">
+        <button class="btn btn-outline-dark w-100" type="button" id="filterToggleBtn">
           ☰ Filters
         </button>
       </div>
 
       
       <!-- ========== SIDEBAR ========== -->
-     <div class="col-md-3 " id="sidebarFilters">
+     <div class="col-md-3" id="sidebarFilters">
 
         <div class="mb-4">
           <h6 class="text-uppercase fw-bold mb-3">Filter By Color</h6>
           <ul class="list-unstyled">
             <li class="mb-2">
-              <a href="?color=Red" class="text-decoration-none d-flex align-items-center gap-2 {% if selected_color == 'Red' %}fw-bold text-dark{% else %}text-secondary{% endif %}">
+              <a href="?color=Red{% if selected_size %}&size={{ selected_size }}{% endif %}{% if selected_price %}&price={{ selected_price }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}" class="text-decoration-none d-flex align-items-center gap-2 {% if selected_color == 'Red' %}fw-bold text-dark{% else %}text-secondary{% endif %}">
                 <span style="width:16px;height:16px;border-radius:50%;background:rgb(220,53,69);display:inline-block;border:1px solid #ddd;flex-shrink:0;"></span> Red
               </a>
             </li>
             <li class="mb-2">
-              <a href="?color=Green" class="text-decoration-none d-flex align-items-center gap-2 {% if selected_color == 'Green' %}fw-bold text-dark{% else %}text-secondary{% endif %}">
+              <a href="?color=Green{% if selected_size %}&size={{ selected_size }}{% endif %}{% if selected_price %}&price={{ selected_price }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}" class="text-decoration-none d-flex align-items-center gap-2 {% if selected_color == 'Green' %}fw-bold text-dark{% else %}text-secondary{% endif %}">
                 <span style="width:16px;height:16px;border-radius:50%;background:rgb(40,167,69);display:inline-block;border:1px solid #ddd;flex-shrink:0;"></span> Green
               </a>
             </li>
             <li class="mb-2">
-              <a href="?color=Blue" class="text-decoration-none d-flex align-items-center gap-2 {% if selected_color == 'Blue' %}fw-bold text-dark{% else %}text-secondary{% endif %}">
+              <a href="?color=Blue{% if selected_size %}&size={{ selected_size }}{% endif %}{% if selected_price %}&price={{ selected_price }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}" class="text-decoration-none d-flex align-items-center gap-2 {% if selected_color == 'Blue' %}fw-bold text-dark{% else %}text-secondary{% endif %}">
                 <span style="width:16px;height:16px;border-radius:50%;background:rgb(17, 63, 168);display:inline-block;border:1px solid #ddd;flex-shrink:0;"></span> Blue
               </a>
             </li>
             <li class="mb-2">
-              <a href="?color=Black" class="text-decoration-none d-flex align-items-center gap-2 {% if selected_color == 'Black' %}fw-bold text-dark{% else %}text-secondary{% endif %}">
+              <a href="?color=Black{% if selected_size %}&size={{ selected_size }}{% endif %}{% if selected_price %}&price={{ selected_price }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}" class="text-decoration-none d-flex align-items-center gap-2 {% if selected_color == 'Black' %}fw-bold text-dark{% else %}text-secondary{% endif %}">
                 <span style="width:16px;height:16px;border-radius:50%;background:rgb(0,0,0);display:inline-block;border:1px solid #ddd;flex-shrink:0;"></span> Black
               </a>
             </li>
             <li class="mb-2">
-              <a href="?color=White" class="text-decoration-none d-flex align-items-center gap-2 {% if selected_color == 'White' %}fw-bold text-dark{% else %}text-secondary{% endif %}">
+              <a href="?color=White{% if selected_size %}&size={{ selected_size }}{% endif %}{% if selected_price %}&price={{ selected_price }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}" class="text-decoration-none d-flex align-items-center gap-2 {% if selected_color == 'White' %}fw-bold text-dark{% else %}text-secondary{% endif %}">
                 <span style="width:16px;height:16px;border-radius:50%;background:rgb(255,255,255);display:inline-block;border:1px solid #333;flex-shrink:0;"></span> White
               </a>
             </li>
             <li class="mb-2">
-              <a href="?color=Yellow" class="text-decoration-none d-flex align-items-center gap-2 {% if selected_color == 'Yellow' %}fw-bold text-dark{% else %}text-secondary{% endif %}">
+              <a href="?color=Yellow{% if selected_size %}&size={{ selected_size }}{% endif %}{% if selected_price %}&price={{ selected_price }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}" class="text-decoration-none d-flex align-items-center gap-2 {% if selected_color == 'Yellow' %}fw-bold text-dark{% else %}text-secondary{% endif %}">
                 <span style="width:16px;height:16px;border-radius:50%;background:rgb(255,193,7);display:inline-block;border:1px solid #ddd;flex-shrink:0;"></span> Yellow
               </a>
             </li>
             <li class="mb-2">
-              <a href="?color=Pink" class="text-decoration-none text-secondary d-flex align-items-center gap-2 {% if selected_color == 'Pink' %}fw-bold text-dark{% else %}text-secondary{% endif %}">
+              <a href="?color=Pink{% if selected_size %}&size={{ selected_size }}{% endif %}{% if selected_price %}&price={{ selected_price }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}" class="text-decoration-none text-secondary d-flex align-items-center gap-2 {% if selected_color == 'Pink' %}fw-bold text-dark{% else %}text-secondary{% endif %}">
                 <span style="width:16px;height:16px;border-radius:50%;background:rgb(243, 66, 154);display:inline-block;border:1px solid #ddd;flex-shrink:0;"></span> Pink
               </a>
             </li>
             <li class="mb-2">
-              <a href="?color=Maroon" class="text-decoration-none text-secondary d-flex align-items-center gap-2 {% if selected_color == 'Maroon' %}fw-bold text-dark{% else %}text-secondary{% endif %}">
+              <a href="?color=Maroon{% if selected_size %}&size={{ selected_size }}{% endif %}{% if selected_price %}&price={{ selected_price }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}" class="text-decoration-none text-secondary d-flex align-items-center gap-2 {% if selected_color == 'Maroon' %}fw-bold text-dark{% else %}text-secondary{% endif %}">
                 <span style="width:16px;height:16px;border-radius:50%;background:rgb(128,0,0);display:inline-block;border:1px solid #ddd;flex-shrink:0;"></span> Maroon
               </a>
             </li>
             <li class="mb-2">
-              <a href="?color=Orange" class="text-decoration-none text-secondary d-flex align-items-center gap-2 {% if selected_color == 'Orange' %}fw-bold text-dark{% else %}text-secondary{% endif %}">
+              <a href="?color=Orange{% if selected_size %}&size={{ selected_size }}{% endif %}{% if selected_price %}&price={{ selected_price }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}" class="text-decoration-none text-secondary d-flex align-items-center gap-2 {% if selected_color == 'Orange' %}fw-bold text-dark{% else %}text-secondary{% endif %}">
                 <span style="width:16px;height:16px;border-radius:50%;background:rgb(210, 123, 17);display:inline-block;border:1px solid #ddd;flex-shrink:0;"></span> Orange
               </a>
             </li>
             <li class="mb-2">
-              <a href="?color=Purple" class="text-decoration-none text-secondary d-flex align-items-center gap-2 {% if selected_color == 'Purple' %}fw-bold text-dark{% else %}text-secondary{% endif %}">
+              <a href="?color=Purple{% if selected_size %}&size={{ selected_size }}{% endif %}{% if selected_price %}&price={{ selected_price }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}" class="text-decoration-none text-secondary d-flex align-items-center gap-2 {% if selected_color == 'Purple' %}fw-bold text-dark{% else %}text-secondary{% endif %}">
                 <span style="width:16px;height:16px;border-radius:50%;background:rgb(128,0,128);display:inline-block;border:1px solid #ddd;flex-shrink:0;"></span> Purple
               </a>
             </li>
           </ul>
-
-   
         </div>
 
         <hr>
@@ -99,28 +87,28 @@
           <h6 class="text-uppercase fw-bold mb-3">Filter By Size</h6>
           <ul class="list-unstyled">
             <li class="mb-1">
-              <a href="?size=XS" class="text-decoration-none {% if selected_size == 'XS' %}fw-bold text-dark{% else %}text-secondary{% endif %}">XS</a>
+              <a href="?size=XS{% if selected_color %}&color={{ selected_color }}{% endif %}{% if selected_price %}&price={{ selected_price }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}" class="text-decoration-none {% if selected_size == 'XS' %}fw-bold text-dark{% else %}text-secondary{% endif %}">XS</a>
             </li>
             <li class="mb-1">
-              <a href="?size=S" class="text-decoration-none {% if selected_size == 'S' %}fw-bold text-dark{% else %}text-secondary{% endif %}">S</a>
+              <a href="?size=S{% if selected_color %}&color={{ selected_color }}{% endif %}{% if selected_price %}&price={{ selected_price }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}" class="text-decoration-none {% if selected_size == 'S' %}fw-bold text-dark{% else %}text-secondary{% endif %}">S</a>
             </li>
             <li class="mb-1">
-              <a href="?size=M" class="text-decoration-none {% if selected_size == 'M' %}fw-bold text-dark{% else %}text-secondary{% endif %}">M</a>
+              <a href="?size=M{% if selected_color %}&color={{ selected_color }}{% endif %}{% if selected_price %}&price={{ selected_price }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}" class="text-decoration-none {% if selected_size == 'M' %}fw-bold text-dark{% else %}text-secondary{% endif %}">M</a>
             </li>
             <li class="mb-1">
-              <a href="?size=L" class="text-decoration-none {% if selected_size == 'L' %}fw-bold text-dark{% else %}text-secondary{% endif %}">L</a>
+              <a href="?size=L{% if selected_color %}&color={{ selected_color }}{% endif %}{% if selected_price %}&price={{ selected_price }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}" class="text-decoration-none {% if selected_size == 'L' %}fw-bold text-dark{% else %}text-secondary{% endif %}">L</a>
             </li>
             <li class="mb-1">
-              <a href="?size=XL" class="text-decoration-none {% if selected_size == 'XL' %}fw-bold text-dark{% else %}text-secondary{% endif %}">XL</a>
+              <a href="?size=XL{% if selected_color %}&color={{ selected_color }}{% endif %}{% if selected_price %}&price={{ selected_price }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}" class="text-decoration-none {% if selected_size == 'XL' %}fw-bold text-dark{% else %}text-secondary{% endif %}">XL</a>
             </li>
             <li class="mb-1">
-              <a href="?size=XXL" class="text-decoration-none {% if selected_size == 'XXL' %}fw-bold text-dark{% else %}text-secondary{% endif %}">XXL</a>
+              <a href="?size=XXL{% if selected_color %}&color={{ selected_color }}{% endif %}{% if selected_price %}&price={{ selected_price }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}" class="text-decoration-none {% if selected_size == 'XXL' %}fw-bold text-dark{% else %}text-secondary{% endif %}">XXL</a>
             </li>
             <li class="mb-1">
-              <a href="?size=3XL" class="text-decoration-none {% if selected_size == '3XL' %}fw-bold text-dark{% else %}text-secondary{% endif %}">3XL</a>
+              <a href="?size=3XL{% if selected_color %}&color={{ selected_color }}{% endif %}{% if selected_price %}&price={{ selected_price }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}" class="text-decoration-none {% if selected_size == '3XL' %}fw-bold text-dark{% else %}text-secondary{% endif %}">3XL</a>
             </li>
             <li class="mb-1">
-              <a href="?size=4XL" class="text-decoration-none {% if selected_size == '4XL' %}fw-bold text-dark{% else %}text-secondary{% endif %}">4XL</a>
+              <a href="?size=4XL{% if selected_color %}&color={{ selected_color }}{% endif %}{% if selected_price %}&price={{ selected_price }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}" class="text-decoration-none {% if selected_size == '4XL' %}fw-bold text-dark{% else %}text-secondary{% endif %}">4XL</a>
             </li>
           </ul>
         </div>
@@ -130,10 +118,10 @@
         <div class="mb-4">
           <h6 class="text-uppercase fw-bold mb-3">Filter By Price</h6>
           <ul class="list-unstyled">
-            <li class="mb-1"><a href="?price=under500" class="text-decoration-none {% if selected_price == 'under500' %}fw-bold text-dark{% else %}text-secondary{% endif %}">Under ₹500</a></li>
-            <li class="mb-1"><a href="?price=500-1000" class="text-decoration-none {% if selected_price == '500-1000' %}fw-bold text-dark{% else %}text-secondary{% endif %}">₹500 – ₹1000</a></li>
-            <li class="mb-1"><a href="?price=1000-2000" class="text-decoration-none {% if selected_price == '1000-2000' %}fw-bold text-dark{% else %}text-secondary{% endif %}">₹1000 – ₹2000</a></li>
-            <li class="mb-1"><a href="?price=above2000" class="text-decoration-none {% if selected_price == 'above2000' %}fw-bold text-dark{% else %}text-secondary{% endif %}">Above ₹2000</a></li>
+            <li class="mb-1"><a href="?price=under500{% if selected_color %}&color={{ selected_color }}{% endif %}{% if selected_size %}&size={{ selected_size }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}" class="text-decoration-none {% if selected_price == 'under500' %}fw-bold text-dark{% else %}text-secondary{% endif %}">Under ₹500</a></li>
+            <li class="mb-1"><a href="?price=500-1000{% if selected_color %}&color={{ selected_color }}{% endif %}{% if selected_size %}&size={{ selected_size }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}" class="text-decoration-none {% if selected_price == '500-1000' %}fw-bold text-dark{% else %}text-secondary{% endif %}">₹500 – ₹1000</a></li>
+            <li class="mb-1"><a href="?price=1000-2000{% if selected_color %}&color={{ selected_color }}{% endif %}{% if selected_size %}&size={{ selected_size }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}" class="text-decoration-none {% if selected_price == '1000-2000' %}fw-bold text-dark{% else %}text-secondary{% endif %}">₹1000 – ₹2000</a></li>
+            <li class="mb-1"><a href="?price=above2000{% if selected_color %}&color={{ selected_color }}{% endif %}{% if selected_size %}&size={{ selected_size }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}" class="text-decoration-none {% if selected_price == 'above2000' %}fw-bold text-dark{% else %}text-secondary{% endif %}">Above ₹2000</a></li>
           </ul>
         </div>
 
@@ -179,8 +167,8 @@
                   </h3>
 
                   <!-- Add to Cart / Out of Stock -->
-                  <div class="mt-1">
-                    {% if product.stock > 0 %}
+                  <div class="mt-2">
+                    {% if product.total_stock > 0 %}
                       <span class="text-success small fw-semibold">In Stock</span>
                       <a href="{% url 'store:product_detail' product.slug %}" class="text-decoration-none d-block" data-after="Click to View">
                         <span>{% if product.price %}₹ {{ product.price }}{% endif %}</span>
@@ -192,6 +180,37 @@
                       </a>
                     {% endif %}
                   </div>
+
+                  <!-- Color & Size Options -->
+                  {% if product.color_options or product.size_options %}
+                    <div class="mt-2 pt-2 border-top">
+                      {% if product.color_options %}
+                        <div class="mb-2">
+                          <small class="text-muted d-block mb-1"><strong>Colors:</strong></small>
+                          <div class="d-flex gap-1 flex-wrap">
+                            {% for color in product.color_options %}
+                              <span class="badge bg-light text-dark border border-secondary small">
+                                {{ color.content }}
+                              </span>
+                            {% endfor %}
+                          </div>
+                        </div>
+                      {% endif %}
+
+                      {% if product.size_options %}
+                        <div class="mb-2">
+                          <small class="text-muted d-block mb-1"><strong>Sizes:</strong></small>
+                          <div class="d-flex gap-1 flex-wrap">
+                            {% for size in product.size_options %}
+                              <span class="badge bg-light text-dark border border-secondary small">
+                                {{ size.content }}
+                              </span>
+                            {% endfor %}
+                          </div>
+                        </div>
+                      {% endif %}
+                    </div>
+                  {% endif %}
                 </div>
               </div>
             </div>
@@ -208,22 +227,39 @@
   </div>
 </section>
 
-
-
-<!-- Adding the sorting script -->
- <script>
+<!-- Improved JavaScript -->
+<script>
+  // Handle sorting with filter preservation
   document.getElementById('sortSelect').addEventListener('change', function () {
     const url = new URL(window.location.href);
+    
     if (this.value) {
       url.searchParams.set('sort', this.value);
     } else {
       url.searchParams.delete('sort');
     }
+    
     window.location.href = url.toString();
   });
-    function toggleFilters() {
-    const sidebar = document.getElementById('sidebarFilters');
-    sidebar.style.display = sidebar.style.display === 'none' ? 'block' : 'none';
+
+  // Handle mobile filter toggle
+  const filterToggleBtn = document.getElementById('filterToggleBtn');
+  const sidebarFilters = document.getElementById('sidebarFilters');
+
+  if (filterToggleBtn) {
+    filterToggleBtn.addEventListener('click', function () {
+      sidebarFilters.classList.toggle('d-none');
+    });
   }
+
+  // Hide sidebar on larger screens (bootstrap md breakpoint)
+  function handleResize() {
+    if (window.innerWidth >= 768) {
+      sidebarFilters.classList.remove('d-none');
+    }
+  }
+
+  window.addEventListener('resize', handleResize);
+  handleResize(); // Call on page load
 </script>
 {% endblock content %}
