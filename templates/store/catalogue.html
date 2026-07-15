@@ -86,6 +86,9 @@
           <h6 class="text-uppercase fw-bold mb-3">Filter By Size</h6>
           <ul class="list-unstyled">
             <li class="mb-1">
+              <a href="?size=FREESIZE{% if selected_color %}&color={{ selected_color }}{% endif %}{% if selected_price %}&price={{ selected_price }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}" class="text-decoration-none {% if selected_size == 'FREESIZE' %}fw-bold text-dark{% else %}text-secondary{% endif %}">Free Size</a>
+            </li>
+            <li class="mb-1">
               <a href="?size=XS{% if selected_color %}&color={{ selected_color }}{% endif %}{% if selected_price %}&price={{ selected_price }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}" class="text-decoration-none {% if selected_size == 'XS' %}fw-bold text-dark{% else %}text-secondary{% endif %}">XS</a>
             </li>
             <li class="mb-1">
