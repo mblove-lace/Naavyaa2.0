@@ -14,7 +14,7 @@
   
 {% comment %} What shows on the browser tab (Naavyaa). {% endcomment %}
   
-  <title>Naavyaa</title>
+  <title>BongSphere</title>
  {% comment %} text encoding (handles all characters) {% endcomment %}
   <meta charset="utf-8">
    {% comment %} Ensures compatibility with older Internet Explorer {% endcomment %}
@@ -1049,11 +1049,12 @@
             </li>
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="dropdownAbout" data-bs-toggle="dropdown"
-                aria-expanded="false">About Naavyaa</a>
+                aria-expanded="false">About BongSphere</a>
               <ul class="dropdown-menu list-unstyled" aria-labelledby="dropdownAbout">
-                <li><a href="{% url 'blog:blog' %}" class="dropdown-item item-anchor">BTS of Naavyaa</a></li>
+                <li><a href="{% url 'blog:blog' %}" class="dropdown-item item-anchor">BTS of BongSphere</a></li>
                 {% comment %} <li><a href="{% url 'blog:care_instructions' %}" class="dropdown-item item-anchor">Care Instructions</a></li> {% endcomment %}
-                <li><a href="{% url 'blog:contact_us' %}" class="dropdown-item item-anchor">Contact Naavyaa</a></li>
+                <li><a href="{% url 'blog:contact_us' %}" class="dropdown-item item-anchor">Contact BongSphere</a></li>
+                
                 <li><a href="{% url 'blog:faqs' %}" class="dropdown-item item-anchor">FAQs</a></li>
               </ul>
             </li>
@@ -1103,7 +1104,10 @@
             {% endif %}
             <li><hr class="my-2"></li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'blog:blog' %}">BTS of Naavyaa</a>
+              <a class="nav-link" href="{% url 'blog:blog' %}">BTS of BongSphere</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'blog:contact_us' %}">Contact BongSphere</a>
             </li>
 
             <li class="nav-item">
