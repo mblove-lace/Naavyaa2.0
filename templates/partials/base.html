@@ -445,8 +445,8 @@
 
 
 
- <footer id="footer" class="mt-5">
-      <section class="newsletter bg-light" style="background: url(images/pattern-bg.png) no-repeat;">
+ <footer id="footer">
+      <section class="newsletter bg-light" style="background: url('{% static 'assets/images/pattern-bg-l.png' %}')  no-repeat;">
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-md-8 py-5 my-5">
@@ -474,13 +474,7 @@
                     </svg>
                   </a>
                 </li>
-                <li>
-                  <a href="#" class="text-secondary">
-                    <svg width="24" height="24" viewBox="0 0 24 24">
-                      <use xlink:href="#twitter"></use>
-                    </svg>
-                  </a>
-                </li>
+
                 <li>
                   <a href="#" class="text-secondary">
                     <svg width="24" height="24" viewBox="0 0 24 24">
@@ -488,13 +482,7 @@
                     </svg>
                   </a>
                 </li>
-                <li>
-                  <a href="#" class="text-secondary">
-                    <svg width="24" height="24" viewBox="0 0 24 24">
-                      <use xlink:href="#pinterest"></use>
-                    </svg>
-                  </a>
-                </li>
+
                 <li>
                   <a href="#" class="text-secondary">
                     <svg width="24" height="24" viewBox="0 0 24 24">
@@ -509,11 +497,11 @@
         
         <div class="col-md-3 col-sm-6">
           <div class="footer-menu footer-menu-003">
-            <h5 class="widget-title text-uppercase mb-4">Help & Info</h5>
+            <h5 class="widget-title  mb-4">Quick Help</h5>
             <ul class="menu-list list-unstyled text-uppercase border-animation-left fs-6">
-               <li class="menu-item">
+               {% comment %} <li class="menu-item">
                 <a href="{% url 'blog:faqs'  %}" class="item-anchor">Track Your Order</a>
-              </li> 
+              </li>  {% endcomment %}
               <li class="menu-item">
                 <a href="{% url 'blog:faqs'  %}" class="item-anchor">Returns + Exchanges</a>
               </li>
@@ -531,40 +519,24 @@
           </div>
         </div>
         <div class="col-md-3 col-sm-6">
-          <div class="footer-menu footer-menu-004 border-animation-left">
-            <h5 class="widget-title text-uppercase mb-4">Contact Us</h5>
-            <p>Do you have any questions or suggestions about the website? <a href="mailto:contact@mblovelace15@gmail.com"
-                class="item-anchor">mblovelace.com</a></p>
-            <p>Do you need support? Give us a call. <a href="tel:+43 720 11 52 78" class="item-anchor">+91 8169272615 </a>
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="border-top py-4">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-6 d-flex flex-wrap">
-            <div class="shipping">
+           <div class="shipping">
               <span>We ship with:</span>
               {% comment %} <img src="{% static 'assets/images/arct-icon.png' %}" alt="icon"> {% endcomment %}
-              <img src="{% static 'assets/images/dhl-logo.png' %}" alt="icon">
+              <img src="{% static 'assets/images/shiprocket logo.png' %}" alt="icon">
             </div>
             <div class="payment-option">
-              <span>Payment Option:</span>
-              <img src="{% static 'assets/images/visa-card.png' %}" alt="card">
-              <img src="{% static 'assets/images/paypal-card.png' %}" alt="card">
-              <img src="{% static 'assets/images/master-card.png' %}" alt="card">
+              <span>Payment through:</span>
+              <img src="{% static 'assets/images/Razorpay.png' %}" alt="payment option">
             </div>
-          </div>
-          <div class="col-md-6 text-end">
-            <p>© Copyright 2025 Naavyaa. All rights reserved. Design by <a href="https://templatesjungle.com"
+             <p>© Copyright 2025 Naavyaa. All rights reserved. </p>
+              {% comment %} Design by <a href="https://templatesjungle.com"
                 target="_blank">https://github.com/mblove-lace</a> Distribution By <a href="https://themewagon.com"
-              target="blank">M Bhattacherjee </a></p>
-          </div>
+              target="blank">M Bhattacherjee </a></p> {% endcomment %}
+
         </div>
       </div>
     </div>
+
   </footer>
 
   {% comment %} <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> {% endcomment %}
