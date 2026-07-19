@@ -1,6 +1,0 @@
-Fabric: Hand block with cotton lining 
-Type: Padded 
-Neckline(font):Round neck
-Neckline (back):Round neck 
-Sleeves:Sleeveless 
-Opening:Back open 
