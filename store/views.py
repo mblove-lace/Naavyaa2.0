@@ -42,7 +42,7 @@ def index(request):
     # .objects - This is Django's default model manager that provides database query methods
     # .filter(status="Published") - Applies a WHERE clause to only return records where the status field matches "Published"
     # .get is used for single record retrieval, while .filter is used for multiple records
-    products = store_models.Product.objects.filter(status="Published")
+    products = store_models.Product.objects.filter(status="Published").select_related('category','vendor')  # Optimize query by fetching related category data in the same query.prefetch_related('variants','gallery')  # Optimize query by prefetching related variant and variant item data
     context = {'products': products}
     # Render the 'index.html' template with the products context
     # {'products': products} → This is the context dictionary that will be passed to the HTML template

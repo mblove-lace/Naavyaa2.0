@@ -282,9 +282,9 @@
                   <a href="{% url 'store:product_detail' product.slug %}">
 
                     {% if product.image %}
-                      <img src="{{ product.image.url }}" alt="{{ product.name }}"  class="product-image img-fluid">
+                      <img src="{{ product.image.url }}" alt="{{ product.name }}"  class="product-image img-fluid" loading="lazy">
                     {% else %}
-                      <img src="{% static 'assets/images/cat-item3.jpg' %}" alt="{{ product.name }}"  class="product-image img-fluid">
+                      <img src="{% static 'assets/images/cat-item3.jpg' %}" alt="{{ product.name }}"  class="product-image img-fluid" loading="lazy">
                     {% endif %}
                   </a>
                   <a href="{% url 'store:product_detail' product.slug %}" class="btn-icon btn-wishlist">
