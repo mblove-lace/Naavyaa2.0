@@ -2564,3 +2564,14 @@ table.nt tr:hover td { background: var(--warm); transition: background 0.15s; }
 .swatch-disabled {
   pointer-events: none;
 }
+
+.navbar-naavyaa {
+  background-color: #e4d9d1;                    /* warm cream, matches blog/dashboard */
+  border-bottom: 1px solid #e5d9cb !important;  /* warm sand instead of default cool grey */
+}
+
+/* keep links near-black, bring the brand sage in on hover/open */
+.navbar-naavyaa .nav-link:hover,
+.navbar-naavyaa .nav-link.dropdown-toggle.show {
+  color: #8C907E !important;
+}
