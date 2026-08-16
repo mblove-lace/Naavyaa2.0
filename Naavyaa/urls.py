@@ -38,6 +38,7 @@ urlpatterns = [
     # This line connects your project with a third-party app called django-ckeditor-5
     # It provides URLs that handle uploading, browsing, and managing images/files for your text editor in the admin panel.
     path("ckeditor5/", include("django_ckeditor_5.urls")),
+    path('accounts/', include('allauth.urls')),
 
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
